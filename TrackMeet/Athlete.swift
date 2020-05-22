@@ -53,12 +53,14 @@ public class Event{
     var mark: Float
     var markString: String
     var place: Int?
+    var points = 0.0
     
     init(name: String, level: String) {
         self.name = name
         self.level = level
         self.mark = 0.0
         markString = ""
+        
         
     }
     

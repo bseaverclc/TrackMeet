@@ -73,6 +73,21 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         return cell
     }
     
+     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete{
+                   
+            var selected = displayedAthletes[indexPath.row]
+            for i in 0 ..< allAthletes.count{
+                if selected.equals(other: allAthletes[i]){
+                    allAthletes.remove(at: i)
+                    break
+                }
+            }
+            displayedAthletes.remove(at: indexPath.row)
+                   tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+    
 //     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        var selectedAthlete = displayedAthletes[indexPath.row]
 //        selectedAthlete.events.append(Event(name: self.title!, level: "varsity"))

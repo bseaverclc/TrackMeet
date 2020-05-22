@@ -13,8 +13,9 @@ class EventsTableViewController: UITableViewController {
     var selectedEvent : String?
     var athletes = [Athlete]()
 
-    var events = ["4x800M Relay","4x100M Relay", "100M","200M"]
+    var events = ["4x800M Relay","4x100M Relay", "3200M","110HH","100M","800","4x200","400","300IM","1600","200M", "4x400", "Long Jump", "Triple Jump", "High Jump", "Pole Vault", "Shot Put", "Discus"]
     //var segues = ["relay4x800", "relay4x100","m100"]
+ 
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -21,11 +21,14 @@ extension UITableView {
 class EventEditViewController: UIViewController, UITableViewDelegate,UITableViewDataSource, UINavigationControllerDelegate, UITabBarDelegate {
     
     @IBOutlet weak var tableViewOutlet: UITableView!
+    var tabBarY : CGFloat!
+    var fieldEvents = ["Long Jump", "Triple Jump", "High Jump", "Pole Vault", "Shot Put", "Discus"]
     
     var allAthletes = [Athlete]()
     var eventAthletes = [Athlete]()
     var screenTitle = ""
     
+    @IBOutlet weak var tabBarOutlet: UITabBar!
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return eventAthletes.count
@@ -53,6 +56,8 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         return cell
     }
     
+    
+    
     override func viewWillAppear(_ animated: Bool) {
           NotificationCenter.default.addObserver(self, selector: #selector(EventEditViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         
@@ -61,8 +66,16 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     
     override func viewWillDisappear(_ animated: Bool) {
          super.viewWillDisappear(animated)
+        if isMovingFromParent{
+        performSegue(withIdentifier: "unwindToEventsSegue", sender: self)
+        }
 
            NotificationCenter.default.removeObserver(self)
+        tabBarOutlet.frame.origin.y = tabBarY
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        tabBarY = tabBarOutlet.frame.origin.y
     }
     
 
@@ -88,12 +101,16 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         if let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height {
                print("Notification: Keyboard will show")
                tableViewOutlet.setBottomInset(to: keyboardHeight)
+            
+            tabBarOutlet.frame.origin.y = tabBarY - keyboardHeight
     }
     }
     
     @objc func keyboardWillHide(notification: Notification){
         print("Notification: Keyboard will hide")
+        tabBarOutlet.frame.origin.y = tabBarY
         tableViewOutlet.setBottomInset(to: 0.0)
+        
         
     }
     
@@ -101,7 +118,16 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         print(indexPath.row)
     }
     
-    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete{
+                   
+            eventAthletes[indexPath.row].events.removeAll { (e) -> Bool in
+                e.name == self.title
+            }
+            eventAthletes.remove(at: indexPath.row)
+                   tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
     
 
     
@@ -145,10 +171,19 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
   
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        print("prepare for segue")
+        if segue.identifier == "unwindToEventsSegue"{
+            calcPoints()
+            print("Calculated Points")
+        }
+        else{
+        
+        
         let nvc = segue.destination as! AddAthleteToEventViewController
         nvc.allAthletes = allAthletes
         nvc.eventAthletes = eventAthletes
         nvc.screenTitle = screenTitle
+        }
     }
     
     
@@ -181,7 +216,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                     return struct1.last.lowercased() < struct2.last.lowercased()
                 }
             }
-            print("Done sorting by name")
+            print("Done sorting by school")
             
            
             
@@ -212,14 +247,26 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         }
         else if item.title == "Mark"{
             eventAthletes = eventAthletes.sorted { (lhs, rhs) -> Bool in
-                                 let a = lhs.getEvent(eventName: self.title!)?.markString
-                                 let b = rhs.getEvent(eventName: self.title!)?.markString
+                                 var a = lhs.getEvent(eventName: self.title!)?.markString
+                                 var b = rhs.getEvent(eventName: self.title!)?.markString
+                
                                  switch (a ,b) {
                                    case ("", _): return false    // Lhs is empty
                                    case (_?, ""): return true    // Lhs is not nil, rhs is empty
-                                 default: return a! < b!
+                                 default:
+                                    while a!.count < b!.count{a = "0\(a!)"
+                                        print(a!)
+                                    }
+                                    while b!.count < a!.count{b = "0\(b!)"
+                                        print(b!)
+                                    }
+                                    if fieldEvents.contains(self.title!){
+                                    return a! > b!
+                                    }
+                                    else{return a! < b!}
                                    }
                                }
+            print("sorting by mark")
            
         }
         
@@ -229,6 +276,72 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
       
         
         
+    }
+    
+    func checkForTies(place: Int)-> Int{
+        var ties = 0
+        for a in eventAthletes{
+            if let event = a.getEvent(eventName: self.title!){
+                if event.place == place{
+                    ties += 1
+                }
+        }
+    }
+        return ties
+    }
+    
+    var scoring = [10,8,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    
+    func calcPoints(){
+        for a in eventAthletes{
+            if let event = a.getEvent(eventName: self.title!){
+            switch event.place{
+            case 1:
+                let ties = checkForTies(place: 1)
+                var points = 0
+                if ties != 0{
+                    for i in 0 ..< ties{
+                        points += scoring[i]
+                    }
+                    event.points = Double(points)/Double(ties)
+                    
+                }
+                else{
+                    event.points = 0
+                }
+            case 2: if checkForTies(place: 2) != 0{
+                  let ties = checkForTies(place: 2)
+                var points = 0
+             if ties != 0{
+                 for i in 1 ..< (ties + 1){
+                     points += scoring[i]
+                 }
+                 event.points = Double(points)/Double(ties)
+                 
+             }
+             else{
+                 event.points = 0
+             }
+                }
+            case 3: if checkForTies(place: 3) != 0{
+                 let ties = checkForTies(place: 3)
+                             var points = 0
+                             if ties != 0{
+                                 for i in 2 ..< (2 + ties){
+                                     points += scoring[i]
+                                 }
+                                 event.points = Double(points)/Double(ties)
+                                 
+                             }
+                             else{
+                                 event.points = 0
+                             }
+                }
+            default: event.points = 0
+                
+            }
+        }
+    }
     }
     
 }

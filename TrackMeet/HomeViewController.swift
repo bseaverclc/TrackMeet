@@ -46,6 +46,12 @@ class HomeViewController: UIViewController, DataBackDelegate {
             allAthletes.append(Athlete(f: first, l: last, s: school, g: grade))
             
         }
+        var teams = ["A","B","C","D","E"]
+        for school in schoolArray{
+            for letter in teams{
+                allAthletes.append(Athlete(f: letter, l: school, s: school, g: 12))
+        }
+        }
                allAthletes[0].addEvent(name: "200M", level: "varsity")
                allAthletes[1].addEvent(name: "100M", level: "varsity")
                allAthletes[2].addEvent(name: "100M", level: "varsity")
@@ -65,6 +71,10 @@ class HomeViewController: UIViewController, DataBackDelegate {
             let nvc = segue.destination as! EventsTableViewController
             nvc.athletes = allAthletes
         }
+        else if segue.identifier == "scoresSegue"{
+            let nvc = segue.destination as! ScoresViewController
+            nvc.allAthletes = allAthletes
+        }
         else{
             let nvc = segue.destination as! AthletesViewController
             nvc.allAthletes = allAthletes
@@ -77,6 +87,7 @@ class HomeViewController: UIViewController, DataBackDelegate {
    @IBAction func unwind( _ seg: UIStoryboardSegue) {
    let pvc = seg.source as! AthletesViewController
     allAthletes = pvc.allAthletes
+    print("unwind to home screen")
     
     
     }

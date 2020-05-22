@@ -60,6 +60,8 @@ class AthletesTableViewController:  UITableViewController, UITabBarDelegate {
     
 
     
+
+    
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         displayedAthletes = [Athlete]()
         for a in allAthletes{

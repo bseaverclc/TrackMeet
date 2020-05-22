@@ -24,6 +24,12 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
             displayedAthletes = allAthletes
            
         }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        if isMovingFromParent{
+         performSegue(withIdentifier: "unwindToEventEdit", sender: self)
+        }
+    }
         
         override func viewDidAppear(_ animated: Bool) {
             tableView.reloadData()
@@ -88,10 +94,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
         }
        
 
-    @IBAction func AddSelectedAthletesAction(_ sender: UIButton) {
-          performSegue(withIdentifier: "unwindToEventEdit", sender: self)
-        
-    }
+
     
     
     }
