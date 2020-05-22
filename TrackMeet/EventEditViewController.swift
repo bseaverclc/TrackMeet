@@ -8,6 +8,19 @@
 
 import UIKit
 
+extension UIResponder {
+    func findParentTableViewCell () -> UITableViewCell? {
+        var parent: UIResponder = self
+        while let next = parent.next {
+            if let tableViewCell = parent as? UITableViewCell {
+                return tableViewCell
+            }
+            parent = next
+        }
+        return nil
+    }
+}
+
 extension UITableView {
 
     func setBottomInset(to value: CGFloat) {
@@ -24,19 +37,95 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     var tabBarY : CGFloat!
     var fieldEvents = ["Long Jump", "Triple Jump", "High Jump", "Pole Vault", "Shot Put", "Discus"]
     
+    var sections = false
     var allAthletes = [Athlete]()
     var eventAthletes = [Athlete]()
+    var heat1 = [Athlete]()
+    var heat2 = [Athlete]()
     var screenTitle = ""
     
     @IBOutlet weak var tabBarOutlet: UITabBar!
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return eventAthletes.count
+    func numberOfSections(in tableView: UITableView) -> Int {
+        if sections{return 3}
+        else{ return 1}
     }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if sections{
+        if section == 0{return "Heat 1"}
+        else if section == 1{return "Heat 2"}
+        else{ return "Open"}
+        }
+        else{return self.title}
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if sections{
+        if section == 0{return heat1.count}
+        else if section == 1 {return heat2.count}
+        else{ return eventAthletes.count}
+        }
+        
+        else{return eventAthletes.count}
+    }
+    
+    
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        
+        var movingAthlete: Athlete!
+        if sections{
+         if (sourceIndexPath != destinationIndexPath ) {
+            var sectionFrom = sourceIndexPath.section
+            var sectionTo = destinationIndexPath.section
+           
+            if sectionFrom == 0{ movingAthlete = heat1[sourceIndexPath.row]
+                heat1.remove(at: sourceIndexPath.row)
+            }
+            else if sectionFrom == 1 {movingAthlete = heat2[sourceIndexPath.row]
+                heat2.remove(at: sourceIndexPath.row)
+            }
+            else{movingAthlete = eventAthletes[sourceIndexPath.row]
+                eventAthletes.remove(at: sourceIndexPath.row)
+            }
+            
+            if sectionTo == 0 {heat1.insert(movingAthlete, at: destinationIndexPath.row)
+                movingAthlete.getEvent(eventName: screenTitle)?.heat = 1}
+            else if sectionTo == 1 {heat2.insert(movingAthlete, at: destinationIndexPath.row)
+                movingAthlete.getEvent(eventName: screenTitle)?.heat = 2}
+            
+            else {eventAthletes.insert(movingAthlete, at: destinationIndexPath.row)
+            movingAthlete.getEvent(eventName: screenTitle)?.heat = 0
+            }
+            }
+            
+            
+        }
+        else{
+            movingAthlete = eventAthletes[sourceIndexPath.row]
+            eventAthletes.remove(at: sourceIndexPath.row)
+            eventAthletes.insert(movingAthlete, at: destinationIndexPath.row)
+            
+        }
+        
+        //tableView.reloadData()
+
+
+           }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "myCell") as! TimeTableViewCell
-        for event in eventAthletes[indexPath.row].events{
+        
+        var currentAthletes = [Athlete]()
+        if !sections{ currentAthletes = eventAthletes}
+        else{ if indexPath.section == 0 {currentAthletes = heat1}
+        else if indexPath.section == 1 {currentAthletes = heat2}
+        else {currentAthletes = eventAthletes}
+        }
+        
+        for event in currentAthletes[indexPath.row].events{
             if event.name == title{
                 if let place = event.place{
                 cell.configure(text: event.markString, placeholder: "Enter a time", placeText: "\(place)")
@@ -48,7 +137,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             }
         }
         
-        let athlete = eventAthletes[indexPath.row]
+        let athlete = currentAthletes[indexPath.row]
         cell.nameOutlet.text = "\(athlete.last), \(athlete.first)"
         cell.schoolOutlet.text = athlete.school
         cell.timeOutlet.tag = indexPath.row
@@ -62,6 +151,9 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
           NotificationCenter.default.addObserver(self, selector: #selector(EventEditViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         
                  NotificationCenter.default.addObserver(self, selector: #selector(EventEditViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        if self.title == "100M" || self.title == "200M"{
+            sections = true
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -81,11 +173,18 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableViewOutlet.isEditing = true
         self.title = screenTitle
         for a in allAthletes{
                   for e in a.events{
                       if e.name == screenTitle{
-                          eventAthletes.append(a)
+                        switch e.heat{
+                        case 0: eventAthletes.append(a)
+                        case 1: heat1.append(a)
+                        case 2: heat2.append(a)
+                        default: eventAthletes.append(a)
+                        }
+                          
                       }
                   }
               }
@@ -120,7 +219,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
-                   
+
             eventAthletes[indexPath.row].events.removeAll { (e) -> Bool in
                 e.name == self.title
             }
@@ -135,35 +234,119 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     @IBAction func timeAction(_ sender: UITextField) {
          //print(sender.tag)
         // print(sender.text)
-         var indexPath = IndexPath(row: sender.tag, section: 0)
-         var cell = tableViewOutlet.cellForRow(at: indexPath) as! TimeTableViewCell
-         
-         if let time = sender.text{
-             for event in eventAthletes[indexPath.row].events{
-                 if event.name == title{
-            event.markString = time
-                 }
-             }
+//         var indexPath = IndexPath(row: sender.tag, section: 0)
+//         var cell = tableViewOutlet.cellForRow(at: indexPath) as! TimeTableViewCell
+         var editingArray : [Athlete]!
+         guard let cell2 = sender.findParentTableViewCell (),
+             let indexPath2 = tableViewOutlet.indexPath(for: cell2) else {
+                 print("This textfield is not in the tableview!")
+                 return
          }
+        if let mark = sender.text{
+        
+       if sections{
+               if indexPath2.section == 0{
+                   for event in heat1[indexPath2.row].events{
+                        if event.name == title{
+                            
+                           event.markString = mark
+                            
+                        }
+                    }
+                   
+               }
+               else if indexPath2.section == 1{
+                   for event in heat2[indexPath2.row].events{
+                        if event.name == title{
+                            
+                   event.markString = mark
+                            
+                        }
+                    }
+               }
+               else{
+                   for event in eventAthletes[indexPath2.row].events{
+                        if event.name == title{
+                           
+                   event.markString = mark
+                            
+                        }
+                    }
+                   
+               }
+           }
+       else{
+           for event in eventAthletes[indexPath2.row].events{
+               if event.name == title{
+                  
+                       event.markString = mark
+                                
+                            }
+                        }
+            }
+                       
+                   
+       }
         
     }
     
     
     @IBAction func placeAction(_ sender: UITextField) {
-                var indexPath = IndexPath(row: sender.tag, section: 0)
-                var cell = tableViewOutlet.cellForRow(at: indexPath) as! TimeTableViewCell
-        
-                if let place = sender.text{
-                    for event in eventAthletes[indexPath.row].events{
-                        if event.name == title{
-                            if let intPlace = Int(place){
-                   event.place = intPlace
-                            }
-        
-        
-                        }
-                    }
-                }
+        var editingArray : [Athlete]!
+        print(sender.tag)
+        guard let cell2 = sender.findParentTableViewCell (),
+            let indexPath2 = tableViewOutlet.indexPath(for: cell2) else {
+                print("This textfield is not in the tableview!")
+                return
+        }
+        //print("The indexPath is \(indexPath2)")
+      
+                //var indexPath = IndexPath(row: sender.tag, section: 0)
+        if let place = sender.text{
+            
+        if sections{
+            if indexPath2.section == 0{
+                for event in heat1[indexPath2.row].events{
+                     if event.name == title{
+                         if let intPlace = Int(place){
+                event.place = intPlace
+                         }
+                     }
+                 }
+                
+            }
+            else if indexPath2.section == 1{
+                for event in heat2[indexPath2.row].events{
+                     if event.name == title{
+                         if let intPlace = Int(place){
+                event.place = intPlace
+                         }
+                     }
+                 }
+            }
+            else{
+                for event in eventAthletes[indexPath2.row].events{
+                     if event.name == title{
+                         if let intPlace = Int(place){
+                event.place = intPlace
+                         }
+                     }
+                 }
+                
+            }
+        }
+        else{
+        for event in eventAthletes[indexPath2.row].events{
+            if event.name == title{
+                if let intPlace = Int(place){
+                    event.place = intPlace
+                             }
+                         }
+                     }
+            }
+                    
+                
+    }
     }
     
     

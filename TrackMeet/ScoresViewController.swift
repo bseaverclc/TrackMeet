@@ -13,6 +13,14 @@ class ScoresViewController: UIViewController {
     @IBOutlet weak var textViewOutlet: UITextView!
     var teamPoints = ["CLC":0.0, "CLS":0.0, "CG": 0.0, "PR": 0.0]
     
+
+    
+
+    
+    @IBOutlet weak var PRScoreOutlet: UILabel!
+    @IBOutlet weak var CLSScoreOutlet: UILabel!
+    @IBOutlet weak var CLCScoreOutlet: UILabel!
+    @IBOutlet weak var CGScoreOutlet: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
         computeScores()
@@ -37,9 +45,13 @@ class ScoresViewController: UIViewController {
                     
                 }
             }
-            if updated{textViewOutlet.text += "\(teamPoints)\n\n"}
+           // if updated{textViewOutlet.text += "\(teamPoints)\n\n"}
             
         }
+        CLCScoreOutlet.text = "\(teamPoints["CLC"]!)"
+        CLSScoreOutlet.text = "\(teamPoints["CLS"]!)"
+        CGScoreOutlet.text = "\(teamPoints["CG"]!)"
+        PRScoreOutlet.text = "\(teamPoints["PR"]!)"
     }
 
 }

@@ -54,6 +54,7 @@ public class Event{
     var markString: String
     var place: Int?
     var points = 0.0
+    var heat = 0
     
     init(name: String, level: String) {
         self.name = name
