@@ -128,10 +128,10 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         for event in currentAthletes[indexPath.row].events{
             if event.name == title{
                 if let place = event.place{
-                cell.configure(text: event.markString, placeholder: "Enter a time", placeText: "\(place)")
+                cell.configure(text: event.markString, placeholder: "Time", placeText: "\(place)")
                 }
                 else{
-                    cell.configure(text: event.markString, placeholder: "Enter a time")
+                    cell.configure(text: event.markString, placeholder: "Time")
                     
                 }
             }
@@ -476,6 +476,12 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     var scoring = [10,8,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     
     func calcPoints(){
+        for a in heat1{
+            eventAthletes.append(a)
+        }
+        for a in heat2{
+            eventAthletes.append(a)
+        }
         for a in eventAthletes{
             if let event = a.getEvent(eventName: self.title!){
             switch event.place{

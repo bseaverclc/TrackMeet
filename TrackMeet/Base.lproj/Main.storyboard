@@ -117,7 +117,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Du-Ii-22I">
-                                <rect key="frame" x="0.0" y="88" width="414" height="691"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="myCell" id="z40-dg-eAy" customClass="TimeTableViewCell" customModule="TrackMeet" customModuleProvider="target">
@@ -128,7 +128,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fkx-zS-Toz">
-                                                    <rect key="frame" x="20" y="0.0" width="165.5" height="22"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="186.5" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -140,7 +140,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="v8j-5x-ku8">
-                                                    <rect key="frame" x="362" y="6.5" width="32" height="34"/>
+                                                    <rect key="frame" x="332" y="6.5" width="62" height="34"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
                                                     <connections>
@@ -148,7 +148,7 @@
                                                     </connections>
                                                 </textField>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZRn-hs-tml">
-                                                    <rect key="frame" x="280" y="6" width="62" height="34.5"/>
+                                                    <rect key="frame" x="223.5" y="6" width="103.5" height="34.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation" enablesReturnKeyAutomatically="YES"/>
                                                     <connections>
@@ -160,18 +160,18 @@
                                             <constraints>
                                                 <constraint firstItem="ZRn-hs-tml" firstAttribute="height" secondItem="E6Y-Oz-khb" secondAttribute="height" multiplier="0.73913" id="1Qw-ke-Ubg"/>
                                                 <constraint firstAttribute="bottom" secondItem="bRQ-Hf-BOo" secondAttribute="bottom" id="Hkj-HT-jEr"/>
-                                                <constraint firstItem="ZRn-hs-tml" firstAttribute="width" secondItem="E6Y-Oz-khb" secondAttribute="width" multiplier="0.15" id="OtO-e2-M25"/>
+                                                <constraint firstItem="ZRn-hs-tml" firstAttribute="width" secondItem="E6Y-Oz-khb" secondAttribute="width" multiplier="0.25" id="OtO-e2-M25"/>
                                                 <constraint firstItem="Fkx-zS-Toz" firstAttribute="top" secondItem="E6Y-Oz-khb" secondAttribute="top" id="WMZ-l6-2ES"/>
                                                 <constraint firstItem="Fkx-zS-Toz" firstAttribute="height" secondItem="E6Y-Oz-khb" secondAttribute="height" multiplier="0.471264" id="Y1u-ke-mIz"/>
                                                 <constraint firstItem="bRQ-Hf-BOo" firstAttribute="leading" secondItem="E6Y-Oz-khb" secondAttribute="leading" constant="20" id="ZxH-tS-SPq"/>
                                                 <constraint firstItem="v8j-5x-ku8" firstAttribute="centerY" secondItem="E6Y-Oz-khb" secondAttribute="centerY" id="bFE-Sn-XwG"/>
-                                                <constraint firstItem="v8j-5x-ku8" firstAttribute="leading" secondItem="ZRn-hs-tml" secondAttribute="trailing" constant="20" id="fEI-Ab-fTp"/>
+                                                <constraint firstItem="v8j-5x-ku8" firstAttribute="leading" secondItem="ZRn-hs-tml" secondAttribute="trailing" constant="5" id="fEI-Ab-fTp"/>
                                                 <constraint firstAttribute="trailing" secondItem="v8j-5x-ku8" secondAttribute="trailing" constant="20" id="gd6-EL-Rj2"/>
                                                 <constraint firstItem="bRQ-Hf-BOo" firstAttribute="height" secondItem="E6Y-Oz-khb" secondAttribute="height" multiplier="0.465909" id="h2V-FE-aPj"/>
-                                                <constraint firstItem="Fkx-zS-Toz" firstAttribute="width" secondItem="E6Y-Oz-khb" secondAttribute="width" multiplier="0.4" id="jDb-QO-AX0"/>
-                                                <constraint firstItem="v8j-5x-ku8" firstAttribute="width" secondItem="E6Y-Oz-khb" secondAttribute="width" multiplier="0.0772947" id="moB-tE-3ci"/>
+                                                <constraint firstItem="Fkx-zS-Toz" firstAttribute="width" secondItem="E6Y-Oz-khb" secondAttribute="width" multiplier="0.45" id="jDb-QO-AX0"/>
+                                                <constraint firstItem="v8j-5x-ku8" firstAttribute="width" secondItem="E6Y-Oz-khb" secondAttribute="width" multiplier="0.15" id="moB-tE-3ci"/>
                                                 <constraint firstItem="ZRn-hs-tml" firstAttribute="centerY" secondItem="E6Y-Oz-khb" secondAttribute="centerY" id="xKn-ca-bpC"/>
-                                                <constraint firstItem="Fkx-zS-Toz" firstAttribute="leading" secondItem="E6Y-Oz-khb" secondAttribute="leading" constant="20" id="yHj-TO-tqB"/>
+                                                <constraint firstItem="Fkx-zS-Toz" firstAttribute="leading" secondItem="E6Y-Oz-khb" secondAttribute="leading" id="yHj-TO-tqB"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -188,7 +188,7 @@
                                 </connections>
                             </tableView>
                             <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iHn-JU-QV0">
-                                <rect key="frame" x="0.0" y="779" width="414" height="83"/>
+                                <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <items>
                                     <tabBarItem title="Name" id="hX2-b8-tR5"/>
