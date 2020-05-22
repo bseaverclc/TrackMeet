@@ -24,6 +24,9 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     var selectedAthlete : Athlete!
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let fontAttributes2 = [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.title3)]
+        UITabBarItem.appearance().setTitleTextAttributes(fontAttributes2, for: .normal)
          
             
            
@@ -180,6 +183,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
             nvc.displayedAthletes = displayedAthletes
             nvc.allAthletes = allAthletes
             nvc.nvc = self
+            nvc.from = "AthletesVC"
         }
         else if segue.identifier == "toAthleteResultsSegue"{
             let nvc = segue.destination as! AthleteResultsViewController

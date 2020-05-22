@@ -26,9 +26,18 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
         }
     
     override func viewWillDisappear(_ animated: Bool) {
-        if isMovingFromParent{
-         performSegue(withIdentifier: "unwindToEventEdit", sender: self)
+      
+        if let selectedPaths = tableView.indexPathsForSelectedRows{
+            print(selectedPaths)
+            for path in selectedPaths{
+                var selectedAthlete = displayedAthletes[path.row]
+                selectedAthlete.events.append(Event(name: self.title!, level: "varsity"))
+                eventAthletes.append(selectedAthlete)
+            }
         }
+        if isMovingFromParent{
+               performSegue(withIdentifier: "unwindToEventEdit", sender: self)
+              }
     }
         
         override func viewDidAppear(_ animated: Bool) {
@@ -71,8 +80,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
                present(alert, animated: true, completion: nil)
                 
             } else {
-            selectedAthlete.events.append(Event(name: self.title!, level: "varsity"))
-            eventAthletes.append(selectedAthlete)
+            
             //print(selectedAthlete.first)
           
             }
@@ -93,7 +101,15 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
             
         }
        
-
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier != "unwindToEventEdit"{
+        let nvc = segue.destination as! addAthleteViewController
+        nvc.allAthletes = allAthletes
+        nvc.eventAthletes = eventAthletes
+        nvc.from = screenTitle
+        }
+        
+    }
 
     
     

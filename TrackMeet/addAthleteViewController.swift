@@ -13,6 +13,8 @@ class addAthleteViewController: UIViewController {
     var athlete : Athlete!
     var allAthletes = [Athlete]()
     var displayedAthletes = [Athlete]()
+    var eventAthletes = [Athlete]()
+    var from = ""
     @IBOutlet weak var schoolOutlet: UISegmentedControl!
     @IBOutlet weak var yearOutlet: UISegmentedControl!
     @IBOutlet weak var lastOutlet: UITextField!
@@ -26,14 +28,19 @@ class addAthleteViewController: UIViewController {
     @IBAction func addAction(_ sender: UIButton) {
         if let first = firstOutlet.text, let last = lastOutlet.text, let school = schoolOutlet.titleForSegment(at: schoolOutlet.selectedSegmentIndex), let year = yearOutlet.titleForSegment(at: yearOutlet.selectedSegmentIndex){
             
+            
         athlete = Athlete(f: first, l: last, s: school, g: Int(year)!)
-            allAthletes.insert(athlete, at: 0)
-            displayedAthletes.insert(athlete, at: 0)
-//            nvc.displayedAthletes = displayedAthletes
-//            nvc.allAthletes = allAthletes
-//            nvc.tableView.reloadData()
             print("Created Athlete")
+            allAthletes.insert(athlete, at: 0)
+            if from == "AthletesVC"{
+            displayedAthletes.insert(athlete, at: 0)
             performSegue(withIdentifier: "unwindToRosters", sender: self)
+            }
+            else{
+                athlete.events.append(Event(name: from, level: "varsity"))
+                eventAthletes.append(athlete)
+                performSegue(withIdentifier: "unwindToRosters", sender: self)
+            }
                 
             
             

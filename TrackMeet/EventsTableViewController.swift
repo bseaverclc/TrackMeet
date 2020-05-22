@@ -27,6 +27,13 @@ class EventsTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        if isMovingFromParent{
+            performSegue(withIdentifier: "unwindToHomeSegue", sender: self)
+        }
+    }
+    
 
     // MARK: - Table view data source
 
@@ -95,11 +102,13 @@ class EventsTableViewController: UITableViewController {
  
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         //var sentAthletes = [Athlete]()
+        if segue.identifier != "unwindToHomeSegue"{
         let nvc = segue.destination as! EventEditViewController
       
         //nvc.eventAthletes = sentAthletes
         nvc.allAthletes = athletes
         nvc.screenTitle = selectedEvent!
+        }
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
     }
@@ -110,6 +119,7 @@ class EventsTableViewController: UITableViewController {
     
  @IBAction func unwind( _ seg: UIStoryboardSegue) {
     let pvc = seg.source as! EventEditViewController
+    athletes = pvc.allAthletes
     "Unwind to events table"
 }
 }

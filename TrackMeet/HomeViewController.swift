@@ -86,8 +86,8 @@ class HomeViewController: UIViewController, DataBackDelegate {
     }
     
    @IBAction func unwind( _ seg: UIStoryboardSegue) {
-   let pvc = seg.source as! AthletesViewController
-    allAthletes = pvc.allAthletes
+   let pvc = seg.source as! EventsTableViewController
+    allAthletes = pvc.athletes
     allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
     print("unwind to home screen")
     

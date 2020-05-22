@@ -122,13 +122,13 @@
 			isa = PBXGroup;
 			children = (
 				D3D2DEEE2471F5CB009C17DD /* Main.storyboard */,
-				D3647CCE2476EEAB000627C6 /* ScoresViewController.swift */,
 				D3D2DEE82471F5CB009C17DD /* AppDelegate.swift */,
 				D3D2DEEA2471F5CB009C17DD /* SceneDelegate.swift */,
 				D3A0B9D52472EEF70088D664 /* HomeViewController.swift */,
+				D3647CCE2476EEAB000627C6 /* ScoresViewController.swift */,
 				D361DB0424735FA9005EF1A2 /* AthletesViewController.swift */,
-				D3B15B16247818F8000BCFC8 /* AthleteResultsViewController.swift */,
 				D361DB0224731403005EF1A2 /* addAthleteViewController.swift */,
+				D3B15B16247818F8000BCFC8 /* AthleteResultsViewController.swift */,
 				D3A0B9D1247248500088D664 /* EventsTableViewController.swift */,
 				D3D2DEEC2471F5CB009C17DD /* EventEditViewController.swift */,
 				D361DB062475741E005EF1A2 /* AddAthleteToEventViewController.swift */,

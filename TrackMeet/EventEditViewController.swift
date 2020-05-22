@@ -173,6 +173,10 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let fontAttributes2 = [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.title3)]
+        UITabBarItem.appearance().setTitleTextAttributes(fontAttributes2, for: .normal)
+        
         tableViewOutlet.isEditing = true
         self.title = screenTitle
         for a in allAthletes{
@@ -359,7 +363,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             calcPoints()
             print("Calculated Points")
         }
-        else{
+        else {
         
         
         let nvc = segue.destination as! AddAthleteToEventViewController
@@ -380,12 +384,23 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
 //    }
     
  @IBAction func unwind( _ seg: UIStoryboardSegue) {
-     let pvc = seg.source as! AddAthleteToEventViewController
+   
+    if let pvc = seg.source as? AddAthleteToEventViewController{
       allAthletes = pvc.allAthletes
       screenTitle = pvc.screenTitle
     eventAthletes = pvc.eventAthletes
       tableViewOutlet.reloadData()
-      print("unwinding done")
+      print("unwinding from AddAthleteToEvent")
+    }
+    else{
+        let pvc = seg.source as! addAthleteViewController
+        allAthletes = pvc.allAthletes
+          screenTitle = pvc.from
+        eventAthletes = pvc.eventAthletes
+          tableViewOutlet.reloadData()
+          print("unwinding from addAthlete")
+        
+    }
 
   }
     
