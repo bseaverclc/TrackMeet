@@ -31,7 +31,8 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
             print(selectedPaths)
             for path in selectedPaths{
                 var selectedAthlete = displayedAthletes[path.row]
-                selectedAthlete.events.append(Event(name: self.title!, level: "varsity"))
+                var lev = String(title!.suffix(4))
+                selectedAthlete.events.append(Event(name: self.title!, level: lev))
                 eventAthletes.append(selectedAthlete)
             }
         }

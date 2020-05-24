@@ -151,7 +151,8 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
           NotificationCenter.default.addObserver(self, selector: #selector(EventEditViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         
                  NotificationCenter.default.addObserver(self, selector: #selector(EventEditViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        if self.title == "100M" || self.title == "200M"{
+        if self.title!.contains("100M")  || self.title!.contains("200M"){
+             tableViewOutlet.isEditing = true
             sections = true
         }
     }
@@ -177,7 +178,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         let fontAttributes2 = [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.title3)]
         UITabBarItem.appearance().setTitleTextAttributes(fontAttributes2, for: .normal)
         
-        tableViewOutlet.isEditing = true
+       
         self.title = screenTitle
         for a in allAthletes{
                   for e in a.events{
@@ -192,6 +193,8 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                       }
                   }
               }
+        sortByMark()
+        sortByPlace()
         tableViewOutlet.reloadData()
         print("eventEditVDL")
  
@@ -306,7 +309,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         //print("The indexPath is \(indexPath2)")
       
                 //var indexPath = IndexPath(row: sender.tag, section: 0)
-        if let place = sender.text{
+        var place = sender.text!
             
         if sections{
             if indexPath2.section == 0{
@@ -315,6 +318,9 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                          if let intPlace = Int(place){
                 event.place = intPlace
                          }
+                         else{
+                            sender.text = ""
+                            event.place = nil}
                      }
                  }
                 
@@ -325,6 +331,9 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                          if let intPlace = Int(place){
                 event.place = intPlace
                          }
+                        else{
+                        sender.text = ""
+                        event.place = nil}
                      }
                  }
             }
@@ -334,6 +343,9 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                          if let intPlace = Int(place){
                 event.place = intPlace
                          }
+                        else{
+                        sender.text = ""
+                        event.place = nil}
                      }
                  }
                 
@@ -345,12 +357,15 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                 if let intPlace = Int(place){
                     event.place = intPlace
                              }
+                else{
+                sender.text = ""
+                event.place = nil}
                          }
                      }
             }
                     
                 
-    }
+    
     }
     
     
@@ -404,67 +419,82 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
 
   }
     
+    func sortBySchool(){
+        eventAthletes = eventAthletes.sorted { (struct1, struct2) -> Bool in
+                        if (struct1.school.lowercased() != struct2.school.lowercased()) { // if it's not the same section sort by section
+                            return struct1.school < struct2.school
+                        } else { // if it the same section sort by order.
+                            return struct1.last.lowercased() < struct2.last.lowercased()
+                        }
+                    }
+                    print("Done sorting by school")
+                    
+                   
+                    
+        //            eventAthletes.sort(by: {$0.school.localizedCaseInsensitiveCompare($1.school) == .orderedAscending && $0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
+        
+    }
+    
+    func sortByName(){
+        eventAthletes = eventAthletes.sorted(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
+                 print("sorting by name")
+    }
+    
+    func sortByPlace(){
+        eventAthletes = eventAthletes.sorted { (lhs, rhs) -> Bool in
+                     let a = lhs.getEvent(eventName: self.title!)?.place
+                     let b = rhs.getEvent(eventName: self.title!)?.place
+                     switch (a ,b) {
+                       case let(a?, b?): return a < b // Both lhs and rhs are not nil
+                       case (nil, _): return false    // Lhs is nil
+                       case (_?, nil): return true    // Lhs is not nil, rhs is nil
+                       }
+                   }
+        
+        
+            print("sorting by place")
+            
+        
+    }
+    
+    func sortByMark(){
+        eventAthletes = eventAthletes.sorted { (lhs, rhs) -> Bool in
+                                        var a = lhs.getEvent(eventName: self.title!)?.markString
+                                        var b = rhs.getEvent(eventName: self.title!)?.markString
+                       
+                                        switch (a ,b) {
+                                          case ("", _): return false    // Lhs is empty
+                                          case (_?, ""): return true    // Lhs is not nil, rhs is empty
+                                        default:
+                                           while a!.count < b!.count{a = "0\(a!)"
+                                               print(a!)
+                                           }
+                                           while b!.count < a!.count{b = "0\(b!)"
+                                               print(b!)
+                                           }
+                                           if fieldEvents.contains(self.title!){
+                                           return a! > b!
+                                           }
+                                           else{return a! < b!}
+                                          }
+                                      }
+                   print("sorting by mark")
+    }
+    
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
        
         if item.title == "School"{
-            eventAthletes = eventAthletes.sorted { (struct1, struct2) -> Bool in
-                if (struct1.school.lowercased() != struct2.school.lowercased()) { // if it's not the same section sort by section
-                    return struct1.school < struct2.school
-                } else { // if it the same section sort by order.
-                    return struct1.last.lowercased() < struct2.last.lowercased()
-                }
-            }
-            print("Done sorting by school")
-            
-           
-            
-//            eventAthletes.sort(by: {$0.school.localizedCaseInsensitiveCompare($1.school) == .orderedAscending && $0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
-           
+            sortBySchool()
         }
         else if item.title == "Name"{
-           eventAthletes = eventAthletes.sorted(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
-            print("sorting by name")
-            
+             sortByName()
         }
         
         else if item.title == "Place"{
-            eventAthletes = eventAthletes.sorted { (lhs, rhs) -> Bool in
-                         let a = lhs.getEvent(eventName: self.title!)?.place
-                         let b = rhs.getEvent(eventName: self.title!)?.place
-                         switch (a ,b) {
-                           case let(a?, b?): return a < b // Both lhs and rhs are not nil
-                           case (nil, _): return false    // Lhs is nil
-                           case (_?, nil): return true    // Lhs is not nil, rhs is nil
-                           }
-                       }
-            
-            
-                print("sorting by place")
-                
-            
+            sortByPlace()
         }
         else if item.title == "Mark"{
-            eventAthletes = eventAthletes.sorted { (lhs, rhs) -> Bool in
-                                 var a = lhs.getEvent(eventName: self.title!)?.markString
-                                 var b = rhs.getEvent(eventName: self.title!)?.markString
-                
-                                 switch (a ,b) {
-                                   case ("", _): return false    // Lhs is empty
-                                   case (_?, ""): return true    // Lhs is not nil, rhs is empty
-                                 default:
-                                    while a!.count < b!.count{a = "0\(a!)"
-                                        print(a!)
-                                    }
-                                    while b!.count < a!.count{b = "0\(b!)"
-                                        print(b!)
-                                    }
-                                    if fieldEvents.contains(self.title!){
-                                    return a! > b!
-                                    }
-                                    else{return a! < b!}
-                                   }
-                               }
-            print("sorting by mark")
+             sortByMark()
            
         }
         

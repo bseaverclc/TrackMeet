@@ -13,7 +13,7 @@ class EventsTableViewController: UITableViewController {
     var selectedEvent : String?
     var athletes = [Athlete]()
 
-    var events = ["4x800M Relay","4x100M Relay", "3200M","110HH","100M","800","4x200","400","300IM","1600","200M", "4x400", "Long Jump", "Triple Jump", "High Jump", "Pole Vault", "Shot Put", "Discus"]
+    var events = ["4x800 VAR", "4x800 F/S","4x100 VAR","4x100 F/S", "3200M VAR","3200M F/S","110HH VAR","110HH F/S","100M VAR","100M F/S","800 VAR","800 F/S","4x200 VAR","4x200 F/S","400 VAR","400 F/S","300IM VAR","300IM F/S","1600 VAR","1600 F/S","200M VAR","200M F/S", "4x400 VAR","4x400 F/S", "Long Jump VAR", "Long Jump F/S","Triple Jump VAR", "Triple Jump F/S","High Jump VAR", "High Jump F/S","Pole Vault VAR","Pole Vault F/S", "Shot Put VAR","Shot Put F/S", "Discus VAR","Discus F/S"]
     //var segues = ["relay4x800", "relay4x100","m100"]
  
     
@@ -50,8 +50,11 @@ class EventsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
-
+        cell.backgroundColor = UIColor.white
         cell.textLabel?.text = events[indexPath.row]
+        if indexPath.row % 2 != 0{
+            cell.backgroundColor = UIColor.lightGray
+        }
 
         return cell
     }

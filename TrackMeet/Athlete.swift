@@ -7,6 +7,9 @@
 //
 
 import Foundation
+enum levels{
+    
+}
 
 public class Athlete{
     var first: String
