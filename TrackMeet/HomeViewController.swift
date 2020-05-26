@@ -14,6 +14,11 @@ public protocol DataBackDelegate: class {
 
 
 class HomeViewController: UIViewController, DataBackDelegate {
+    
+    var allAthletes : [Athlete]!
+    var meet : Meet!
+    
+    
     func savePreferences(athletes: [Athlete]) {
         allAthletes = athletes
         allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
@@ -23,43 +28,13 @@ class HomeViewController: UIViewController, DataBackDelegate {
   
     
 
-    var allAthletes = [Athlete]()
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        allAthletes.append(Athlete(f: "Owen", l: "Mize", s: "CLC", g: 12))
-               allAthletes.append(Athlete(f: "Jakhari", l: "Anderson", s: "CG", g: 12))
-               allAthletes.append(Athlete(f: "Drew", l: "McGinness", s: "CLS", g: 9))
-        let letters = "abcdefghijklmnopqrstuvwxyz"
-        let chars = Array(letters)
-        let schoolArray = ["CLC","CG","CLS","PR"]
+        print(meet.gender)
         
-        for _ in 3...75{
-            var first = ""
-            var last = ""
-            for _ in 0...4{
-                first.append(String(chars[Int.random(in: 0 ..< chars.count)]))
-                last.append(String(chars[Int.random(in: 0 ..< chars.count)]))
-            }
-            let school = schoolArray.randomElement()!
-            let grade = Int.random(in: 9...12)
-            
-            allAthletes.append(Athlete(f: first, l: last, s: school, g: grade))
-            
-        }
-        var teams = ["A","B","C","D","E"]
-        var levels = ["VAR", "F/S"]
-        for school in schoolArray{
-            for letter in teams{
-                allAthletes.append(Athlete(f: letter, l: school, s: school, g: 12))
-        }
-        }
-               allAthletes[0].addEvent(name: "200M VAR", level: "VAR")
-               allAthletes[1].addEvent(name: "100M F/S", level: "F/S")
-               allAthletes[2].addEvent(name: "100M VAR", level: "VAR")
-        allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
-
-        // Do any additional setup after loading the view.
+        
     }
     
 
@@ -72,15 +47,21 @@ class HomeViewController: UIViewController, DataBackDelegate {
         if segue.identifier == "eventsSegue"{
             let nvc = segue.destination as! EventsTableViewController
             nvc.athletes = allAthletes
+            nvc.events = meet.events
+            nvc.meet = meet
+            
+            
         }
         else if segue.identifier == "scoresSegue"{
             let nvc = segue.destination as! ScoresViewController
             nvc.allAthletes = allAthletes
+            nvc.meet = meet
         }
         else{
             let nvc = segue.destination as! AthletesViewController
             nvc.allAthletes = allAthletes
             nvc.delegate = self
+            nvc.meet = meet
         }
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.

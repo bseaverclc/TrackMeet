@@ -15,14 +15,18 @@ class addAthleteViewController: UIViewController {
     var displayedAthletes = [Athlete]()
     var eventAthletes = [Athlete]()
     var from = ""
+    var schools = [String]()
     @IBOutlet weak var schoolOutlet: UISegmentedControl!
     @IBOutlet weak var yearOutlet: UISegmentedControl!
     @IBOutlet weak var lastOutlet: UITextField!
     @IBOutlet weak var firstOutlet: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        schoolOutlet.removeAllSegments()
+        for school in schools{
+        schoolOutlet.insertSegment(withTitle: school, at: 0, animated: true)
+    }
     }
     
     @IBAction func addAction(_ sender: UIButton) {

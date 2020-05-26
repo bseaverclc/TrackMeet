@@ -36,7 +36,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     @IBOutlet weak var tableViewOutlet: UITableView!
     var tabBarY : CGFloat!
     var fieldEvents = ["Long Jump", "Triple Jump", "High Jump", "Pole Vault", "Shot Put", "Discus"]
-    
+    var meet : Meet!
     var sections = false
     var allAthletes = [Athlete]()
     var eventAthletes = [Athlete]()
@@ -177,8 +177,9 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         
         let fontAttributes2 = [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.title3)]
         UITabBarItem.appearance().setTitleTextAttributes(fontAttributes2, for: .normal)
+     
         
-       
+        
         self.title = screenTitle
         for a in allAthletes{
                   for e in a.events{
@@ -385,6 +386,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         nvc.allAthletes = allAthletes
         nvc.eventAthletes = eventAthletes
         nvc.screenTitle = screenTitle
+            nvc.meet = meet
         }
     }
     
@@ -518,7 +520,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         return ties
     }
     
-    var scoring = [10,8,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    
     
     func calcPoints(){
         for a in heat1{
@@ -528,55 +530,72 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             eventAthletes.append(a)
         }
         for a in eventAthletes{
-            if let event = a.getEvent(eventName: self.title!){
-            switch event.place{
-            case 1:
-                let ties = checkForTies(place: 1)
-                var points = 0
-                if ties != 0{
-                    for i in 0 ..< ties{
-                        points += scoring[i]
+            if let event = a.getEvent(eventName: self.title!), let place = event.place{
+                var scoring = [Int]()
+                if event.name.contains("4x"){
+                    scoring = meet.indPoints
+                }
+                else{scoring = meet.relPoints}
+                if place <= scoring.count{
+                    let ties = checkForTies(place: place)
+                    var points = 0
+                    if ties != 0{
+                        for i in place - 1 ..< ties{
+                            points += scoring[i]
+                        }
+                        event.points = Double(points)/Double(ties)
                     }
-                    event.points = Double(points)/Double(ties)
-                    
-                }
-                else{
-                    event.points = 0
-                }
-            case 2: if checkForTies(place: 2) != 0{
-                  let ties = checkForTies(place: 2)
-                var points = 0
-             if ties != 0{
-                 for i in 1 ..< (ties + 1){
-                     points += scoring[i]
-                 }
-                 event.points = Double(points)/Double(ties)
-                 
-             }
-             else{
-                 event.points = 0
-             }
-                }
-            case 3: if checkForTies(place: 3) != 0{
-                 let ties = checkForTies(place: 3)
-                             var points = 0
-                             if ties != 0{
-                                 for i in 2 ..< (2 + ties){
-                                     points += scoring[i]
-                                 }
-                                 event.points = Double(points)/Double(ties)
-                                 
-                             }
-                             else{
-                                 event.points = 0
-                             }
-                }
-            default: event.points = 0
+                    else{event.points = 0}
+//            switch event.place{
+//            case 1:
+//                let ties = checkForTies(place: 1)
+//                var points = 0
+//                if ties != 0{
+//                    for i in 0 ..< ties{
+//                        points += scoring[i]
+//                    }
+//                    event.points = Double(points)/Double(ties)
+//
+//                }
+//                else{
+//                    event.points = 0
+//                }
+//            case 2: if checkForTies(place: 2) != 0{
+//                  let ties = checkForTies(place: 2)
+//                var points = 0
+//             if ties != 0{
+//                 for i in 1 ..< (ties + 1){
+//                     points += scoring[i]
+//                 }
+//                 event.points = Double(points)/Double(ties)
+//
+//             }
+//             else{
+//                 event.points = 0
+//             }
+//                }
+//            case 3: if checkForTies(place: 3) != 0{
+//                 let ties = checkForTies(place: 3)
+//                             var points = 0
+//                             if ties != 0{
+//                                 for i in 2 ..< (2 + ties){
+//                                     points += scoring[i]
+//                                 }
+//                                 event.points = Double(points)/Double(ties)
+//
+//                             }
+//                             else{
+//                                 event.points = 0
+//                             }
+//                }
+//            default: event.points = 0
                 
-            }
+//            }
         }
     }
     }
     
+}
+
 }
 

@@ -11,9 +11,10 @@ import UIKit
 class ScoresViewController: UIViewController {
     var allAthletes: [Athlete]!
     @IBOutlet weak var textViewOutlet: UITextView!
-    var teamPointsVAR = ["CLC":0.0, "CLS":0.0, "CG": 0.0, "PR": 0.0]
-    var teamPointsFS = ["CLC":0.0, "CLS":0.0, "CG": 0.0, "PR": 0.0]
-
+    var teamPoints = [String: [String:Double]]()
+   
+    var meet : Meet!
+    var levels = [String]()
     
     @IBOutlet weak var CLCFSOutlet: UILabel!
     @IBOutlet weak var CLSFSOutlet: UILabel!
@@ -25,12 +26,21 @@ class ScoresViewController: UIViewController {
     @IBOutlet weak var CLSScoreOutlet: UILabel!
     @IBOutlet weak var CLCScoreOutlet: UILabel!
     @IBOutlet weak var CGScoreOutlet: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("Scores View Did Load")
+        var initials = [String](meet.schools.values)
+        levels = meet.levels
+        for lev in levels{
+            for team in initials{
+                (teamPoints[lev]?)[team] = 0.0
+            }
+        }
+        
+        print("initial team points: \(teamPoints)")
         computeScores()
-        //print(teamPoints)
-
-        // Do any additional setup after loading the view.
+        
     }
     
 
@@ -41,31 +51,31 @@ class ScoresViewController: UIViewController {
             
             for e in a.events{
                 if e.markString != ""{
-                    if e.level == "VAR"{
-                        if let current = teamPointsVAR[a.school]{
-                        teamPointsVAR.updateValue(current + e.points, forKey: a.school)
-                         }
-                     }
-                    else{
-                        if let current = teamPointsFS[a.school]{
-                            teamPointsFS.updateValue(current + e.points, forKey: a.school)
-                         }
-                    }
                     
+                    var current = teamPoints[e.level]!
+                    let currentPoints = current[a.school]!
+                        current.updateValue(currentPoints + e.points, forKey: a.school)
+                         
+                     }
+                    
+                    // if event was a relay
                     if e.name.contains("4x"){
+                        // if they placed put place in output
                        if let pl = e.place{
-                            textViewOutlet.text += "R,M,\(e.level),\(e.name.dropLast(4)),\(pl), , , ,\(a.school),\(e.markString),\(e.points),Finals, , \n"
+                        textViewOutlet.text += "R,\(meet.gender), \(e.level),\(e.name.dropLast(4)),\(pl), , , ,\(a.school),\(e.markString),\(e.points),Finals, , \n"
                                           }
+                        // if they didn't place leave spot open
                        else{
-                            textViewOutlet.text += "R,M,\(e.level),\(e.name.dropLast(4)), , , ,\(a.school),\(e.markString),\(e.points),Finals, , \n"
+                            textViewOutlet.text += "R,\(meet.gender),\(e.level),\(e.name.dropLast(4)), , , ,\(a.school),\(e.markString),\(e.points),Finals, , \n"
                             }
                     }
+                      //  If event was individual
                     else{
                       if let pl = e.place{
-                        textViewOutlet.text += "E,M,\(e.level),\(e.name.dropLast(4)),\(pl),\(a.last),\(a.first),\(a.grade),\(a.school),\(e.markString),\(e.points),Finals, , \n"
+                        textViewOutlet.text += "E,\(meet.gender),\(e.level),\(e.name.dropLast(4)),\(pl),\(a.last),\(a.first),\(a.grade),\(a.school),\(e.markString),\(e.points),Finals, , \n"
                       }
                       else{
-                        textViewOutlet.text += "E,M,\(e.level),\(e.name.dropLast(4)), ,\(a.last),\(a.first),\(a.grade),\(a.school),\(e.markString),\(e.points),Finals, , \n"
+                        textViewOutlet.text += "E,\(meet.gender),\(e.level),\(e.name.dropLast(4)), ,\(a.last),\(a.first),\(a.grade),\(a.school),\(e.markString),\(e.points),Finals, , \n"
                         
                         }
                         }
@@ -73,27 +83,27 @@ class ScoresViewController: UIViewController {
                     
                 }
                 }
-        }
+        
             
-           // if updated{textViewOutlet.text += "\(teamPoints)\n\n"}
+       
             
-        for (key,value) in teamPointsVAR{
-        textViewOutlet.text += "S,M,VAR,,\(key),\(value)\n"
+        for (key,value) in teamPoints{
+            for (k,v) in value{
+            textViewOutlet.text += "S,\(meet.gender),\(key),,\(k),\(v)\n"
+            }
         }
         
-        for (key,value) in teamPointsFS{
-               textViewOutlet.text += "S,M,F/S,,\(key),\(value)\n"
-               }
+       
         
-        CLCScoreOutlet.text = "\(teamPointsVAR["CLC"]!)"
-        CLSScoreOutlet.text = "\(teamPointsVAR["CLS"]!)"
-        CGScoreOutlet.text = "\(teamPointsVAR["CG"]!)"
-        PRScoreOutlet.text = "\(teamPointsVAR["PR"]!)"
-        
-        CLCFSOutlet.text = "\(teamPointsFS["CLC"]!)"
-        CLSFSOutlet.text = "\(teamPointsFS["CLS"]!)"
-        CGFSOutlet.text = "\(teamPointsFS["CG"]!)"
-        PRFSOutlet.text = "\(teamPointsFS["PR"]!)"
+//        CLCScoreOutlet.text = "\(teamPointsVAR["CLC"]!)"
+//        CLSScoreOutlet.text = "\(teamPointsVAR["CLS"]!)"
+//        CGScoreOutlet.text = "\(teamPointsVAR["CG"]!)"
+//        PRScoreOutlet.text = "\(teamPointsVAR["PR"]!)"
+//        
+//        CLCFSOutlet.text = "\(teamPointsFS["CLC"]!)"
+//        CLSFSOutlet.text = "\(teamPointsFS["CLS"]!)"
+//        CGFSOutlet.text = "\(teamPointsFS["CG"]!)"
+//        PRFSOutlet.text = "\(teamPointsFS["PR"]!)"
     }
         
 

@@ -16,12 +16,26 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
         var allAthletes = [Athlete]()
         var eventAthletes = [Athlete]()
         var displayedAthletes = [Athlete]()
+    var meet : Meet!
+    var schools = [String]()
         
     
         override func viewDidLoad() {
             super.viewDidLoad()
             self.title = screenTitle
-            displayedAthletes = allAthletes
+            for a in allAthletes{
+                if meet.schools.values.contains(a.school){
+                    displayedAthletes.append(a)
+                }
+            }
+          
+             schools = [String](meet.schools.values)
+            var tabItems = tabBarOutlet.items!
+                 var i = 0
+                 for school in schools{
+                     tabItems[i].title = school
+                     i+=1
+                 }
            
         }
     
@@ -31,7 +45,8 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
             print(selectedPaths)
             for path in selectedPaths{
                 var selectedAthlete = displayedAthletes[path.row]
-                var lev = String(title!.suffix(4))
+                var lev = String(title!.suffix(3))
+                print("level of selected athletes: \(lev)")
                 selectedAthlete.events.append(Event(name: self.title!, level: lev))
                 eventAthletes.append(selectedAthlete)
             }
@@ -108,6 +123,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
         nvc.allAthletes = allAthletes
         nvc.eventAthletes = eventAthletes
         nvc.from = screenTitle
+            nvc.schools = schools
         }
         
     }

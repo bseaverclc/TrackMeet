@@ -22,6 +22,9 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     var eventAthletes = [Athlete]()
     var displayedAthletes = [Athlete]()
     var selectedAthlete : Athlete!
+    var schools = [String]()
+    var meet : Meet!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -33,11 +36,17 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         
         self.title = screenTitle
         displayedAthletes = allAthletes
+        
+        schools = [String](meet.schools.values)
+        var tabItems = tabBarOutlet.items!
+             var i = 0
+             for school in schools{
+                 tabItems[i].title = school
+                 i+=1
+             }
+        
         print("ViewDidLoad")
-        //tableView.reloadData()
-//        for a in displayedAthletes{
-//            print(a.last)
-//        }
+       
     }
     
     override func viewDidAppear(_ animated: Bool) {
