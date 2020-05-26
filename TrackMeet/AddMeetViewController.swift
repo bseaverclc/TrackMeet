@@ -80,7 +80,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     
     func getSchools(){
         if let selectedPaths = tableView.indexPathsForSelectedRows{
-                          print(selectedPaths)
+                          //print(selectedPaths)
                           for path in selectedPaths{
                               var selectedSchoolKey = schoolKeys[path.row]
                             selectedSchools[selectedSchoolKey] = schools[selectedSchoolKey]

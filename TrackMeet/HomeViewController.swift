@@ -33,6 +33,7 @@ class HomeViewController: UIViewController, DataBackDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         print(meet.gender)
+        print("Individual Points: \(meet.indPoints)")
         
         
     }

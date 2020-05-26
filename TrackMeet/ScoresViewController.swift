@@ -16,6 +16,13 @@ class ScoresViewController: UIViewController {
     var meet : Meet!
     var levels = [String]()
     
+    var schoolsOutlet = [UILabel]()
+    
+    @IBOutlet weak var meetNameOutlet: UILabel!
+    @IBOutlet var levelsOutlet: [UILabel]!
+    @IBOutlet var schoolsStackView: [UIStackView]!
+    @IBOutlet var scoresStackView: [UIStackView]!
+    
     @IBOutlet weak var CLCFSOutlet: UILabel!
     @IBOutlet weak var CLSFSOutlet: UILabel!
     @IBOutlet weak var CGFSOutlet: UILabel!
@@ -29,18 +36,24 @@ class ScoresViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("Scores View Did Load")
+        meetNameOutlet.text = meet.name
+        print("meet name : \(meet.name)")
+   
         var initials = [String](meet.schools.values)
         levels = meet.levels
         for lev in levels{
-            for team in initials{
-                (teamPoints[lev]?)[team] = 0.0
+            // hard code the first one
+            teamPoints[lev] = [initials[0]: 0.0]
+            // fill in the rest if needed
+            for i in 1..<initials.count{
+                    (teamPoints[lev]!)[initials[i]] = 0.0
+                }
+           
             }
-        }
         
         print("initial team points: \(teamPoints)")
         computeScores()
-        
+        print("Scores View Did Load")
     }
     
 
@@ -52,10 +65,10 @@ class ScoresViewController: UIViewController {
             for e in a.events{
                 if e.markString != ""{
                     
-                    var current = teamPoints[e.level]!
-                    let currentPoints = current[a.school]!
-                        current.updateValue(currentPoints + e.points, forKey: a.school)
-                         
+                    //var current = teamPoints[e.level]!
+                    let currentPoints = teamPoints[e.level]![a.school]!
+                        teamPoints[e.level]!.updateValue(currentPoints + e.points, forKey: a.school)
+                    print("points added to school \(a.school): \(teamPoints[e.level]![a.school])")
                      }
                     
                     // if event was a relay
@@ -86,14 +99,35 @@ class ScoresViewController: UIViewController {
         
             
        
-            
-        for (key,value) in teamPoints{
-            for (k,v) in value{
-            textViewOutlet.text += "S,\(meet.gender),\(key),,\(k),\(v)\n"
+            var i = 0
+        for (level,scores) in teamPoints{
+            // add level text header
+            levelsOutlet[i].text = "\(level) Scores"
+            for (initials,score) in scores{
+                // print info to textview
+            textViewOutlet.text += "S,\(meet.gender),\(level),,\(initials),\(score)\n"
+                // set up school labels
+                var label = UILabel()
+                label.text = "\(initials)"
+                label.textAlignment = .center
+                schoolsStackView[i].addArrangedSubview(label)
+                
+                // set up score labels
+                var label2 = UILabel()
+                label2.text = "\(score)"
+                label2.textAlignment = .center
+                scoresStackView[i].addArrangedSubview(label2)
+                
             }
+            i+=1
         }
         
-       
+//       for (key,value) in meet.schools{
+//                 var label = UILabel()
+//                       label.text = value
+//                       schoolsOutlet.append(label)
+//                 schoolsStackViewA.addArrangedSubview(label)
+//             }
         
 //        CLCScoreOutlet.text = "\(teamPointsVAR["CLC"]!)"
 //        CLSScoreOutlet.text = "\(teamPointsVAR["CLS"]!)"

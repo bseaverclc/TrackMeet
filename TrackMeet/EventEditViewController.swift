@@ -533,19 +533,25 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             if let event = a.getEvent(eventName: self.title!), let place = event.place{
                 var scoring = [Int]()
                 if event.name.contains("4x"){
-                    scoring = meet.indPoints
+                    scoring = meet.relPoints
                 }
-                else{scoring = meet.relPoints}
+                else{scoring = meet.indPoints}
                 if place <= scoring.count{
                     let ties = checkForTies(place: place)
                     var points = 0
                     if ties != 0{
-                        for i in place - 1 ..< ties{
-                            points += scoring[i]
+                        for i in place - 1 ..< place - 1 + ties{
+                            if i > scoring.count - 1{
+                                points += 0
+                            }
+                            else{
+                                points += scoring[i]
+                            }
                         }
                         event.points = Double(points)/Double(ties)
                     }
                     else{event.points = 0}
+                    print("\(a.last) points added = \(event.points)")
 //            switch event.place{
 //            case 1:
 //                let ties = checkForTies(place: 1)
