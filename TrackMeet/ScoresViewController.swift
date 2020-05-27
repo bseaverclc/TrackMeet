@@ -98,11 +98,15 @@ class ScoresViewController: UIViewController {
                 }
         
             
-       
+       // Need to figure out how to clear out labels everytime????
+        // I think I should add the labels in view did load and update their text values here
+        // I will need to build an array of uiLabels
             var i = 0
-        for (level,scores) in teamPoints{
+        for (level,scores) in teamPoints {
+            if i < schoolsStackView.count{
             // add level text header
             levelsOutlet[i].text = "\(level) Scores"
+        
             for (initials,score) in scores{
                 // print info to textview
             textViewOutlet.text += "S,\(meet.gender),\(level),,\(initials),\(score)\n"
@@ -117,8 +121,10 @@ class ScoresViewController: UIViewController {
                 label2.text = "\(score)"
                 label2.textAlignment = .center
                 scoresStackView[i].addArrangedSubview(label2)
+                }
                 
             }
+            else{print("i value too big when adding score labels")}
             i+=1
         }
         

@@ -41,16 +41,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
     
     override func viewWillDisappear(_ animated: Bool) {
       
-        if let selectedPaths = tableView.indexPathsForSelectedRows{
-            print(selectedPaths)
-            for path in selectedPaths{
-                var selectedAthlete = displayedAthletes[path.row]
-                var lev = String(title!.suffix(3))
-                print("level of selected athletes: \(lev)")
-                selectedAthlete.events.append(Event(name: self.title!, level: lev))
-                eventAthletes.append(selectedAthlete)
-            }
-        }
+     selectAthletes()
         if isMovingFromParent{
                performSegue(withIdentifier: "unwindToEventEdit", sender: self)
               }
@@ -101,10 +92,24 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
           
             }
         }
+    
+    func selectAthletes(){
+        if let selectedPaths = tableView.indexPathsForSelectedRows{
+                 print(selectedPaths)
+                 for path in selectedPaths{
+                     var selectedAthlete = displayedAthletes[path.row]
+                     var lev = String(title!.suffix(3))
+                     print("level of selected athletes: \(lev)")
+                     selectedAthlete.events.append(Event(name: self.title!, level: lev))
+                     eventAthletes.append(selectedAthlete)
+                 }
+             }
+    }
         
 
         
         func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+            selectAthletes()
             displayedAthletes = [Athlete]()
             for a in allAthletes{
             
@@ -113,6 +118,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
                 }
             }
             //self.title = item.title
+            
             self.tableView.reloadData()
             
         }
