@@ -620,5 +620,9 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     
 }
 
+    @IBAction func processEventAction(_ sender: UIButton) {
+        calcPoints()
+
+    }
 }
 

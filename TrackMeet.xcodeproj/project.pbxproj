@@ -20,6 +20,7 @@
 		D3A0B9D42472EE3C0088D664 /* AthletesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A0B9D32472EE3C0088D664 /* AthletesTableViewController.swift */; };
 		D3A0B9D62472EEF70088D664 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A0B9D52472EEF70088D664 /* HomeViewController.swift */; };
 		D3B15B17247818F8000BCFC8 /* AthleteResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B15B16247818F8000BCFC8 /* AthleteResultsViewController.swift */; };
+		D3BF359724803BB9000736F8 /* MeetsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BF359624803BB9000736F8 /* MeetsViewController.swift */; };
 		D3D2DEE92471F5CB009C17DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D2DEE82471F5CB009C17DD /* AppDelegate.swift */; };
 		D3D2DEEB2471F5CB009C17DD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D2DEEA2471F5CB009C17DD /* SceneDelegate.swift */; };
 		D3D2DEED2471F5CB009C17DD /* EventEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D2DEEC2471F5CB009C17DD /* EventEditViewController.swift */; };
@@ -62,6 +63,7 @@
 		D3A0B9D32472EE3C0088D664 /* AthletesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthletesTableViewController.swift; sourceTree = "<group>"; };
 		D3A0B9D52472EEF70088D664 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		D3B15B16247818F8000BCFC8 /* AthleteResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleteResultsViewController.swift; sourceTree = "<group>"; };
+		D3BF359624803BB9000736F8 /* MeetsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetsViewController.swift; sourceTree = "<group>"; };
 		D3D2DEE52471F5CB009C17DD /* TrackMeet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrackMeet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3D2DEE82471F5CB009C17DD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D3D2DEEA2471F5CB009C17DD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				D3D2DEEE2471F5CB009C17DD /* Main.storyboard */,
+				D3BF359624803BB9000736F8 /* MeetsViewController.swift */,
 				D3366839247B0FA3008EA70C /* InitialViewController.swift */,
 				D36BAF83247ABEDF00D71D4A /* AddMeetViewController.swift */,
 				D3A0B9D52472EEF70088D664 /* HomeViewController.swift */,
@@ -314,6 +317,7 @@
 				D3D2DEEB2471F5CB009C17DD /* SceneDelegate.swift in Sources */,
 				D36BAF84247ABEDF00D71D4A /* AddMeetViewController.swift in Sources */,
 				D361DB072475741E005EF1A2 /* AddAthleteToEventViewController.swift in Sources */,
+				D3BF359724803BB9000736F8 /* MeetsViewController.swift in Sources */,
 				D3A0B9CE24722B5B0088D664 /* TimeTableViewCell.swift in Sources */,
 				D3647CCF2476EEAB000627C6 /* ScoresViewController.swift in Sources */,
 				D3A0B9D42472EE3C0088D664 /* AthletesTableViewController.swift in Sources */,

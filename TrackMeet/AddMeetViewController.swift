@@ -129,6 +129,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     
     
     @IBAction func submitAction(_ sender: UIButton) {
+        print("hit submit button")
         selectedSchools.removeAll()
         getSchools()
         
@@ -185,17 +186,20 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         }
         
          meet = Meet(name: meetNameOutlet.text!, date: datePickerOutlet.date, schools: selectedSchools, gender: gen, levels: lev , events: eventLeveled, indPoints: indP, relpoints: relP, athletes: selectedAthletes)
-        performSegue(withIdentifier: "toHomeSegue", sender: nil)
+        
+        performSegue(withIdentifier: "unwindToMeetsSegue", sender: self)
         //print("\(meet)")
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toHomeSegue"{
-            let nvc = segue.destination as! HomeViewController
-            nvc.meet = meet
-            nvc.allAthletes = allAthletes
-        }
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        print("trying to prepare")
+//        if segue.identifier == "toHomeSegue"{
+//            let nvc = segue.destination as! HomeViewController
+//            nvc.meet = meet
+//            nvc.allAthletes = allAthletes
+//            print("preparing to go back")
+//        }
+//    }
     
 
 }
