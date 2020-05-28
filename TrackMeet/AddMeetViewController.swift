@@ -8,14 +8,16 @@
 
 import UIKit
 
-class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDataSource {
+class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDataSource, UIScrollViewDelegate {
+    var kHeight : CGFloat = 0.0
 
+    @IBOutlet weak var scrollViewOutlet: UIScrollView!
     var allAthletes = [Athlete]()
     var schools = [String: String]()
     var schoolKeys = [String]()
     var selectedSchools = [String:String]()
     var lev = [String]()
-    var eve = ["4x800 VAR", "4x800 F/S","4x100 VAR","4x100 F/S", "3200M VAR","3200M F/S","110HH VAR","110HH F/S","100M VAR","100M F/S","800 VAR","800 F/S","4x200 VAR","4x200 F/S","400 VAR","400 F/S","300IM VAR","300IM F/S","1600 VAR","1600 F/S","200M VAR","200M F/S", "4x400 VAR","4x400 F/S", "Long Jump VAR", "Long Jump F/S","Triple Jump VAR", "Triple Jump F/S","High Jump VAR", "High Jump F/S","Pole Vault VAR","Pole Vault F/S", "Shot Put VAR","Shot Put F/S", "Discus VAR","Discus F/S"]
+    var eve = ["4x800", "4x100", "3200M", "110HH", "100M", "800M", "4x200", "400M", "300IM", "1600", "200", "4x400", "Long Jump", "Triple Jump", "High Jump", "Pole Vault", "Shot Put", "Discus"]
     var indP = [Int]()
     var relP = [Int]()
     var selectedAthletes = [Athlete]()
@@ -35,9 +37,46 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     @IBOutlet weak var eventCodeOutlet: UITextField!
     
     
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(AddMeetViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+                 NotificationCenter.default.addObserver(self, selector: #selector(AddMeetViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        print(scrollViewOutlet.contentInset.bottom)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+         NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func keyboardWillShow(notification: Notification){
+         if let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height {
+                print("Notification: Keyboard will show")
+            scrollViewOutlet.contentInset.bottom = keyboardHeight
+            print(scrollViewOutlet.contentInset.bottom)
+            
+            
+           // view.frame.origin.y -= keyboardHeight
+             
+             
+     }
+     }
+     
+     @objc func keyboardWillHide(notification: Notification){
+         print("Notification: Keyboard will hide")
+         
+        scrollViewOutlet.contentInset.bottom = 0.0
+        // view.frame.origin.y += kHeight
+         
+         
+     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//         eventAthletes = eventAthletes.sorted(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
+        
+        individualScoringOutlet.sort(by: {$0.tag < $1.tag})
+        relayScoringOutlet.sort(by: {$0.tag < $1.tag})
         tableView.flashScrollIndicators()
         ScoreTableView.layer.borderWidth = 10
         
@@ -90,17 +129,31 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     
     
     @IBAction func submitAction(_ sender: UIButton) {
+        selectedSchools.removeAll()
         getSchools()
+        
+        
        print(selectedSchools)
         var gen = "M"
         if genderPicker.selectedSegmentIndex == 1{
             gen = "W"
         }
+        
+        lev.removeAll()
         for b in levelButtonsOutlet{
             if b.isSelected{
                 lev.append(b.titleLabel?.text! ?? "")
             }
         }
+        
+        var eventLeveled = [String]()
+        for event in eve{
+              for level in lev{
+                      eventLeveled.append("\(event) \(level)")
+                  }
+              }
+        
+        indP.removeAll()
         var i = 0
         while individualScoringOutlet[i].text != ""{
             if let points = Int(individualScoringOutlet[i].text!){
@@ -109,6 +162,8 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
             else{print("not a number in score field")}
             i+=1
         }
+        
+        relP.removeAll()
         i = 0
         while relayScoringOutlet[i].text != ""{
                    if let points = Int(relayScoringOutlet[i].text!){
@@ -117,6 +172,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                    else{print("not a number in score field")}
             i+=1
                }
+        
         var schoolInits = ""
         for (key,value) in selectedSchools{
              schoolInits = value
@@ -128,7 +184,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
             }
         }
         
-         meet = Meet(name: meetNameOutlet.text!, date: datePickerOutlet.date, schools: selectedSchools, gender: gen, levels: lev , events: eve, indPoints: indP, relpoints: relP, athletes: selectedAthletes)
+         meet = Meet(name: meetNameOutlet.text!, date: datePickerOutlet.date, schools: selectedSchools, gender: gen, levels: lev , events: eventLeveled, indPoints: indP, relpoints: relP, athletes: selectedAthletes)
         performSegue(withIdentifier: "toHomeSegue", sender: nil)
         //print("\(meet)")
     }

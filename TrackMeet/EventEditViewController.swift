@@ -33,9 +33,13 @@ extension UITableView {
 
 class EventEditViewController: UIViewController, UITableViewDelegate,UITableViewDataSource, UINavigationControllerDelegate, UITabBarDelegate {
     
+    var beenScored : [Bool]!
+    var selectedRow : Int!
+    
     @IBOutlet weak var tableViewOutlet: UITableView!
     var tabBarY : CGFloat!
     var fieldEvents = ["Long Jump", "Triple Jump", "High Jump", "Pole Vault", "Shot Put", "Discus"]
+    var fieldEventsLev = [String]()
     var meet : Meet!
     var sections = false
     var allAthletes = [Athlete]()
@@ -117,6 +121,10 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "myCell") as! TimeTableViewCell
+      
+        if beenScored[selectedRow]{
+            cell.backgroundColor = UIColor.green
+        }
         
         var currentAthletes = [Athlete]()
         if !sections{ currentAthletes = eventAthletes}
@@ -128,10 +136,10 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         for event in currentAthletes[indexPath.row].events{
             if event.name == title{
                 if let place = event.place{
-                cell.configure(text: event.markString, placeholder: "Time", placeText: "\(place)")
+                cell.configure(text: event.markString, placeholder: "Mark", placeText: "\(place)")
                 }
                 else{
-                    cell.configure(text: event.markString, placeholder: "Time")
+                    cell.configure(text: event.markString, placeholder: "Mark")
                     
                 }
             }
@@ -169,16 +177,22 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     
     override func viewDidAppear(_ animated: Bool) {
         tabBarY = tabBarOutlet.frame.origin.y
+        
     }
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
+       
         
         let fontAttributes2 = [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.title3)]
         UITabBarItem.appearance().setTitleTextAttributes(fontAttributes2, for: .normal)
      
-        
+        for lev in meet.levels{
+        for event in fieldEvents{
+            fieldEventsLev.append("\(event) \(lev)")
+            }
+        }
         
         self.title = screenTitle
         for a in allAthletes{
@@ -474,7 +488,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                                            while b!.count < a!.count{b = "0\(b!)"
                                                print(b!)
                                            }
-                                           if fieldEvents.contains(self.title!){
+                                           if fieldEventsLev.contains(self.title!){
                                            return a! > b!
                                            }
                                            else{return a! < b!}
@@ -523,6 +537,9 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     
     
     func calcPoints(){
+        print("starting to calculate points.  Ind points \(meet.indPoints)")
+        beenScored[selectedRow] = true
+        tableViewOutlet.backgroundColor = UIColor.green
         for a in heat1{
             eventAthletes.append(a)
         }

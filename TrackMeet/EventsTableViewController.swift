@@ -13,14 +13,21 @@ class EventsTableViewController: UITableViewController {
     var selectedEvent : String?
     var athletes = [Athlete]()
     var meet : Meet!
+    var beenScored = [Bool]()
+    var selectedRow : Int = 0
 
     var events = [String]()
+    
     //var segues = ["relay4x800", "relay4x100","m100"]
  
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("EventsVDL")
+        for _ in meet.events{
+            beenScored.append(false)
+        }
+      
         
 
         // Uncomment the following line to preserve selection between presentations
@@ -57,12 +64,16 @@ class EventsTableViewController: UITableViewController {
         if indexPath.row % 2 != 0{
             cell.backgroundColor = UIColor.lightGray
         }
+        if beenScored[indexPath.row]{
+            cell.backgroundColor = UIColor.green
+        }
 
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedEvent =  tableView.cellForRow(at: indexPath)?.textLabel?.text
+        selectedRow = indexPath.row
         
         performSegue(withIdentifier: "editEventSegue", sender: nil)
     }
@@ -114,6 +125,10 @@ class EventsTableViewController: UITableViewController {
         //nvc.eventAthletes = sentAthletes
         nvc.allAthletes = athletes
         nvc.screenTitle = selectedEvent!
+            nvc.beenScored = beenScored
+            nvc.selectedRow = selectedRow
+        
+            
         }
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
@@ -126,6 +141,8 @@ class EventsTableViewController: UITableViewController {
  @IBAction func unwind( _ seg: UIStoryboardSegue) {
     let pvc = seg.source as! EventEditViewController
     athletes = pvc.allAthletes
+    beenScored = pvc.beenScored
+    tableView.reloadData()
     "Unwind to events table"
 }
 }

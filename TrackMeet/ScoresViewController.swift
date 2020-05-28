@@ -40,6 +40,10 @@ class ScoresViewController: UIViewController {
         print("meet name : \(meet.name)")
    
         var initials = [String](meet.schools.values)
+        for i in 0 ..< initials.count{
+            initials[i] = initials[i].uppercased()
+        }
+        initials.sort(by: {$0 < $1 })
         levels = meet.levels
         for lev in levels{
             // hard code the first one
@@ -107,6 +111,8 @@ class ScoresViewController: UIViewController {
             // add level text header
             levelsOutlet[i].text = "\(level) Scores"
         
+                
+                
             for (initials,score) in scores{
                 // print info to textview
             textViewOutlet.text += "S,\(meet.gender),\(level),,\(initials),\(score)\n"
