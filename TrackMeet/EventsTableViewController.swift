@@ -13,7 +13,7 @@ class EventsTableViewController: UITableViewController {
     var selectedEvent : String?
     var athletes = [Athlete]()
     var meet : Meet!
-    var beenScored = [Bool]()
+   
     var selectedRow : Int = 0
 
     var events = [String]()
@@ -24,9 +24,7 @@ class EventsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("EventsVDL")
-        for _ in meet.events{
-            beenScored.append(false)
-        }
+        
       
         
 
@@ -64,7 +62,7 @@ class EventsTableViewController: UITableViewController {
         if indexPath.row % 2 != 0{
             cell.backgroundColor = UIColor.lightGray
         }
-        if beenScored[indexPath.row]{
+        if meet.beenScored[indexPath.row]{
             cell.backgroundColor = UIColor.green
         }
 
@@ -125,7 +123,7 @@ class EventsTableViewController: UITableViewController {
         //nvc.eventAthletes = sentAthletes
         nvc.allAthletes = athletes
         nvc.screenTitle = selectedEvent!
-            nvc.beenScored = beenScored
+            
             nvc.selectedRow = selectedRow
         
             
@@ -141,7 +139,7 @@ class EventsTableViewController: UITableViewController {
  @IBAction func unwind( _ seg: UIStoryboardSegue) {
     let pvc = seg.source as! EventEditViewController
     athletes = pvc.allAthletes
-    beenScored = pvc.beenScored
+    meet = pvc.meet
     tableView.reloadData()
     "Unwind to events table"
 }

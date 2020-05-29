@@ -191,7 +191,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
             let nvc = segue.destination as! addAthleteViewController
             nvc.displayedAthletes = displayedAthletes
             nvc.allAthletes = allAthletes
-            nvc.nvc = self
+            nvc.meet = meet
             nvc.from = "AthletesVC"
         }
         else if segue.identifier == "toAthleteResultsSegue"{

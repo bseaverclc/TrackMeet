@@ -67,7 +67,8 @@ class ScoresViewController: UIViewController {
             var updated = false
             
             for e in a.events{
-                if e.markString != ""{
+                if e.meetName == meet.name{
+                  if e.markString != "" {
                     
                     //var current = teamPoints[e.level]!
                     let currentPoints = teamPoints[e.level]![a.school]!
@@ -79,26 +80,27 @@ class ScoresViewController: UIViewController {
                     if e.name.contains("4x"){
                         // if they placed put place in output
                        if let pl = e.place{
-                        textViewOutlet.text += "R,\(meet.gender), \(e.level),\(e.name.dropLast(4)),\(pl), , , ,\(a.school),\(e.markString),\(e.points),Finals, , \n"
+                        textViewOutlet.text += "R,\(meet.gender), \(e.level),\(e.name.dropLast(4)),\(pl), , , ,\(a.schoolFull),\(e.markString),\(e.points),Finals, , \n"
                                           }
                         // if they didn't place leave spot open
                        else{
-                            textViewOutlet.text += "R,\(meet.gender),\(e.level),\(e.name.dropLast(4)), , , ,\(a.school),\(e.markString),\(e.points),Finals, , \n"
+                            textViewOutlet.text += "R,\(meet.gender),\(e.level),\(e.name.dropLast(4)), , , ,\(a.schoolFull),\(e.markString),\(e.points),Finals, , \n"
                             }
                     }
                       //  If event was individual
                     else{
                       if let pl = e.place{
-                        textViewOutlet.text += "E,\(meet.gender),\(e.level),\(e.name.dropLast(4)),\(pl),\(a.last),\(a.first),\(a.grade),\(a.school),\(e.markString),\(e.points),Finals, , \n"
+                        textViewOutlet.text += "E,\(meet.gender),\(e.level),\(e.name.dropLast(4)),\(pl),\(a.last),\(a.first),\(a.grade),\(a.schoolFull),\(e.markString),\(e.points),Finals, , \n"
                       }
                       else{
-                        textViewOutlet.text += "E,\(meet.gender),\(e.level),\(e.name.dropLast(4)), ,\(a.last),\(a.first),\(a.grade),\(a.school),\(e.markString),\(e.points),Finals, , \n"
+                        textViewOutlet.text += "E,\(meet.gender),\(e.level),\(e.name.dropLast(4)), ,\(a.last),\(a.first),\(a.grade),\(a.schoolFull),\(e.markString),\(e.points),Finals, , \n"
                         
                         }
                         }
                    
                     
                 }
+            }
                 }
         
             
@@ -115,7 +117,13 @@ class ScoresViewController: UIViewController {
                 
             for (initials,score) in scores{
                 // print info to textview
-            textViewOutlet.text += "S,\(meet.gender),\(level),,\(initials),\(score)\n"
+                var fullSchool = ""
+                for (sch,ini) in meet.schools{
+                    if initials == ini{
+                        fullSchool = sch
+                    }
+                }
+            textViewOutlet.text += "S,\(meet.gender),\(level),,\(fullSchool),\(score)\n"
                 // set up school labels
                 var label = UILabel()
                 label.text = "\(initials)"

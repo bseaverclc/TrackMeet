@@ -19,9 +19,10 @@ public class Meet{
     var indPoints: [Int]
     var relPoints: [Int]
     var athletes: [Athlete]
+    var beenScored: [Bool]
     
     
-    init(name n : String, date d:Date, schools s: [String:String], gender g: String, levels l : [String], events e : [String], indPoints ip:  [Int], relpoints rp : [Int], athletes a : [Athlete] ){
+    init(name n : String, date d:Date, schools s: [String:String], gender g: String, levels l : [String], events e : [String], indPoints ip:  [Int], relpoints rp : [Int], athletes a : [Athlete], beenScored se: [Bool] ){
         name = n
         date = d
         schools = s
@@ -31,6 +32,7 @@ public class Meet{
         indPoints = ip
         relPoints = rp
         athletes = a
+        beenScored = se
     }
     
     

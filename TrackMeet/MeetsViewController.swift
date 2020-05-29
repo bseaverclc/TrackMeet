@@ -31,12 +31,14 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
            }
     
     func randomizeAthletes(){
-        allAthletes.append(Athlete(f: "Owen", l: "Mize", s: "CLC", g: 12))
-               allAthletes.append(Athlete(f: "Jakhari", l: "Anderson", s: "CG", g: 12))
-               allAthletes.append(Athlete(f: "Drew", l: "McGinness", s: "CLS", g: 9))
+        allAthletes.append(Athlete(f: "Owen", l: "Mize", s: "CLC", g: 12, sf: "Crystal Lake Central"))
+            allAthletes.append(Athlete(f: "Jakhari", l: "Anderson", s: "CG", g: 12, sf: "Cary-Grove"))
+            allAthletes.append(Athlete(f: "Drew", l: "McGinness", s: "CLS", g: 9, sf: "Crystal Lake South"))
         let letters = "abcdefghijklmnopqrstuvwxyz"
         let chars = Array(letters)
         let schoolArray = ["CLC","CG","CLS","PR"]
+        let schoolFullArray = ["Crystal Lake Central", "Cary-Grove", "Crystal Lake South", "Prairie Ridge"]
+                            
         
         for _ in 3...75{
             var first = ""
@@ -45,20 +47,22 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 first.append(String(chars[Int.random(in: 0 ..< chars.count)]))
                 last.append(String(chars[Int.random(in: 0 ..< chars.count)]))
             }
-            let school = schools.randomElement()?.value
+            var choice = Int.random(in: 0..<schoolArray.count)
+            let school = schoolArray[choice]
+            let schoolF = schoolFullArray[choice]
             //let school = schoolArray.randomElement()!
             let grade = Int.random(in: 9...12)
             
-            allAthletes.append(Athlete(f: first, l: last, s: school!, g: grade))
+            allAthletes.append(Athlete(f: first, l: last, s: school, g: grade, sf: schoolF))
             
         }
-        var teams = ["A","B","C"]
-        var levels = ["VAR", "F/S"]
-        for school in schoolArray{
-            for letter in teams{
-                allAthletes.append(Athlete(f: letter, l: school, s: school, g: 12))
-        }
-        }
+//        var teams = ["A","B","C"]
+//        var levels = ["VAR", "F/S"]
+//        for school in schoolArray{
+//            for letter in teams{
+//                allAthletes.append(Athlete(f: letter, l: school, s: school, g: 12))
+//        }
+//     }
              
         
     }

@@ -146,11 +146,12 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                 lev.append(b.titleLabel?.text! ?? "")
             }
         }
-        
+        var beenScored = [Bool]()
         var eventLeveled = [String]()
         for event in eve{
               for level in lev{
                       eventLeveled.append("\(event) \(level)")
+                    beenScored.append(false)
                   }
               }
         
@@ -185,7 +186,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
             }
         }
         
-         meet = Meet(name: meetNameOutlet.text!, date: datePickerOutlet.date, schools: selectedSchools, gender: gen, levels: lev , events: eventLeveled, indPoints: indP, relpoints: relP, athletes: selectedAthletes)
+        meet = Meet(name: meetNameOutlet.text!, date: datePickerOutlet.date, schools: selectedSchools, gender: gen, levels: lev , events: eventLeveled, indPoints: indP, relpoints: relP, athletes: selectedAthletes, beenScored: beenScored)
         
         performSegue(withIdentifier: "unwindToMeetsSegue", sender: self)
         //print("\(meet)")

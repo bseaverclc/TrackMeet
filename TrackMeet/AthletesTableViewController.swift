@@ -16,6 +16,7 @@ class AthletesTableViewController:  UITableViewController, UITabBarDelegate {
     var allAthletes = [Athlete]()
     var eventAthletes = [Athlete]()
     var displayedAthletes = [Athlete]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = screenTitle

@@ -33,7 +33,9 @@ extension UITableView {
 
 class EventEditViewController: UIViewController, UITableViewDelegate,UITableViewDataSource, UINavigationControllerDelegate, UITabBarDelegate {
     
-    var beenScored : [Bool]!
+    @IBOutlet weak var processOutlet: UIButton!
+    
+    
     var selectedRow : Int!
     
     @IBOutlet weak var tableViewOutlet: UITableView!
@@ -95,12 +97,13 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             }
             
             if sectionTo == 0 {heat1.insert(movingAthlete, at: destinationIndexPath.row)
-                movingAthlete.getEvent(eventName: screenTitle)?.heat = 1}
+                movingAthlete.getEvent(eventName: screenTitle, meetName: meet.name)?.heat = 1}
             else if sectionTo == 1 {heat2.insert(movingAthlete, at: destinationIndexPath.row)
-                movingAthlete.getEvent(eventName: screenTitle)?.heat = 2}
+                movingAthlete.getEvent(eventName: screenTitle, meetName: meet.name
+                    )?.heat = 2}
             
             else {eventAthletes.insert(movingAthlete, at: destinationIndexPath.row)
-            movingAthlete.getEvent(eventName: screenTitle)?.heat = 0
+                movingAthlete.getEvent(eventName: screenTitle, meetName: meet.name)?.heat = 0
             }
             }
             
@@ -122,9 +125,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "myCell") as! TimeTableViewCell
       
-        if beenScored[selectedRow]{
-            cell.backgroundColor = UIColor.green
-        }
+       
         
         var currentAthletes = [Athlete]()
         if !sections{ currentAthletes = eventAthletes}
@@ -183,6 +184,14 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        if meet.beenScored[selectedRow]{
+             processOutlet.setTitle("Processed", for: .normal)
+            processOutlet.backgroundColor = UIColor.green
+        }
+        else{
+            processOutlet.setTitle("Process Event", for: .normal)
+            processOutlet.backgroundColor = UIColor.red
+        }
        
         
         let fontAttributes2 = [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.title3)]
@@ -197,7 +206,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         self.title = screenTitle
         for a in allAthletes{
                   for e in a.events{
-                      if e.name == screenTitle{
+                    if e.name == screenTitle && e.meetName == meet.name{
                         switch e.heat{
                         case 0: eventAthletes.append(a)
                         case 1: heat1.append(a)
@@ -258,6 +267,10 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         // print(sender.text)
 //         var indexPath = IndexPath(row: sender.tag, section: 0)
 //         var cell = tableViewOutlet.cellForRow(at: indexPath) as! TimeTableViewCell
+        
+        meet.beenScored[selectedRow] = false
+        processOutlet.backgroundColor = UIColor.red
+        processOutlet.setTitle("Process Event", for: .normal)
          var editingArray : [Athlete]!
          guard let cell2 = sender.findParentTableViewCell (),
              let indexPath2 = tableViewOutlet.indexPath(for: cell2) else {
@@ -314,6 +327,10 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     
     
     @IBAction func placeAction(_ sender: UITextField) {
+        
+        meet.beenScored[selectedRow] = false
+        processOutlet.backgroundColor = UIColor.red
+        processOutlet.setTitle("Process Event", for: .normal)
         var editingArray : [Athlete]!
         print(sender.tag)
         guard let cell2 = sender.findParentTableViewCell (),
@@ -390,8 +407,8 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         print("prepare for segue")
         if segue.identifier == "unwindToEventsSegue"{
-            calcPoints()
-            print("Calculated Points")
+           // calcPoints()
+           // print("Calculated Points")
         }
         else {
         
@@ -415,7 +432,10 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
 //    }
     
  @IBAction func unwind( _ seg: UIStoryboardSegue) {
-   
+    meet.beenScored[selectedRow] = false
+   processOutlet.backgroundColor = UIColor.red
+    processOutlet.setTitle("Process Event", for: .normal)
+    
     if let pvc = seg.source as? AddAthleteToEventViewController{
       allAthletes = pvc.allAthletes
       screenTitle = pvc.screenTitle
@@ -458,8 +478,9 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     
     func sortByPlace(){
         eventAthletes = eventAthletes.sorted { (lhs, rhs) -> Bool in
-                     let a = lhs.getEvent(eventName: self.title!)?.place
-                     let b = rhs.getEvent(eventName: self.title!)?.place
+            let a = lhs.getEvent(eventName: self.title!, meetName: meet.name
+                )?.place
+            let b = rhs.getEvent(eventName: self.title!, meetName: meet.name)?.place
                      switch (a ,b) {
                        case let(a?, b?): return a < b // Both lhs and rhs are not nil
                        case (nil, _): return false    // Lhs is nil
@@ -475,8 +496,9 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     
     func sortByMark(){
         eventAthletes = eventAthletes.sorted { (lhs, rhs) -> Bool in
-                                        var a = lhs.getEvent(eventName: self.title!)?.markString
-                                        var b = rhs.getEvent(eventName: self.title!)?.markString
+            var a = lhs.getEvent(eventName: self.title!, meetName: meet.name)?.markString
+            var b = rhs.getEvent(eventName: self.title!, meetName: meet.name
+                )?.markString
                        
                                         switch (a ,b) {
                                           case ("", _): return false    // Lhs is empty
@@ -525,7 +547,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     func checkForTies(place: Int)-> Int{
         var ties = 0
         for a in eventAthletes{
-            if let event = a.getEvent(eventName: self.title!){
+            if let event = a.getEvent(eventName: self.title!, meetName: meet.name){
                 if event.place == place{
                     ties += 1
                 }
@@ -538,8 +560,8 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     
     func calcPoints(){
         print("starting to calculate points.  Ind points \(meet.indPoints)")
-        beenScored[selectedRow] = true
-        tableViewOutlet.backgroundColor = UIColor.green
+        meet.beenScored[selectedRow] = true
+        
         for a in heat1{
             eventAthletes.append(a)
         }
@@ -547,7 +569,9 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             eventAthletes.append(a)
         }
         for a in eventAthletes{
-            if let event = a.getEvent(eventName: self.title!), let place = event.place{
+            if let event = a.getEvent(eventName: self.title!, meetName: meet.name), let place = event.place{
+                print("event.meetName \(event.meetName) meet.name \(meet.name)")
+                if event.meetName == meet.name{
                 var scoring = [Int]()
                 if event.name.contains("4x"){
                     scoring = meet.relPoints
@@ -569,51 +593,8 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                     }
                     else{event.points = 0}
                     print("\(a.last) points added = \(event.points)")
-//            switch event.place{
-//            case 1:
-//                let ties = checkForTies(place: 1)
-//                var points = 0
-//                if ties != 0{
-//                    for i in 0 ..< ties{
-//                        points += scoring[i]
-//                    }
-//                    event.points = Double(points)/Double(ties)
-//
-//                }
-//                else{
-//                    event.points = 0
-//                }
-//            case 2: if checkForTies(place: 2) != 0{
-//                  let ties = checkForTies(place: 2)
-//                var points = 0
-//             if ties != 0{
-//                 for i in 1 ..< (ties + 1){
-//                     points += scoring[i]
-//                 }
-//                 event.points = Double(points)/Double(ties)
-//
-//             }
-//             else{
-//                 event.points = 0
-//             }
-//                }
-//            case 3: if checkForTies(place: 3) != 0{
-//                 let ties = checkForTies(place: 3)
-//                             var points = 0
-//                             if ties != 0{
-//                                 for i in 2 ..< (2 + ties){
-//                                     points += scoring[i]
-//                                 }
-//                                 event.points = Double(points)/Double(ties)
-//
-//                             }
-//                             else{
-//                                 event.points = 0
-//                             }
-//                }
-//            default: event.points = 0
-                
-//            }
+                    }
+
         }
     }
     }
@@ -621,6 +602,8 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
 }
 
     @IBAction func processEventAction(_ sender: UIButton) {
+        processOutlet.backgroundColor = UIColor.green
+        processOutlet.setTitle("Processed", for: .normal)
         calcPoints()
 
     }

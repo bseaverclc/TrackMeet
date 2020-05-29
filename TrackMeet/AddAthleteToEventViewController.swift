@@ -12,7 +12,8 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tabBarOutlet: UITabBar!
-        var screenTitle = "All Schools"
+    var lev = ""
+        var screenTitle = ""
         var allAthletes = [Athlete]()
         var eventAthletes = [Athlete]()
         var displayedAthletes = [Athlete]()
@@ -23,6 +24,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
         override func viewDidLoad() {
             super.viewDidLoad()
             self.title = screenTitle
+            lev = String(screenTitle.suffix(3))
             for a in allAthletes{
                 if meet.schools.values.contains(a.school){
                     displayedAthletes.append(a)
@@ -98,9 +100,9 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
                  print(selectedPaths)
                  for path in selectedPaths{
                      var selectedAthlete = displayedAthletes[path.row]
-                     var lev = String(title!.suffix(3))
+                    
                      print("level of selected athletes: \(lev)")
-                     selectedAthlete.events.append(Event(name: self.title!, level: lev))
+                    selectedAthlete.events.append(Event(name: self.title!, level: lev, meetName: meet.name))
                      eventAthletes.append(selectedAthlete)
                  }
              }
@@ -129,7 +131,10 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
         nvc.allAthletes = allAthletes
         nvc.eventAthletes = eventAthletes
         nvc.from = screenTitle
-            nvc.schools = schools
+        nvc.schools = schools
+        nvc.meet = meet
+        nvc.lev = lev
+        nvc.meetName = meet.name
         }
         
     }
