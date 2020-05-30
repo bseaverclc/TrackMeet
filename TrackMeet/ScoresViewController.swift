@@ -74,7 +74,7 @@ class ScoresViewController: UIViewController {
                     let currentPoints = teamPoints[e.level]![a.school]!
                         teamPoints[e.level]!.updateValue(currentPoints + e.points, forKey: a.school)
                     print("points added to school \(a.school): \(teamPoints[e.level]![a.school])")
-                     }
+                     
                     
                     // if event was a relay
                     if e.name.contains("4x"){
@@ -99,6 +99,7 @@ class ScoresViewController: UIViewController {
                         }
                    
                     
+                }
                 }
             }
                 }

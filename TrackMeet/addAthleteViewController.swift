@@ -32,7 +32,12 @@ class addAthleteViewController: UIViewController {
     }
     
     @IBAction func addAction(_ sender: UIButton) {
-        if let first = firstOutlet.text, let last = lastOutlet.text, let school = schoolOutlet.titleForSegment(at: schoolOutlet.selectedSegmentIndex), let year = yearOutlet.titleForSegment(at: yearOutlet.selectedSegmentIndex){
+        if schoolOutlet.selectedSegmentIndex >= 0 {
+        
+        let first = firstOutlet.text
+            let last = lastOutlet.text
+            let school = schoolOutlet.titleForSegment(at: schoolOutlet.selectedSegmentIndex)
+            let year = yearOutlet.titleForSegment(at: yearOutlet.selectedSegmentIndex)
             var schoolFull = ""
             for (full,initials) in meet.schools{
                 if school == initials{
@@ -40,8 +45,10 @@ class addAthleteViewController: UIViewController {
                     break
                 }
             }
+        
+        
            
-            athlete = Athlete(f: first, l: last, s: school, g: Int(year)!, sf: schoolFull)
+            athlete = Athlete(f: first!, l: last!, s: school!, g: Int(year!)!, sf: schoolFull)
             print("Created Athlete")
             allAthletes.insert(athlete, at: 0)
             if from == "AthletesVC"{
@@ -54,34 +61,15 @@ class addAthleteViewController: UIViewController {
                 eventAthletes.append(athlete)
                 performSegue(withIdentifier: "unwindToRosters", sender: self)
             }
-                
-            
-            
-               
-            
-        
     }
+        else{
+            let alert = UIAlertController(title: "Error!", message: "You must pick a school", preferredStyle: .alert)
+            let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alert.addAction(action)
+            present(alert, animated: true, completion: nil)
+        }
         
     }
     
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        let nvc = segue.destination as! AthletesTableViewController
-//        nvc.displayedAthletes = displayedAthletes
-//        nvc.allAthletes = allAthletes
-       // nvc.tableView.reloadData()
-//        for a in nvc.displayedAthletes{
-//            print(a.first)
-//        }
-//    }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

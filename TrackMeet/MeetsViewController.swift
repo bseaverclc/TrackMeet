@@ -113,9 +113,16 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
     }
     
+    @IBAction func unwind2(_ seg: UIStoryboardSegue){
+        let pvc = seg.source as! HomeViewController
+        allAthletes = pvc.allAthletes
+        print("unwinding from Home VC")
+    }
+    
   @IBAction func unwind( _ seg: UIStoryboardSegue) {
-        print("unwinding to Meets VC")
-    let pvc = seg.source as! AddMeetViewController
+        print("unwinding from Meets VC")
+     
+     let pvc = seg.source as! AddMeetViewController
         if let m = pvc.meet{
         meets.append(m)
             tableView.reloadData()

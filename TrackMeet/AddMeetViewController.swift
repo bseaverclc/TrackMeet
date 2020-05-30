@@ -133,8 +133,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         selectedSchools.removeAll()
         getSchools()
         
-        
-       print(selectedSchools)
+       //print(selectedSchools)
         var gen = "M"
         if genderPicker.selectedSegmentIndex == 1{
             gen = "W"
@@ -192,15 +191,28 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         //print("\(meet)")
     }
     
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        print("trying to prepare")
-//        if segue.identifier == "toHomeSegue"{
-//            let nvc = segue.destination as! HomeViewController
-//            nvc.meet = meet
-//            nvc.allAthletes = allAthletes
-//            print("preparing to go back")
-//        }
-//    }
-    
 
+    @IBAction func addSchoolAction(_ sender: UIButton) {
+        let alert = UIAlertController(title: "Add School", message: "", preferredStyle: .alert)
+        
+        alert.addTextField(configurationHandler: { (textField) in
+            textField.placeholder = "Full School Name"
+            
+        })
+        
+        alert.addTextField(configurationHandler: { (textField) in
+                   textField.placeholder = "School Initials"
+                   
+               })
+        alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { (updateAction) in
+            if alert.textFields![0].text! != "" && alert.textFields![1].text! != ""{
+                self.schools[alert.textFields![0].text!] = alert.textFields![1].text!
+                self.schoolKeys.append(alert.textFields![0].text!)
+                self.tableView.reloadData()
+            }
+        }))
+    
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
 }

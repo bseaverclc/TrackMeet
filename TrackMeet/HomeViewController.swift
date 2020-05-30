@@ -25,7 +25,11 @@ class HomeViewController: UIViewController, DataBackDelegate {
         print("delegate function called")
     }
     
-  
+    override func viewWillDisappear(_ animated: Bool) {
+        if isMovingFromParent{
+            performSegue(withIdentifier: "unwindToMeetsVC", sender: nil)
+        }
+    }
     
 
    
@@ -58,7 +62,7 @@ class HomeViewController: UIViewController, DataBackDelegate {
             nvc.allAthletes = allAthletes
             nvc.meet = meet
         }
-        else{
+        else if segue.identifier == "athletesSegue"{
             let nvc = segue.destination as! AthletesViewController
             nvc.allAthletes = allAthletes
             nvc.delegate = self
