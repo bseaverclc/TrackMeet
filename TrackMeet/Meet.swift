@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class Meet{
+public class Meet: Codable{
     
     var name : String
     var date : Date
@@ -18,11 +18,10 @@ public class Meet{
     var events: [String]
     var indPoints: [Int]
     var relPoints: [Int]
-    var athletes: [Athlete]
     var beenScored: [Bool]
     
     
-    init(name n : String, date d:Date, schools s: [String:String], gender g: String, levels l : [String], events e : [String], indPoints ip:  [Int], relpoints rp : [Int], athletes a : [Athlete], beenScored se: [Bool] ){
+    init(name n : String, date d:Date, schools s: [String:String], gender g: String, levels l : [String], events e : [String], indPoints ip:  [Int], relpoints rp : [Int],  beenScored se: [Bool] ){
         name = n
         date = d
         schools = s
@@ -31,7 +30,6 @@ public class Meet{
         events = e
         indPoints = ip
         relPoints = rp
-        athletes = a
         beenScored = se
     }
     

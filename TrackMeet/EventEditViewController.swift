@@ -190,7 +190,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         }
         else{
             processOutlet.setTitle("Process Event", for: .normal)
-            processOutlet.backgroundColor = UIColor.red
+            processOutlet.backgroundColor = UIColor.lightGray
         }
        
         
@@ -407,6 +407,14 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         print("prepare for segue")
         if segue.identifier == "unwindToEventsSegue"{
+            // save to userdefaults
+               let userDefaults = UserDefaults.standard
+               do {
+                       try userDefaults.setObjects(allAthletes, forKey: "allAthletes")
+                      } catch {
+                          print(error.localizedDescription)
+                      }
+            
            // calcPoints()
            // print("Calculated Points")
         }
@@ -433,8 +441,10 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     
  @IBAction func unwind( _ seg: UIStoryboardSegue) {
     meet.beenScored[selectedRow] = false
-   processOutlet.backgroundColor = UIColor.red
+   processOutlet.backgroundColor = UIColor.lightGray
     processOutlet.setTitle("Process Event", for: .normal)
+    
+    
     
     if let pvc = seg.source as? AddAthleteToEventViewController{
       allAthletes = pvc.allAthletes
@@ -452,6 +462,14 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
           print("unwinding from addAthlete")
         
     }
+    
+    // save to userdefaults
+    let userDefaults = UserDefaults.standard
+    do {
+            try userDefaults.setObjects(allAthletes, forKey: "allAthletes")
+           } catch {
+               print(error.localizedDescription)
+           }
 
   }
     
@@ -605,6 +623,13 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         processOutlet.backgroundColor = UIColor.green
         processOutlet.setTitle("Processed", for: .normal)
         calcPoints()
+        // save to userdefaults
+           let userDefaults = UserDefaults.standard
+           do {
+                   try userDefaults.setObjects(allAthletes, forKey: "allAthletes")
+                  } catch {
+                      print(error.localizedDescription)
+                  }
 
     }
 }

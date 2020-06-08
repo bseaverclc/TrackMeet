@@ -8,6 +8,67 @@
 
 import UIKit
 
+
+protocol ObjectSavable {
+    func setObjects<Object>(_ object: Object, forKey: String) throws where Object: Encodable
+    func getObjects<Object>(forKey: String, castTo type: Object.Type) throws -> Object where Object: Decodable
+}
+
+
+enum ObjectSavableError: String, LocalizedError {
+    case unableToEncode = "Unable to encode object into data"
+    case noValue = "No data object found for the given key"
+    case unableToDecode = "Unable to decode object into given type"
+    
+    var errorDescription: String? {
+        rawValue
+    }
+}
+
+
+extension UserDefaults: ObjectSavable {
+    func setObjects<Object>(_ object: Object, forKey: String) throws where Object: Encodable {
+        let encoder = JSONEncoder()
+        do {
+            let data = try encoder.encode(object)
+            set(data, forKey: forKey)
+        } catch {
+            throw ObjectSavableError.unableToEncode
+        }
+    }
+    
+    func getObjects<Object>(forKey: String, castTo type: Object.Type) throws -> Object where Object: Decodable {
+        guard let data = data(forKey: forKey) else { throw ObjectSavableError.noValue }
+        let decoder = JSONDecoder()
+        do {
+            let object = try decoder.decode(type, from: data)
+            return object
+        } catch {
+            throw ObjectSavableError.unableToDecode
+        }
+    }
+}
+
+func readFromURL(){
+    
+    // my google sheets api  888132519905-jg10rta9qlig4voa44lr4850et6lqmla.apps.googleusercontent.com
+    
+    let url = URL(string: "https://docs.google.com/spreadsheets/d/17itHVEOa9JBKnWo6-IJWVG8yqtuduzo_hpff-B-UcNw/edit#gid=1747035338")!
+
+    let task = URLSession.shared.downloadTask(with: url) { localURL, urlResponse, error in
+        if let localURL = localURL {
+            if let string = try? String(contentsOf: localURL) {
+                print(string)
+            }
+        }
+    }
+
+    task.resume()
+}
+
+
+
+
 class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var meets = [Meet]()
@@ -18,29 +79,65 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var events = [Event]()
  
     var selectedMeet : Meet?
-    var schools = ["Crystal Lake Central": "CLC", "Crystal Lake South": "CLS", "Cary Grove": "CG", "Prairie Ridge": "PR"]
+    var schools = [String:String]()
+   // var schools = ["CRYSTAL LAKE CENTRAL": "CLC", "CRYSTAL LAKE SOUTH": "CLS", "CARY-GROVE": "CG", "PRAIRIE RIDGE": "PR"]
     
     
     override func viewDidLoad() {
                super.viewDidLoad()
-               randomizeAthletes()
+        readFromURL()
+        let userDefaults = UserDefaults.standard
+        
+        // Get athletes from UserDefaults
+        do {
+                   let athletes = try userDefaults.getObjects(forKey: "allAthletes", castTo: [Athlete].self)
+            for athlete in athletes{
+                allAthletes.append(athlete)
+            }
+            
+                   //print(playingItMyWay[0].schoolFull)
+               } catch {
+                   print(error.localizedDescription)
+                  randomizeAthletes()
+               }
+               //randomizeAthletes()
                 sortByName()
-               
-
-               // Do any additional setup after loading the view.
+        
+        // get meets from userdefaults
+        do {
+               let inMeets = try userDefaults.getObjects(forKey: "meets", castTo: [Meet].self)
+        for meet in inMeets{
+            meets.append(meet)
+        }
+        
+               //print(playingItMyWay[0].schoolFull)
+           } catch {
+               print(error.localizedDescription)
+           }
+        
+        // get schools from UserDefaults
+        do {
+            let inSchools = try userDefaults.getObjects(forKey: "schools", castTo: [String:String].self)
+               for (key,value) in inSchools{
+                   schools[key] = value
+               }
+            } catch {
+                schools = ["CRYSTAL LAKE CENTRAL": "CLC", "CRYSTAL LAKE SOUTH": "CLS", "CARY-GROVE": "CG", "PRAIRIE RIDGE": "PR"]
+                      print(error.localizedDescription)
+                    }
            }
     
     func randomizeAthletes(){
-        allAthletes.append(Athlete(f: "Owen", l: "Mize", s: "CLC", g: 12, sf: "Crystal Lake Central"))
-            allAthletes.append(Athlete(f: "Jakhari", l: "Anderson", s: "CG", g: 12, sf: "Cary-Grove"))
-            allAthletes.append(Athlete(f: "Drew", l: "McGinness", s: "CLS", g: 9, sf: "Crystal Lake South"))
-        let letters = "abcdefghijklmnopqrstuvwxyz"
+        allAthletes.append(Athlete(f: "OWEN", l: "MIZE", s: "CLC", g: 12, sf: "CRYSTAL LAKE CENTRAL"))
+            allAthletes.append(Athlete(f: "JAKHARI", l: "ANDERSON", s: "CG", g: 12, sf: "CARY-GROVE"))
+            allAthletes.append(Athlete(f: "DREW", l: "MCGINNESS", s: "CLS", g: 9, sf: "CRYSTAL LAKE SOUTH"))
+        let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         let chars = Array(letters)
         let schoolArray = ["CLC","CG","CLS","PR"]
-        let schoolFullArray = ["Crystal Lake Central", "Cary-Grove", "Crystal Lake South", "Prairie Ridge"]
+        let schoolFullArray = ["CRYSTAL LAKE CENTRAL", "CARY-GROVE", "CRYSTAL LAKE SOUTH", "PRAIRIE RIDGE"]
                             
         
-        for _ in 3...75{
+        for _ in 3...1000{
             var first = ""
             var last = ""
             for _ in 0...4{
@@ -126,6 +223,15 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         if let m = pvc.meet{
         meets.append(m)
             tableView.reloadData()
+            
+            // store meets to UserDefaults
+            
+               let userDefaults = UserDefaults.standard
+               do {
+                       try userDefaults.setObjects(meets, forKey: "meets")
+                      } catch {
+                          print(error.localizedDescription)
+                      }
         }
     }
     

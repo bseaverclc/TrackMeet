@@ -11,7 +11,7 @@ enum levels{
     
 }
 
-public class Athlete{
+public class Athlete : Codable{
     var first: String
     var last: String
     var school: String
@@ -52,7 +52,7 @@ public class Athlete{
 
 
 
-public class Event{
+public class Event:Codable{
     var name: String
     var level: String
     var mark: Float

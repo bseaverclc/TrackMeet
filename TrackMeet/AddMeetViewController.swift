@@ -8,12 +8,14 @@
 
 import UIKit
 
-class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDataSource, UIScrollViewDelegate {
+class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDataSource, UIScrollViewDelegate, UITextFieldDelegate {
     var kHeight : CGFloat = 0.0
 
+    
     @IBOutlet weak var scrollViewOutlet: UIScrollView!
     var allAthletes = [Athlete]()
     var schools = [String: String]()
+    var initials = [String]()
     var schoolKeys = [String]()
     var selectedSchools = [String:String]()
     var lev = [String]()
@@ -24,6 +26,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     var meet : Meet!
     
     
+    @IBOutlet weak var verticalStackViewOutlet: UIStackView!
     @IBOutlet weak var ScoreTableView: UIStackView!
     
     @IBOutlet weak var meetNameOutlet: UITextField!
@@ -36,6 +39,27 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     @IBOutlet var relayScoringOutlet: [UITextField]!
     @IBOutlet weak var eventCodeOutlet: UITextField!
     
+    
+    
+    // Does not work
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+         print("textfield should return")
+        for textField in verticalStackViewOutlet.subviews where textField is UITextField {
+                   textField.resignFirstResponder()
+                   
+               }
+               return true
+    }
+    
+    // This is not working either.
+    // Need to find the right subviews and add delegates to these subviews also
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for textField in ScoreTableView.subviews where textField is UITextField {
+                          textField.resignFirstResponder()
+                          
+                      }
+        print("touchesBegan")
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(AddMeetViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -73,6 +97,18 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        for textField in verticalStackViewOutlet.subviews {
+            print("found a subview")
+            if let current = textField as? UITextField{
+            current.delegate = self
+                print("made textfield delegate")
+            }
+                  
+              }
+        
+        
+        meetNameOutlet.becomeFirstResponder()
+        
 //         eventAthletes = eventAthletes.sorted(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
         
         individualScoringOutlet.sort(by: {$0.tag < $1.tag})
@@ -82,6 +118,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         
         // Keep a copy of dictionary key
         schoolKeys = Array(schools.keys)
+        initials = Array(schools.values)
         // You may want to sort it
         schoolKeys.sort(by: {$0 < $1})
         // Do any additional setup after loading the view.
@@ -127,12 +164,23 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                       }
     }
     
+    func showAlert(errorMessage:String){
+        let alert = UIAlertController(title: "Error!", message: errorMessage, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        alert.addAction(okAction)
+        present(alert, animated: true, completion: nil)
+        
+    }
+    
     
     @IBAction func submitAction(_ sender: UIButton) {
         print("hit submit button")
         selectedSchools.removeAll()
         getSchools()
-        
+        if selectedSchools.count == 0{
+            showAlert(errorMessage: "You have to have at least 1 school")
+            return
+        }
        //print(selectedSchools)
         var gen = "M"
         if genderPicker.selectedSegmentIndex == 1{
@@ -144,6 +192,10 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
             if b.isSelected{
                 lev.append(b.titleLabel?.text! ?? "")
             }
+        }
+        if lev.count == 0{
+            showAlert(errorMessage: "You have to have at least 1 level")
+            return
         }
         var beenScored = [Bool]()
         var eventLeveled = [String]()
@@ -160,7 +212,11 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
             if let points = Int(individualScoringOutlet[i].text!){
             indP.append(points)
             }
-            else{print("not a number in score field")}
+            else{
+                showAlert(errorMessage: "Must put numbers in score fields")
+                return
+                
+            }
             i+=1
         }
         
@@ -170,22 +226,25 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                    if let points = Int(relayScoringOutlet[i].text!){
                    relP.append(points)
                    }
-                   else{print("not a number in score field")}
+                   else{
+                   showAlert(errorMessage: "Must put numbers in score fields")
+                    return
+            }
             i+=1
                }
         
-        var schoolInits = ""
-        for (key,value) in selectedSchools{
-             schoolInits = value
-        }
+//        var schoolInits = ""
+//        for (_,value) in selectedSchools{
+//             schoolInits = value
+//        }
+//
+//        for a in allAthletes{
+//            if schoolInits.contains(a.school){
+//                selectedAthletes.append(a)
+//            }
+//        }
         
-        for a in allAthletes{
-            if schoolInits.contains(a.school){
-                selectedAthletes.append(a)
-            }
-        }
-        
-        meet = Meet(name: meetNameOutlet.text!, date: datePickerOutlet.date, schools: selectedSchools, gender: gen, levels: lev , events: eventLeveled, indPoints: indP, relpoints: relP, athletes: selectedAthletes, beenScored: beenScored)
+        meet = Meet(name: meetNameOutlet.text!, date: datePickerOutlet.date, schools: selectedSchools, gender: gen, levels: lev , events: eventLeveled, indPoints: indP, relpoints: relP,  beenScored: beenScored)
         
         performSegue(withIdentifier: "unwindToMeetsSegue", sender: self)
         //print("\(meet)")
@@ -196,19 +255,58 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         let alert = UIAlertController(title: "Add School", message: "", preferredStyle: .alert)
         
         alert.addTextField(configurationHandler: { (textField) in
+            textField.autocapitalizationType = .allCharacters
             textField.placeholder = "Full School Name"
             
         })
         
         alert.addTextField(configurationHandler: { (textField) in
+            textField.autocapitalizationType = .allCharacters
                    textField.placeholder = "School Initials"
                    
                })
         alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { (updateAction) in
-            if alert.textFields![0].text! != "" && alert.textFields![1].text! != ""{
+            var badInput = false
+            var error = ""
+            var fullSchool = alert.textFields![0].text!
+            var initSchool = alert.textFields![1].text!
+            if fullSchool == ""{
+                error = "Must include school name"
+                badInput = true
+            }
+            else if initSchool == ""{
+                error = "Must include school initials"
+                badInput = true
+            }
+            else if self.schoolKeys.contains(fullSchool){
+                error = "\(fullSchool) is already in database"
+                badInput = true
+            }
+            else if self.initials.contains(initSchool){
+                error = "The initials \(initSchool) are already in use"
+                badInput = true
+            }
+            else{
+            
                 self.schools[alert.textFields![0].text!] = alert.textFields![1].text!
+                
+                // Save school to UserDefaults
+                let userDefaults = UserDefaults.standard
+                do {
+                    try userDefaults.setObjects(self.schools, forKey: "schools")
+                       } catch {
+                           print(error.localizedDescription)
+                       }
+                
+                
                 self.schoolKeys.append(alert.textFields![0].text!)
                 self.tableView.reloadData()
+            }
+            if badInput{
+            let alert2 = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alert2.addAction(okAction)
+                self.present(alert2, animated: true, completion: nil)
             }
         }))
     

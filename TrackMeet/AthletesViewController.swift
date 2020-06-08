@@ -131,7 +131,14 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
                          self.allAthletes[i].school = alert.textFields![2].text!
                           if let grade = Int(alert.textFields![3].text!){
                                 self.allAthletes[i].grade = grade}
-                        
+                        // save changes to userDefaults
+                        let userDefaults = UserDefaults.standard
+                        do {
+
+                            try userDefaults.setObjects(self.allAthletes, forKey: "allAthletes")
+                               } catch {
+                                   print(error.localizedDescription)
+                               }
                                               break
                                           }
                     }

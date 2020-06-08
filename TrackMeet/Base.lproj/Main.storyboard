@@ -8,6 +8,21 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--View Controller-->
+        <scene sceneID="YaC-XU-ozM">
+            <objects>
+                <viewController id="mAT-7D-l9q" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="1EI-q5-mH6">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="f38-SK-Ln7"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mWB-l4-xD2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="355" y="769"/>
+        </scene>
         <!--Home-->
         <scene sceneID="ykN-K0-0Fr">
             <objects>
@@ -535,7 +550,7 @@
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name of Meet" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="q6c-nc-suI">
                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="77.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters"/>
                                             </textField>
                                             <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" translatesAutoresizingMaskIntoConstraints="NO" id="6PZ-sC-qbN">
                                                 <rect key="frame" x="27" y="139.5" width="320" height="100"/>
@@ -921,6 +936,7 @@
                         <outlet property="meetNameOutlet" destination="q6c-nc-suI" id="zPO-iz-9FI"/>
                         <outlet property="scrollViewOutlet" destination="K08-xd-tpn" id="Jnc-zb-HwV"/>
                         <outlet property="tableView" destination="AaK-Wh-7QB" id="aF2-6q-OfX"/>
+                        <outlet property="verticalStackViewOutlet" destination="31Z-33-95e" id="cYD-RG-pVQ"/>
                         <outletCollection property="relayScoringOutlet" destination="nKe-g5-ObZ" collectionClass="NSMutableArray" id="BBd-tg-K2p"/>
                         <outletCollection property="relayScoringOutlet" destination="GqK-U9-rPr" collectionClass="NSMutableArray" id="Gue-0G-7Vb"/>
                         <outletCollection property="relayScoringOutlet" destination="Psh-vo-4XW" collectionClass="NSMutableArray" id="5rq-ps-VLo"/>
@@ -962,12 +978,12 @@
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First Name" textAlignment="natural" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KbY-Ie-WPm">
                                         <rect key="frame" x="103.5" y="0.0" width="207" height="52.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="alphabet"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" keyboardType="alphabet"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last Name" textAlignment="natural" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="W7u-6V-xmo">
                                         <rect key="frame" x="103.5" y="66.5" width="207" height="53"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Year" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P30-uv-63q">
                                         <rect key="frame" x="188" y="133.5" width="38.5" height="29"/>
@@ -1010,7 +1026,6 @@
                                         </state>
                                         <connections>
                                             <action selector="addAction:" destination="hT1-Dv-o5h" eventType="touchUpInside" id="zS4-Ez-nHv"/>
-                                            <segue destination="HZg-Od-ECo" kind="unwind" identifier="unwindToRosters" unwindAction="unwind:" id="Ihr-xp-UMt"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -1038,6 +1053,7 @@
                         <outlet property="lastOutlet" destination="W7u-6V-xmo" id="Eip-md-tY1"/>
                         <outlet property="schoolOutlet" destination="kCi-ZG-kax" id="NHt-CM-y5r"/>
                         <outlet property="yearOutlet" destination="DZ5-VE-tVe" id="3ZT-Rx-n3j"/>
+                        <segue destination="HZg-Od-ECo" kind="unwind" identifier="unwindToRosters" unwindAction="unwind:" id="d5X-od-iyR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nlw-18-dnc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -31,7 +31,19 @@ class addAthleteViewController: UIViewController {
     }
     }
     
+    func sameAthleteError()-> Bool{
+        let alert =  UIAlertController(title: "Error", message: "Athlete already exists in database", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: {(alertaction) in
+            print("Hit OK")
+        })
+        alert.addAction(okAction)
+        present(alert, animated: true, completion: nil)
+        return false
+    }
+    
     @IBAction func addAction(_ sender: UIButton) {
+        
+        var addAthlete = true
         if schoolOutlet.selectedSegmentIndex >= 0 {
         
         let first = firstOutlet.text
@@ -49,8 +61,26 @@ class addAthleteViewController: UIViewController {
         
            
             athlete = Athlete(f: first!, l: last!, s: school!, g: Int(year!)!, sf: schoolFull)
+            
+            for a in allAthletes{
+                if a.equals(other: athlete){
+                   resignFirstResponder()
+                   addAthlete = sameAthleteError()
+                   
+                    break
+                }
+            }
+            if addAthlete{
             print("Created Athlete")
             allAthletes.insert(athlete, at: 0)
+                // Save
+                let userDefaults = UserDefaults.standard
+                do {
+                    try userDefaults.setObjects(allAthletes, forKey: "allAthletes")
+                       } catch {
+                           print(error.localizedDescription)
+                       }
+                
             if from == "AthletesVC"{
             displayedAthletes.insert(athlete, at: 0)
                 print(athlete.schoolFull)
@@ -61,12 +91,13 @@ class addAthleteViewController: UIViewController {
                 eventAthletes.append(athlete)
                 performSegue(withIdentifier: "unwindToRosters", sender: self)
             }
-    }
+            }
+        }
         else{
-            let alert = UIAlertController(title: "Error!", message: "You must pick a school", preferredStyle: .alert)
+            let alert2 = UIAlertController(title: "Error!", message: "You must pick a school", preferredStyle: .alert)
             let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-            alert.addAction(action)
-            present(alert, animated: true, completion: nil)
+            alert2.addAction(action)
+            present(alert2, animated: true, completion: nil)
         }
         
     }
