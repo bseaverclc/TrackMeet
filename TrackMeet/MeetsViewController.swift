@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import GTMSessionFetcher
+import GoogleAPIClientForREST
 
 
 protocol ObjectSavable {
@@ -49,22 +51,37 @@ extension UserDefaults: ObjectSavable {
     }
 }
 
-func readFromURL(){
-    
-    // my google sheets api  888132519905-jg10rta9qlig4voa44lr4850et6lqmla.apps.googleusercontent.com
-    
-    let url = URL(string: "https://docs.google.com/spreadsheets/d/17itHVEOa9JBKnWo6-IJWVG8yqtuduzo_hpff-B-UcNw/edit#gid=1747035338")!
-
-    let task = URLSession.shared.downloadTask(with: url) { localURL, urlResponse, error in
-        if let localURL = localURL {
-            if let string = try? String(contentsOf: localURL) {
-                print(string)
-            }
-        }
-    }
-
-    task.resume()
-}
+//func readFromURL(){
+//
+//    // my google sheets api  888132519905-jg10rta9qlig4voa44lr4850et6lqmla.apps.googleusercontent.com
+//
+//    let url = URL(string: "https://docs.google.com/spreadsheets/d/17itHVEOa9JBKnWo6-IJWVG8yqtuduzo_hpff-B-UcNw/edit#gid=1747035338")!
+//
+//    let task = URLSession.shared.downloadTask(with: url) { localURL, urlResponse, error in
+//        if let localURL = localURL {
+//            if let string = try? String(contentsOf: localURL) {
+//                print(string)
+//            }
+//        }
+//    }
+//
+//    task.resume()
+//}
+//
+//func  readRoster(){
+//
+//  let query = GTLRSheetsQuery_SpreadsheetsValuesGet.query(withSpreadsheetId: "17itHVEOa9JBKnWo6-IJWVG8yqtuduzo_hpff-B-UcNw", range:"A1:B1")
+//    print(query.json)
+//let service = GTLRSheetsService()
+//    service.executeQuery(query) { (ticket, data, err) in
+//        print( ticket.fetchedObject)
+//    }
+//   // print(query)
+//    var fetcher = GTMSessionFetcher(urlString: "https://docs.google.com/spreadsheets/d/17itHVEOa9JBKnWo6-IJWVG8yqtuduzo_hpff-B-UcNw/edit#gid=0")
+//    //print(fetcher.bodyData)
+//    //print(fetcher)
+//    //GTLRSheets_Spreadsheet
+//}
 
 
 
@@ -85,7 +102,8 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     override func viewDidLoad() {
                super.viewDidLoad()
-        readFromURL()
+        //readFromURL()
+        //readRoster()
         let userDefaults = UserDefaults.standard
         
         // Get athletes from UserDefaults
