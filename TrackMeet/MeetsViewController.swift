@@ -240,6 +240,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         print("unwinding from Meets VC")
      
      let pvc = seg.source as! AddMeetViewController
+    allAthletes = pvc.allAthletes
         if let m = pvc.meet{
         meets.append(m)
             tableView.reloadData()
@@ -249,9 +250,17 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
                let userDefaults = UserDefaults.standard
                do {
                        try userDefaults.setObjects(meets, forKey: "meets")
+                
                       } catch {
                           print(error.localizedDescription)
                       }
+            do {
+                try userDefaults.setObjects(allAthletes, forKey: "allAthletes")
+                print("Saving Athletes")
+            }
+            catch{
+                print("error saving athletes")
+            }
         }
     }
     
