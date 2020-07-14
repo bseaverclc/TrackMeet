@@ -308,8 +308,10 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                 let userDefaults = UserDefaults.standard
                 do {
                     try userDefaults.setObjects(self.schools, forKey: "schools")
+                    print("Saved Schools in Add Meet VC")
                        } catch {
                            print(error.localizedDescription)
+                        print("Error saving schools in AddMeet")
                        }
                 
                 

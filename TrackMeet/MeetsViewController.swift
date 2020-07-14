@@ -93,7 +93,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     @IBOutlet weak var tableView: UITableView!
     
     var allAthletes = [Athlete]()
-    var events = [Event]()
+    
  
     var selectedMeet : Meet?
     var schools = [String:String]()
@@ -104,45 +104,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
                super.viewDidLoad()
         //readFromURL()
         //readRoster()
-        let userDefaults = UserDefaults.standard
         
-        // Get athletes from UserDefaults
-        do {
-                   let athletes = try userDefaults.getObjects(forKey: "allAthletes", castTo: [Athlete].self)
-            for athlete in athletes{
-                allAthletes.append(athlete)
-            }
-            
-                   //print(playingItMyWay[0].schoolFull)
-               } catch {
-                   print(error.localizedDescription)
-                  randomizeAthletes()
-               }
-               //randomizeAthletes()
-                sortByName()
-        
-        // get meets from userdefaults
-        do {
-               let inMeets = try userDefaults.getObjects(forKey: "meets", castTo: [Meet].self)
-        for meet in inMeets{
-            meets.append(meet)
-        }
-        
-               //print(playingItMyWay[0].schoolFull)
-           } catch {
-               print(error.localizedDescription)
-           }
-        
-        // get schools from UserDefaults
-        do {
-            let inSchools = try userDefaults.getObjects(forKey: "schools", castTo: [String:String].self)
-               for (key,value) in inSchools{
-                   schools[key] = value
-               }
-            } catch {
-                schools = ["CRYSTAL LAKE CENTRAL": "CLC", "CRYSTAL LAKE SOUTH": "CLS", "CARY-GROVE": "CG", "PRAIRIE RIDGE": "PR"]
-                      print(error.localizedDescription)
-                    }
            }
     
     func randomizeAthletes(){
@@ -237,7 +199,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
   @IBAction func unwind( _ seg: UIStoryboardSegue) {
-        print("unwinding from Meets VC")
+        print("unwinding from addMeets VC")
      
      let pvc = seg.source as! AddMeetViewController
     allAthletes = pvc.allAthletes
@@ -261,6 +223,14 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
             catch{
                 print("error saving athletes")
             }
+            
+            do {
+                           try userDefaults.setObjects(allAthletes, forKey: "schools")
+                           print("Saving Schools")
+                       }
+                       catch{
+                           print("error saving schools")
+                       }
         }
     }
     

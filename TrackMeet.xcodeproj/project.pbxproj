@@ -3,11 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		2C09C98D8EDCC5EC05899AFF /* Pods_TrackMeetTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 808E1012C4181C31395A3C2A /* Pods_TrackMeetTests.framework */; };
+		D3258ECA24BD239E00895910 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3258EC924BD239E00895910 /* LaunchViewController.swift */; };
+		D3258ECC24BD304B00895910 /* SchoolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3258ECB24BD304B00895910 /* SchoolsViewController.swift */; };
 		D3366838247B08B2008EA70C /* Meet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3366837247B08B2008EA70C /* Meet.swift */; };
 		D361DB0324731403005EF1A2 /* addAthleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D361DB0224731403005EF1A2 /* addAthleteViewController.swift */; };
 		D361DB0524735FA9005EF1A2 /* AthletesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D361DB0424735FA9005EF1A2 /* AthletesViewController.swift */; };
@@ -59,6 +61,8 @@
 		808E1012C4181C31395A3C2A /* Pods_TrackMeetTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TrackMeetTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA702FEBFDB3982E440C97EB /* Pods-TrackMeet-TrackMeetUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TrackMeet-TrackMeetUITests.release.xcconfig"; path = "Target Support Files/Pods-TrackMeet-TrackMeetUITests/Pods-TrackMeet-TrackMeetUITests.release.xcconfig"; sourceTree = "<group>"; };
 		BEA3E12BACB83F918BE971FF /* Pods_TrackMeet_TrackMeetUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TrackMeet_TrackMeetUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3258EC924BD239E00895910 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
+		D3258ECB24BD304B00895910 /* SchoolsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchoolsViewController.swift; sourceTree = "<group>"; };
 		D3366837247B08B2008EA70C /* Meet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meet.swift; sourceTree = "<group>"; };
 		D361DB0224731403005EF1A2 /* addAthleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addAthleteViewController.swift; sourceTree = "<group>"; };
 		D361DB0424735FA9005EF1A2 /* AthletesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthletesViewController.swift; sourceTree = "<group>"; };
@@ -153,6 +157,8 @@
 			isa = PBXGroup;
 			children = (
 				D3D2DEEE2471F5CB009C17DD /* Main.storyboard */,
+				D3258ECB24BD304B00895910 /* SchoolsViewController.swift */,
+				D3258EC924BD239E00895910 /* LaunchViewController.swift */,
 				D3BF359624803BB9000736F8 /* MeetsViewController.swift */,
 				D36BAF83247ABEDF00D71D4A /* AddMeetViewController.swift */,
 				D3A0B9D52472EEF70088D664 /* HomeViewController.swift */,
@@ -204,7 +210,6 @@
 				0BFAC400294DC273F54ABEA6 /* Pods-TrackMeetTests.debug.xcconfig */,
 				164824F93D386FF982E439F4 /* Pods-TrackMeetTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -448,10 +453,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3366838247B08B2008EA70C /* Meet.swift in Sources */,
+				D3258ECA24BD239E00895910 /* LaunchViewController.swift in Sources */,
 				D3D2DEED2471F5CB009C17DD /* EventEditViewController.swift in Sources */,
 				D3A0B9D2247248500088D664 /* EventsTableViewController.swift in Sources */,
 				D3A0B9D024723FDE0088D664 /* Athlete.swift in Sources */,
 				D3D2DEE92471F5CB009C17DD /* AppDelegate.swift in Sources */,
+				D3258ECC24BD304B00895910 /* SchoolsViewController.swift in Sources */,
 				D361DB0324731403005EF1A2 /* addAthleteViewController.swift in Sources */,
 				D3B15B17247818F8000BCFC8 /* AthleteResultsViewController.swift in Sources */,
 				D3D2DEF32471F5CB009C17DD /* TrackMeet.xcdatamodeld in Sources */,
