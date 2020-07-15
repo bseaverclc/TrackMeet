@@ -12,6 +12,15 @@ class LaunchViewController: UIViewController {
    var meets = [Meet]()
    var allAthletes = [Athlete]()
    var schools = [String:String]()
+    var initials = [String]()
+    
+    @IBAction func unwind3(_ seg: UIStoryboardSegue){
+           let pvc = seg.source as! SchoolsViewController
+           allAthletes = pvc.allAthletes
+        schools = pvc.schools
+           print("unwinding from Schools VC")
+       }
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toMeetsSegue"{
@@ -36,9 +45,9 @@ class LaunchViewController: UIViewController {
         // Get athletes from UserDefaults
         do {
             let athletes = try userDefaults.getObjects(forKey: "allAthletes", castTo: [Athlete].self)
-//            for athlete in athletes{
-//                allAthletes.append(athlete)
-//            }
+            for athlete in athletes{
+                allAthletes.append(athlete)
+            }
             
                    //print(playingItMyWay[0].schoolFull)
                } catch {
@@ -66,6 +75,7 @@ class LaunchViewController: UIViewController {
                for (key,value) in inSchools{
                    schools[key] = value
                }
+            initials = Array(schools.values)
             print("Got schools from file")
             print(schools)
             } catch {

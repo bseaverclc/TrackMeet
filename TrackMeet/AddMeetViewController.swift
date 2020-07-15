@@ -24,6 +24,9 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     var relP = [Int]()
     var selectedAthletes = [Athlete]()
     var meet : Meet!
+    var meets: [Meet]!
+    var selectedMeet : Meet?
+    var changeMeet = false
     
     
     @IBOutlet weak var verticalStackViewOutlet: UIStackView!
@@ -106,13 +109,67 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                   
               }
         
+        // sort the scoring textfields
+        individualScoringOutlet.sort(by: {$0.tag < $1.tag})
+        relayScoringOutlet.sort(by: {$0.tag < $1.tag})
         
-        meetNameOutlet.becomeFirstResponder()
+        meetNameOutlet.isEnabled = true
+        if let meet = selectedMeet{
+            changeMeet = true
+            // set the name and you can't change it!
+            meetNameOutlet.text = meet.name
+            meetNameOutlet.isEnabled = false
+            meetNameOutlet.textColor = UIColor.lightGray
+            
+            // set the date
+            datePickerOutlet.date = meet.date
+            
+            // still need to set the schools
+            
+            // set the gender
+            if meet.gender == "M"{
+                genderPicker.selectedSegmentIndex = 0
+            }
+            else{
+                genderPicker.selectedSegmentIndex = 1
+            }
+            
+            // set the levels
+            for level in meet.levels{
+                for button in levelButtonsOutlet{
+                    if button.titleLabel?.text == level{
+                        button.isSelected = true
+                    }
+                }
+            }
+            
+            // set the events no happening yet
+            
+            // set the scores
+            var i = 0
+            for score in meet.indPoints{
+                individualScoringOutlet[i].text = "\(score)"
+                i+=1
+            }
+            
+            var j = 0
+            for score in meet.relPoints{
+                relayScoringOutlet[j].text = "\(score)"
+                j+=1
+            }
+            
+            
+            
+        }
+        else{
+            meetNameOutlet.becomeFirstResponder()
+        }
+        
+       
         
 //         eventAthletes = eventAthletes.sorted(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
         
-        individualScoringOutlet.sort(by: {$0.tag < $1.tag})
-        relayScoringOutlet.sort(by: {$0.tag < $1.tag})
+        
         tableView.flashScrollIndicators()
         ScoreTableView.layer.borderWidth = 10
         
@@ -175,6 +232,14 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     
     @IBAction func submitAction(_ sender: UIButton) {
         print("hit submit button")
+        if !changeMeet{
+        for meet in meets{
+            if meet.name == meetNameOutlet.text{
+                showAlert(errorMessage: "Meet name already in use")
+                return
+            }
+        }
+        }
         selectedSchools.removeAll()
         getSchools()
         if selectedSchools.count == 0{
@@ -213,7 +278,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
             indP.append(points)
             }
             else{
-                showAlert(errorMessage: "Must put numbers in score fields")
+                showAlert(errorMessage: "Must put some numbers in individual score fields")
                 return
                 
             }
@@ -227,7 +292,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                    relP.append(points)
                    }
                    else{
-                   showAlert(errorMessage: "Must put numbers in score fields")
+                   showAlert(errorMessage: "Must put some numbers in relay score fields")
                     return
             }
             i+=1
@@ -243,9 +308,17 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
 //                selectedAthletes.append(a)
 //            }
 //        }
-        
+        if let oldMeet = selectedMeet{
+            for i in 0 ... meets.count - 1{
+                if oldMeet.name == meets[i].name{
+                    meets.remove(at: i)
+                    print("removed meet")
+                    break;
+                }
+            }
+        }
         meet = Meet(name: meetNameOutlet.text!, date: datePickerOutlet.date, schools: selectedSchools, gender: gen, levels: lev , events: eventLeveled, indPoints: indP, relpoints: relP,  beenScored: beenScored)
-        
+        meets.append(meet)
         performSegue(withIdentifier: "unwindToMeetsSegue", sender: self)
         //print("\(meet)")
     }
@@ -313,6 +386,14 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                            print(error.localizedDescription)
                         print("Error saving schools in AddMeet")
                        }
+                
+                do {
+                    try userDefaults.setObjects(self.allAthletes, forKey: "allAthletes")
+                               print("Saving Athletes")
+                           }
+                           catch{
+                               print("error saving athletes")
+                           }
                 
                 
                 self.schoolKeys.append(alert.textFields![0].text!)

@@ -157,8 +157,8 @@
 			isa = PBXGroup;
 			children = (
 				D3D2DEEE2471F5CB009C17DD /* Main.storyboard */,
-				D3258ECB24BD304B00895910 /* SchoolsViewController.swift */,
 				D3258EC924BD239E00895910 /* LaunchViewController.swift */,
+				D3258ECB24BD304B00895910 /* SchoolsViewController.swift */,
 				D3BF359624803BB9000736F8 /* MeetsViewController.swift */,
 				D36BAF83247ABEDF00D71D4A /* AddMeetViewController.swift */,
 				D3A0B9D52472EEF70088D664 /* HomeViewController.swift */,

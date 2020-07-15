@@ -269,7 +269,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
 //         var cell = tableViewOutlet.cellForRow(at: indexPath) as! TimeTableViewCell
         
         meet.beenScored[selectedRow] = false
-        processOutlet.backgroundColor = UIColor.red
+        processOutlet.backgroundColor = UIColor.gray
         processOutlet.setTitle("Process Event", for: .normal)
          var editingArray : [Athlete]!
          guard let cell2 = sender.findParentTableViewCell (),
@@ -329,7 +329,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     @IBAction func placeAction(_ sender: UITextField) {
         
         meet.beenScored[selectedRow] = false
-        processOutlet.backgroundColor = UIColor.red
+        processOutlet.backgroundColor = UIColor.gray
         processOutlet.setTitle("Process Event", for: .normal)
         var editingArray : [Athlete]!
         print(sender.tag)

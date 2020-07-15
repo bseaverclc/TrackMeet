@@ -111,12 +111,21 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="f38-SK-Ln7"/>
                     </view>
-                    <navigationItem key="navigationItem" id="1Pg-7I-JIG"/>
+                    <navigationItem key="navigationItem" id="1Pg-7I-JIG">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="a7L-ba-Ubl">
+                            <connections>
+                                <action selector="addSchoolAction:" destination="mAT-7D-l9q" id="Qhs-wr-rA1"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="NdD-wk-pe7" id="oIv-b8-tUY"/>
+                        <segue destination="F2J-Ik-Hl4" kind="unwind" identifier="unwindFromSchoolsSegue" unwindAction="unwind3:" id="PDy-tm-bDX"/>
+                        <segue destination="aqN-4C-D8X" kind="show" identifier="toAthletesSegue" id="WjZ-Z8-AfY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mWB-l4-xD2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="F2J-Ik-Hl4" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="795.6521739130435" y="699.77678571428567"/>
         </scene>
@@ -371,7 +380,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6lG-pe-0tM">
-                                <rect key="frame" x="0.0" y="813" width="414" height="49"/>
+                                <rect key="frame" x="0.0" y="779" width="414" height="83"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <items>
                                     <tabBarItem title="" id="Dt9-6l-S2b"/>
@@ -384,7 +393,7 @@
                                 </connections>
                             </tabBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mKk-PU-ZTZ">
-                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="691"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" textLabel="Ahs-lB-kkI" detailTextLabel="GXT-DK-QXF" style="IBUITableViewCellStyleValue1" id="IwU-a1-1Xj">
@@ -641,8 +650,8 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K08-xd-tpn">
                                 <rect key="frame" x="20" y="88" width="374" height="774"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="62" translatesAutoresizingMaskIntoConstraints="NO" id="31Z-33-95e">
-                                        <rect key="frame" x="0.0" y="0.0" width="374" height="1105"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" alignment="center" spacing="62" translatesAutoresizingMaskIntoConstraints="NO" id="31Z-33-95e">
+                                        <rect key="frame" x="0.0" y="-18" width="374" height="1105"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name of Meet" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="q6c-nc-suI">
                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="77.5"/>
@@ -1288,6 +1297,7 @@
                     <connections>
                         <outlet property="tableView" destination="sev-qb-zdj" id="483-xz-ech"/>
                         <segue destination="4Wv-4b-bX5" kind="show" identifier="toHomeSegue" id="eQ9-bX-cb9"/>
+                        <segue destination="z7i-Fd-zXZ" kind="show" identifier="changeMeetSegue" id="OGE-wb-gIP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DYD-3o-qWP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1315,5 +1325,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="H19-HB-OvR"/>
+        <segue reference="OGE-wb-gIP"/>
+        <segue reference="WjZ-Z8-AfY"/>
     </inferredMetricsTieBreakers>
 </document>

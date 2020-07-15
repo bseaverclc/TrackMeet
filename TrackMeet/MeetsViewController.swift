@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import GTMSessionFetcher
+//import GTMSessionFetcher
 import GoogleAPIClientForREST
 // Testing Moving Folders
 
@@ -157,11 +157,21 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
             let nvc = segue.destination as! AddMeetViewController
             nvc.allAthletes = allAthletes
             nvc.schools = schools
+            nvc.meets = meets
         }
         if segue.identifier == "toHomeSegue"{
             let nvc = segue.destination as! HomeViewController
             nvc.meet = selectedMeet
             nvc.allAthletes = allAthletes
+        }
+        
+        if segue.identifier == "changeMeetSegue"{
+            let nvc = segue.destination as! AddMeetViewController
+            nvc.allAthletes = allAthletes
+            nvc.schools = schools
+            nvc.meets = meets
+            nvc.selectedMeet = selectedMeet
+            
         }
     
         
@@ -170,7 +180,41 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
     
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+                var blankText = false
+                var blankAlert = UIAlertController()
+                let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+                    var selected = self.meets[indexPath.row]
+                    self.meets.remove(at: indexPath.row)
+                    tableView.deleteRows(at: [indexPath], with: .fade)
+                    
+                    let userDefaults = UserDefaults.standard
+                    do {
+                       try userDefaults.setObjects(self.meets, forKey: "meets")
+                       print("Saving meets")
+                    }
+                    catch{
+                          print("error saving meets")
+                    }
+                    
+                }
+
+                let edit = UITableViewRowAction(style: .normal, title: "Edit") { (action, indexPath) in
+                  
+                    self.selectedMeet = self.meets[indexPath.row]
+                    self.performSegue(withIdentifier: "changeMeetSegue", sender: nil)
+                      
+
+                
+
+                
+            }
+        return [edit,delete]
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         meets.count
@@ -202,10 +246,12 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         print("unwinding from addMeets VC")
      
      let pvc = seg.source as! AddMeetViewController
-    allAthletes = pvc.allAthletes
-        if let m = pvc.meet{
-        meets.append(m)
-            tableView.reloadData()
+     allAthletes = pvc.allAthletes
+     schools = pvc.schools
+    meets = pvc.meets
+     if let m = pvc.meet{
+       // meets.append(m)
+        tableView.reloadData()
             
             // store meets to UserDefaults
             
@@ -225,7 +271,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
             }
             
             do {
-                           try userDefaults.setObjects(allAthletes, forKey: "schools")
+                           try userDefaults.setObjects(schools, forKey: "schools")
                            print("Saving Schools")
                        }
                        catch{

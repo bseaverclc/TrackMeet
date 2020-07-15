@@ -16,7 +16,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     
      weak var delegate: DataBackDelegate?
    
-    var header = "All Schools"
+    var header = ""
     var screenTitle = "Rosters"
     var allAthletes = [Athlete]()
     var eventAthletes = [Athlete]()
@@ -24,6 +24,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     var selectedAthlete : Athlete!
     var schools = [String]()
     var meet : Meet!
+    var pvcScreenTitle = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,13 +38,16 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         self.title = screenTitle
         displayedAthletes = allAthletes
         
+        if pvcScreenTitle == ""{
         schools = [String](meet.schools.values)
+        }
         var tabItems = tabBarOutlet.items!
              var i = 0
              for school in schools{
                  tabItems[i].title = school
                  i+=1
              }
+        tabBar(tabBarOutlet, didSelect: tabBarOutlet.items![0])
         
         print("ViewDidLoad")
        
@@ -52,6 +56,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
         tableView.reloadData()
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
