@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 
 class LaunchViewController: UIViewController {
    var meets = [Meet]()
@@ -51,6 +52,7 @@ class LaunchViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
+        self.navigationController?.toolbar.isHidden = true
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -61,6 +63,7 @@ class LaunchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Home"
+        self.navigationController?.toolbar.isHidden = true
         
         let userDefaults = UserDefaults.standard
         
@@ -146,4 +149,13 @@ class LaunchViewController: UIViewController {
         }
   
 
+    @IBAction func athleticNetAction(_ sender: UIButton) {
+        if let url = URL(string: "https://www.athletic.net/TrackAndField/Illinois/") {
+            UIApplication.shared.open(url)
+        }
+        
+//        let url = URL(string: "https://www.athletic.net/TrackAndField/Illinois/")
+//        let svc = SFSafariViewController(url: url!)
+//        present(svc, animated: true, completion: nil)
+    }
 }

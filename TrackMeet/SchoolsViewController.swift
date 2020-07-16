@@ -399,7 +399,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
         let nvc = segue.destination as! AthletesViewController
         nvc.pvcScreenTitle = screenTitle
         nvc.allAthletes = allAthletes
-        
+            nvc.meets = meets
         nvc.schools = [schools[selectedSchool]!]
         }
     }

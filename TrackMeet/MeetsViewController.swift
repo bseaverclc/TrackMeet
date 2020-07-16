@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import SafariServices
 //import GTMSessionFetcher
-import GoogleAPIClientForREST
+//import GoogleAPIClientForREST
 // Testing Moving Folders
 
 protocol ObjectSavable {
@@ -103,9 +104,15 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
                super.viewDidLoad()
         self.title = "All Meets"
+        
+        
         //readFromURL()
         //readRoster()
            }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.toolbar.isHidden = false
+    }
     
     override func viewWillDisappear(_ animated: Bool) {
         if isMovingFromParent{
@@ -170,6 +177,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
             let nvc = segue.destination as! HomeViewController
             nvc.meet = selectedMeet
             nvc.allAthletes = allAthletes
+            nvc.meets = meets
         }
         
         if segue.identifier == "changeMeetSegue"{
@@ -293,5 +301,10 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
 
-
+    @IBAction func athleticNetAction(_ sender: UIBarButtonItem) {
+        let url = URL(string: "https://www.athletic.net/TrackAndField/School.aspx?SchoolID=16275")
+        let svc = SFSafariViewController(url: url!)
+        present(svc, animated: true, completion: nil)
+    }
+    
 }

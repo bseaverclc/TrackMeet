@@ -25,6 +25,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     var schools = [String]()
     var meet : Meet?
     var pvcScreenTitle = ""
+    var meets : [Meet]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -219,6 +220,8 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         else if segue.identifier == "toAthleteResultsSegue"{
             let nvc = segue.destination as! AthleteResultsViewController
             nvc.athlete = selectedAthlete
+            nvc.meets = meets
+            nvc.meet = meet
         }
     }
     

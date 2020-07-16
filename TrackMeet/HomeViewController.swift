@@ -17,6 +17,7 @@ class HomeViewController: UIViewController, DataBackDelegate {
     
     var allAthletes : [Athlete]!
     var meet : Meet!
+    var meets : [Meet]!
     
     
     func savePreferences(athletes: [Athlete]) {
@@ -67,6 +68,7 @@ class HomeViewController: UIViewController, DataBackDelegate {
             nvc.allAthletes = allAthletes
             nvc.delegate = self
             nvc.meet = meet
+            nvc.meets = meets
         }
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
