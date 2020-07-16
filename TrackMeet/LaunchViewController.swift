@@ -18,8 +18,18 @@ class LaunchViewController: UIViewController {
            let pvc = seg.source as! SchoolsViewController
            allAthletes = pvc.allAthletes
         schools = pvc.schools
+        meets = pvc.meets
            print("unwinding from Schools VC")
        }
+    
+    @IBAction func unwindFromMeets(_ seg: UIStoryboardSegue){
+              let pvc = seg.source as! MeetsViewController
+              allAthletes = pvc.allAthletes
+              schools = pvc.schools
+              meets = pvc.meets
+              print("unwinding from Meets VC")
+          }
+    
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -34,11 +44,23 @@ class LaunchViewController: UIViewController {
             let nvc = segue.destination as! SchoolsViewController
             nvc.allAthletes = allAthletes
             nvc.schools = schools
+            nvc.meets = meets
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Home"
         
         let userDefaults = UserDefaults.standard
         

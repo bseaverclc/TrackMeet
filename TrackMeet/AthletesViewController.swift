@@ -23,7 +23,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     var displayedAthletes = [Athlete]()
     var selectedAthlete : Athlete!
     var schools = [String]()
-    var meet : Meet!
+    var meet : Meet?
     var pvcScreenTitle = ""
     
     override func viewDidLoad() {
@@ -39,7 +39,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         displayedAthletes = allAthletes
         
         if pvcScreenTitle == ""{
-        schools = [String](meet.schools.values)
+        schools = [String](meet!.schools.values)
         }
         var tabItems = tabBarOutlet.items!
              var i = 0
@@ -63,7 +63,12 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         super.viewWillDisappear(animated)
         print("view disappearing")
         if isMovingFromParent{
-        self.delegate?.savePreferences(athletes: allAthletes)
+            if let del = self.delegate{
+        del.savePreferences(athletes: allAthletes)
+            }
+            else{
+                performSegue(withIdentifier: "unwindtoSchoolsSegue", sender: nil)
+            }
             print("is moving from parent")
         }
     }
@@ -203,7 +208,12 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
             let nvc = segue.destination as! addAthleteViewController
             nvc.displayedAthletes = displayedAthletes
             nvc.allAthletes = allAthletes
-            nvc.meet = meet
+            if let aMeet = meet{
+                nvc.meet = aMeet
+            }
+            else{
+                nvc.meet = Meet(name: "Blank", date: Date(), schools: ["Full School":schools[0]], gender: "M", levels: ["VAR"], events: ["none"], indPoints: [Int](), relpoints: [Int](), beenScored: [false])
+            }
             nvc.from = "AthletesVC"
         }
         else if segue.identifier == "toAthleteResultsSegue"{

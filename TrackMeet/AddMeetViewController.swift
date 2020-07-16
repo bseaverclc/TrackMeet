@@ -190,6 +190,11 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         let school = schoolKeys[indexPath.row]
         cell.textLabel?.text = school
         cell.detailTextLabel?.text = schools[school]
+        if selectedMeet?.schools[school] != nil{
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableView.ScrollPosition(rawValue: 0)!)
+            //cell.isHighlighted = true
+            print("selecting and highlighting cell")
+        }
         return cell
         
     }
@@ -319,6 +324,8 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         }
         meet = Meet(name: meetNameOutlet.text!, date: datePickerOutlet.date, schools: selectedSchools, gender: gen, levels: lev , events: eventLeveled, indPoints: indP, relpoints: relP,  beenScored: beenScored)
         meets.append(meet)
+      //reCalcPoints()
+     
         performSegue(withIdentifier: "unwindToMeetsSegue", sender: self)
         //print("\(meet)")
     }
@@ -468,4 +475,67 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     
     
 }
+    
+        func reCalcPoints(){
+//            print("Recalculating points")
+//
+//            for eventName in eve{
+//                var eventAthletes = [Athlete]()
+//                for a in allAthletes{
+//                    for event in a.events{
+//                        if event.meetName == meet.name && eventName == event.name{
+//                            eventAthletes.append(a)
+//                        }
+//                    }
+//                }
+//                for ea in eventAthletes{
+//                    for event in ea.events{
+//                       if event.meetName == meet.name && eventName == event.name{
+//                            if let place = event.place{
+//                                var scoring = [Int]()
+//                                if event.name.contains("4x"){
+//                                    scoring = meet.relPoints
+//                                 }
+//                                else{scoring = meet.indPoints}
+//                                if place <= scoring.count{
+//                                    let ties = checkForTies(place: place, athletes: eventAthletes)
+//                                    var points = 0
+//                                    if ties != 0{
+//                                        for i in place - 1 ..< place - 1 + ties{
+//                                            if i > scoring.count - 1{
+//                                                points += 0
+//                                            }
+//                                            else{
+//                                                points += scoring[i]
+//                                            }
+//                                        }
+//                                        event.points = Double(points)/Double(ties)
+//                                    }
+//                                    else{event.points = 0}
+//                                    //print("\(a.last) points added = \(event.points)")
+//                                    }
+//
+//                        }
+//                    }
+//                    }
+//                }
+//
+//
+//        }
+        
+    }
+    
+    func checkForTies(place: Int, athletes: [Athlete])-> Int{
+//           var ties = 0
+//           for a in athletes{
+//               if let event = a.getEvent(eventName: self.title!, meetName: meet.name){
+//                   if event.place == place{
+//                       ties += 1
+//                   }
+//           }
+//       }
+//           return ties
+        return 0
+       }
+    
 }

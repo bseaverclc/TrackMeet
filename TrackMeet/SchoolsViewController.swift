@@ -16,8 +16,8 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
         
          //weak var delegate: DataBackDelegate?
        
-        var header = "All Schools"
-        var screenTitle = "All Schools"
+        var header = "Schools"
+        var screenTitle = "Schools"
         var allAthletes = [Athlete]()
         var eventAthletes = [Athlete]()
         var displayedAthletes = [Athlete]()
@@ -25,6 +25,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
         var schools = [String:String]()
         var schoolNames = [String]()
         var initials = [String]()
+        var meets : [Meet]!
    
         
         
@@ -54,6 +55,15 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
             performSegue(withIdentifier: "unwindFromSchoolsSegue", sender: nil)
         }
     }
+    
+    @IBAction func unwindtoSchools( _ seg: UIStoryboardSegue) {
+    let pvc = seg.source as! AthletesViewController
+     allAthletes = pvc.allAthletes
+     allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
+     print("unwind to schools")
+     
+     
+     }
         
 //        override func viewWillDisappear(_ animated: Bool) {
 //            super.viewWillDisappear(animated)
@@ -127,20 +137,60 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
               
                     alert.addAction(UIAlertAction(title: "Update", style: .default, handler: { (updateAction) in
                         if alert.textFields![0].text! != "" && alert.textFields![1].text! != ""{
+                        
+                            //changing school names to new names
                             
-                        self.schools.removeValue(forKey: self.schoolNames[indexPath.row]) // remove old from Dict
+                                    for a in self.allAthletes{
+                                        print(a.schoolFull)
+                                        print(self.schoolNames[indexPath.row])
+                                        if a.schoolFull == self.schoolNames[indexPath.row]{
+                                            a.schoolFull = alert.textFields![0].text!
+                                            a.school = alert.textFields![1].text!
+                                            print("changed athletes school")
+                                        }
+                                    }
+                            
+                            // changing all meets to new school names
+                            for m in self.meets{
+                                m.schools.removeValue(forKey: self.schoolNames[indexPath.row])
+                                m.schools[alert.textFields![0].text!] = alert.textFields![1].text!
+                            
+                            }
+                              
+                            
+                       self.schools.removeValue(forKey: self.schoolNames[indexPath.row]) // remove old from Dict
                         self.schools[alert.textFields![0].text!] = alert.textFields![1].text! // add new to dict
                         self.schoolNames[indexPath.row] = alert.textFields![0].text! // change Array of schools
                         self.tableView.reloadRows(at: [indexPath], with: .fade)
                             
+                            
+                            
                              let userDefaults = UserDefaults.standard
-                            do {
-                                try userDefaults.setObjects(self.schools, forKey: "schools")
-                                print("Saving Schools")
-                            }
-                            catch{
-                                print("error saving schools")
-                            }
+                         
+                            
+                            
+                                          do {
+                                            try userDefaults.setObjects(self.meets, forKey: "meets")
+                                           
+                                                 } catch {
+                                                     print(error.localizedDescription)
+                                                 }
+                                       do {
+                                        try userDefaults.setObjects(self.allAthletes, forKey: "allAthletes")
+                                           print("Saving Athletes")
+                                       }
+                                       catch{
+                                           print("error saving athletes")
+                                       }
+                                       
+                                       do {
+                                        try userDefaults.setObjects(self.schools, forKey: "schools")
+                                                      print("Saving Schools")
+                                                  }
+                                                  catch{
+                                                      print("error saving schools")
+                                                  }
+                                   
                         
                         // Still need to change all athletes with old school names
 //                        for i in 0 ..< self.allAthletes.count{

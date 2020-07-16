@@ -38,7 +38,7 @@ class HomeViewController: UIViewController, DataBackDelegate {
         super.viewDidLoad()
         print(meet.gender)
         print("Individual Points: \(meet.indPoints)")
-        
+        self.title = "\(meet.name) Home"
         
     }
     

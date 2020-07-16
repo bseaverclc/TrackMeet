@@ -11,6 +11,7 @@
 		D3258ECA24BD239E00895910 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3258EC924BD239E00895910 /* LaunchViewController.swift */; };
 		D3258ECC24BD304B00895910 /* SchoolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3258ECB24BD304B00895910 /* SchoolsViewController.swift */; };
 		D3366838247B08B2008EA70C /* Meet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3366837247B08B2008EA70C /* Meet.swift */; };
+		D3481B4D24BF98C200963A0C /* AddAthleteFromRosterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3481B4C24BF98C200963A0C /* AddAthleteFromRosterViewController.swift */; };
 		D361DB0324731403005EF1A2 /* addAthleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D361DB0224731403005EF1A2 /* addAthleteViewController.swift */; };
 		D361DB0524735FA9005EF1A2 /* AthletesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D361DB0424735FA9005EF1A2 /* AthletesViewController.swift */; };
 		D361DB072475741E005EF1A2 /* AddAthleteToEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D361DB062475741E005EF1A2 /* AddAthleteToEventViewController.swift */; };
@@ -64,6 +65,7 @@
 		D3258EC924BD239E00895910 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 		D3258ECB24BD304B00895910 /* SchoolsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchoolsViewController.swift; sourceTree = "<group>"; };
 		D3366837247B08B2008EA70C /* Meet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meet.swift; sourceTree = "<group>"; };
+		D3481B4C24BF98C200963A0C /* AddAthleteFromRosterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAthleteFromRosterViewController.swift; sourceTree = "<group>"; };
 		D361DB0224731403005EF1A2 /* addAthleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addAthleteViewController.swift; sourceTree = "<group>"; };
 		D361DB0424735FA9005EF1A2 /* AthletesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthletesViewController.swift; sourceTree = "<group>"; };
 		D361DB062475741E005EF1A2 /* AddAthleteToEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAthleteToEventViewController.swift; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				D3D2DEEE2471F5CB009C17DD /* Main.storyboard */,
+				D3481B4C24BF98C200963A0C /* AddAthleteFromRosterViewController.swift */,
 				D3258EC924BD239E00895910 /* LaunchViewController.swift */,
 				D3258ECB24BD304B00895910 /* SchoolsViewController.swift */,
 				D3BF359624803BB9000736F8 /* MeetsViewController.swift */,
@@ -470,6 +473,7 @@
 				D3A0B9CE24722B5B0088D664 /* TimeTableViewCell.swift in Sources */,
 				D3647CCF2476EEAB000627C6 /* ScoresViewController.swift in Sources */,
 				D361DB0524735FA9005EF1A2 /* AthletesViewController.swift in Sources */,
+				D3481B4D24BF98C200963A0C /* AddAthleteFromRosterViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

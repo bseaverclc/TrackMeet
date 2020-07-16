@@ -102,10 +102,17 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     override func viewDidLoad() {
                super.viewDidLoad()
+        self.title = "All Meets"
         //readFromURL()
         //readRoster()
-        
            }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        if isMovingFromParent{
+            performSegue(withIdentifier: "unwindFromMeetsSegue", sender: nil)
+        }
+    }
+    
     
     func randomizeAthletes(){
         allAthletes.append(Athlete(f: "OWEN", l: "MIZE", s: "CLC", g: 12, sf: "CRYSTAL LAKE CENTRAL"))

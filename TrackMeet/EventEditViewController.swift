@@ -135,7 +135,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         }
         
         for event in currentAthletes[indexPath.row].events{
-            if event.name == title{
+            if event.name == title  && event.meetName == meet.name{
                 if let place = event.place{
                 cell.configure(text: event.markString, placeholder: "Mark", placeText: "\(place)")
                 }
@@ -250,12 +250,31 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
-
-            eventAthletes[indexPath.row].events.removeAll { (e) -> Bool in
-                e.name == self.title
+            
+            var sec = indexPath.section
+            
+            switch sec{
+            case 0:
+                heat1[indexPath.row].events.removeAll { (e) -> Bool in
+                    e.name == self.title && e.meetName == self.meet.name
+                }
+                heat1.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            case 1:
+                heat2[indexPath.row].events.removeAll { (e) -> Bool in
+                    e.name == self.title && e.meetName == self.meet.name
+                }
+                heat2.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            default:
+                eventAthletes[indexPath.row].events.removeAll { (e) -> Bool in
+                    e.name == self.title && e.meetName == self.meet.name
+                }
+                eventAthletes.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
             }
-            eventAthletes.remove(at: indexPath.row)
-                   tableView.deleteRows(at: [indexPath], with: .fade)
+
+            
         }
     }
     
@@ -268,9 +287,12 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
 //         var indexPath = IndexPath(row: sender.tag, section: 0)
 //         var cell = tableViewOutlet.cellForRow(at: indexPath) as! TimeTableViewCell
         
+        print("time action happening")
+        
         meet.beenScored[selectedRow] = false
         processOutlet.backgroundColor = UIColor.gray
         processOutlet.setTitle("Process Event", for: .normal)
+        
          var editingArray : [Athlete]!
          guard let cell2 = sender.findParentTableViewCell (),
              let indexPath2 = tableViewOutlet.indexPath(for: cell2) else {
@@ -282,9 +304,10 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
        if sections{
                if indexPath2.section == 0{
                    for event in heat1[indexPath2.row].events{
-                        if event.name == title{
+                    if event.name == title && event.meetName == meet.name{
                             
                            event.markString = mark
+                           print("section 0 set mark")
                             
                         }
                     }
@@ -292,18 +315,20 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                }
                else if indexPath2.section == 1{
                    for event in heat2[indexPath2.row].events{
-                        if event.name == title{
+                        if event.name == title && event.meetName == meet.name{
                             
                    event.markString = mark
+                            print("section 1 set mark")
                             
                         }
                     }
                }
                else{
                    for event in eventAthletes[indexPath2.row].events{
-                        if event.name == title{
+                        if event.name == title && event.meetName == meet.name{
                            
                    event.markString = mark
+                            print("sections but no section set mark")
                             
                         }
                     }
@@ -312,9 +337,10 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
            }
        else{
            for event in eventAthletes[indexPath2.row].events{
-               if event.name == title{
+               if event.name == title && event.meetName == meet.name{
                   
                        event.markString = mark
+                       print("no sections set mark")
                                 
                             }
                         }
@@ -346,7 +372,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         if sections{
             if indexPath2.section == 0{
                 for event in heat1[indexPath2.row].events{
-                     if event.name == title{
+                     if event.name == title && event.meetName == meet.name{
                          if let intPlace = Int(place){
                 event.place = intPlace
                          }
@@ -359,7 +385,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             }
             else if indexPath2.section == 1{
                 for event in heat2[indexPath2.row].events{
-                     if event.name == title{
+                     if event.name == title && event.meetName == meet.name{
                          if let intPlace = Int(place){
                 event.place = intPlace
                          }
@@ -371,7 +397,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             }
             else{
                 for event in eventAthletes[indexPath2.row].events{
-                     if event.name == title{
+                     if event.name == title && event.meetName == meet.name{
                          if let intPlace = Int(place){
                 event.place = intPlace
                          }
@@ -385,7 +411,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         }
         else{
         for event in eventAthletes[indexPath2.row].events{
-            if event.name == title{
+            if event.name == title && event.meetName == meet.name{
                 if let intPlace = Int(place){
                     event.place = intPlace
                              }
@@ -415,7 +441,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                           print(error.localizedDescription)
                       }
             
-           // calcPoints()
+           //calcPoints()
            // print("Calculated Points")
         }
         else {

@@ -24,6 +24,7 @@ class EventsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("EventsVDL")
+        self.title = "\(meet.name) Events"
         
       
         
