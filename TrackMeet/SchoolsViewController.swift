@@ -106,6 +106,8 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
             var blankAlert = UIAlertController()
             let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
                 var selected = self.schoolNames[indexPath.row]
+                self.allAthletes.removeAll(where: {$0.schoolFull == selected})
+                
                 self.schoolNames.remove(at: indexPath.row) // remove from array
                 self.schools.removeValue(forKey: selected) // remove from dictionary
                 // Still need to remove all athletes from this school

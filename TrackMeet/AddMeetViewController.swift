@@ -538,4 +538,10 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         return 0
        }
     
+    
+    @IBAction func tapAction(_ sender: UITapGestureRecognizer) {
+        print("tapped")
+        view.endEditing(true)
+     // resignFirstResponder()
+    }
 }

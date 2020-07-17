@@ -103,4 +103,7 @@ class addAthleteViewController: UIViewController {
     }
     
 
+    @IBAction func tapAction(_ sender: UITapGestureRecognizer) {
+        view.endEditing(true)
+    }
 }

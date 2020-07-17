@@ -355,6 +355,7 @@
                             </tabBar>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="iHn-JU-QV0" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="0C9-Od-vhm"/>
                             <constraint firstItem="F19-CC-7aQ" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.0401786" id="39p-Ns-Wgw"/>
@@ -369,6 +370,9 @@
                             <constraint firstItem="iHn-JU-QV0" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="stt-WY-kWd"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="CaU-3h-sbR" appends="YES" id="Rfg-qE-iAY"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="Sgz-3R-RcI">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="NBQ-fo-wUn">
@@ -386,6 +390,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <exit id="IX2-Fv-UV8" userLabel="Exit" sceneMemberID="exit"/>
+                <tapGestureRecognizer id="CaU-3h-sbR">
+                    <connections>
+                        <action selector="tapAction:" destination="BYZ-38-t0r" id="erV-we-TVE"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3747.826086956522" y="768.75"/>
         </scene>
@@ -1001,21 +1010,25 @@
                                                 </connections>
                                             </button>
                                         </subviews>
+                                        <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstItem="q6c-nc-suI" firstAttribute="height" secondItem="31Z-33-95e" secondAttribute="height" multiplier="0.034" id="9ru-ZT-Na8"/>
                                             <constraint firstItem="6PZ-sC-qbN" firstAttribute="height" secondItem="31Z-33-95e" secondAttribute="height" multiplier="0.1" id="HcZ-qw-dQp"/>
                                             <constraint firstAttribute="height" constant="1000" id="Kho-NT-49o"/>
+                                            <constraint firstItem="AaK-Wh-7QB" firstAttribute="leading" secondItem="31Z-33-95e" secondAttribute="leading" id="Ohf-3Y-BGg"/>
                                             <constraint firstItem="AaK-Wh-7QB" firstAttribute="height" secondItem="31Z-33-95e" secondAttribute="height" multiplier="0.451" id="Qyf-pL-4yo"/>
-                                            <constraint firstItem="AaK-Wh-7QB" firstAttribute="leading" secondItem="31Z-33-95e" secondAttribute="leading" id="WM6-FC-Ih3"/>
-                                            <constraint firstAttribute="trailing" secondItem="AaK-Wh-7QB" secondAttribute="trailing" id="oAA-oZ-pSL"/>
+                                            <constraint firstAttribute="trailing" secondItem="AaK-Wh-7QB" secondAttribute="trailing" id="Y1T-0j-6F7"/>
                                         </constraints>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="zPj-yl-Cn0" appends="YES" id="ouJ-RW-yGI"/>
+                                        </connections>
                                     </stackView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="31Z-33-95e" firstAttribute="leading" secondItem="K08-xd-tpn" secondAttribute="leading" id="5u2-T7-uSp"/>
-                                    <constraint firstAttribute="trailing" secondItem="31Z-33-95e" secondAttribute="trailing" constant="-5.5" id="Daj-wc-ifG"/>
                                     <constraint firstItem="maW-sW-RHC" firstAttribute="height" secondItem="K08-xd-tpn" secondAttribute="height" multiplier="0.15" id="IDJ-E7-p07"/>
                                     <constraint firstAttribute="bottom" secondItem="31Z-33-95e" secondAttribute="bottom" constant="35.5" id="WHR-7d-LA3"/>
+                                    <constraint firstAttribute="trailing" secondItem="31Z-33-95e" secondAttribute="trailing" id="lfF-xw-r9c"/>
                                     <constraint firstItem="31Z-33-95e" firstAttribute="top" secondItem="K08-xd-tpn" secondAttribute="top" id="mGx-e9-uIh"/>
                                 </constraints>
                                 <connections>
@@ -1066,6 +1079,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rhf-F9-tEo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="tNl-Dk-3rl" userLabel="Exit" sceneMemberID="exit"/>
+                <tapGestureRecognizer id="zPj-yl-Cn0">
+                    <connections>
+                        <action selector="tapAction:" destination="z7i-Fd-zXZ" id="deM-Zn-UMC"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2181.1594202898555" y="-3.3482142857142856"/>
         </scene>
@@ -1144,6 +1162,7 @@
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="elU-0x-IZL" firstAttribute="leading" secondItem="LqY-dL-dws" secondAttribute="leading" id="Ed6-uY-2rL"/>
                             <constraint firstItem="LqY-dL-dws" firstAttribute="trailing" secondItem="elU-0x-IZL" secondAttribute="trailing" id="QRV-Ci-ZYE"/>
@@ -1151,6 +1170,9 @@
                             <constraint firstItem="elU-0x-IZL" firstAttribute="top" secondItem="LqY-dL-dws" secondAttribute="top" id="xAV-Cu-utH"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="LqY-dL-dws"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="sNe-2B-LuA" appends="YES" id="Tpn-ah-Fxn"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="gKy-oO-HAA"/>
                     <connections>
@@ -1163,6 +1185,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nlw-18-dnc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="HZg-Od-ECo" userLabel="Exit" sceneMemberID="exit"/>
+                <tapGestureRecognizer id="sNe-2B-LuA">
+                    <connections>
+                        <action selector="tapAction:" destination="hT1-Dv-o5h" id="nsc-7i-enw"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2609" y="1600"/>
         </scene>

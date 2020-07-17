@@ -614,7 +614,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         }
         for a in eventAthletes{
             if let event = a.getEvent(eventName: self.title!, meetName: meet.name), let place = event.place{
-                print("event.meetName \(event.meetName) meet.name \(meet.name)")
+               // print("event.meetName \(event.meetName) meet.name \(meet.name)")
                 if event.meetName == meet.name{
                 var scoring = [Int]()
                 if event.name.contains("4x"){
@@ -661,6 +661,11 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                       print(error.localizedDescription)
                   }
 
+    }
+    
+    
+    @IBAction func tapAction(_ sender: UITapGestureRecognizer) {
+        view.endEditing(true)
     }
 }
 
