@@ -635,8 +635,12 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                         }
                         event.points = Double(points)/Double(ties)
                     }
-                    else{event.points = 0}
+                    else{event.points = 0}  // if ties somehow = 0
+                    
                     print("\(a.last) points added = \(event.points)")
+                    }
+                else{
+                    event.points = 0  // if place is not for a score
                     }
 
         }
