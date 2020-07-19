@@ -160,7 +160,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
           NotificationCenter.default.addObserver(self, selector: #selector(EventEditViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         
                  NotificationCenter.default.addObserver(self, selector: #selector(EventEditViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        if self.title!.contains("100M")  || self.title!.contains("200M"){
+        if self.title!.contains("100M")  || self.title!.contains("200M")  || self.title!.contains("400M"){
              tableViewOutlet.isEditing = true
             sections = true
         }
