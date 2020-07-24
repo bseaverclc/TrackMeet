@@ -11,7 +11,11 @@ import UIKit
 class ScoresViewController: UIViewController {
     var allAthletes: [Athlete]!
     @IBOutlet weak var textViewOutlet: UITextView!
+    
+    @IBOutlet weak var copyButton: UIButton!
+    
     var teamPoints = [String: [String:Double]]()
+    var fieldEvents = ["Long Jump", "Triple Jump", "High Jump", "Pole Vault", "Shot Put", "Discus"]
    
     var meet : Meet!
     var levels = [String]()
@@ -36,6 +40,8 @@ class ScoresViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        copyButton.titleLabel?.numberOfLines = 2
+        copyButton.setTitle("Copy results and\ngo to athletic.net", for: .normal)
         meetNameOutlet.text = meet.name
         print("meet name : \(meet.name)")
    
@@ -68,8 +74,12 @@ class ScoresViewController: UIViewController {
             
             for e in a.events{
                 if e.meetName == meet.name{
-                  if e.markString != "" {
-                    
+                    if e.markString != "" {
+                        print("There is a mark or a place")
+                        var units = ""
+                        if e.name.contains("Jump") || e.name.contains("Vault") || e.name.contains("Shot") || e.name.contains("Discus"){
+                            units = "m"
+                        }
                     //var current = teamPoints[e.level]!
                     let currentPoints = teamPoints[e.level]![a.school]!
                         teamPoints[e.level]!.updateValue(currentPoints + e.points, forKey: a.school)
@@ -80,20 +90,20 @@ class ScoresViewController: UIViewController {
                     if e.name.contains("4x"){
                         // if they placed put place in output
                        if let pl = e.place{
-                        textViewOutlet.text += "R,\(meet.gender), \(e.level),\(e.name.dropLast(4)),\(pl), , , ,\(a.schoolFull),\(e.markString),\(e.points),Finals, , \n"
+                        textViewOutlet.text += "R,\(meet.gender),\(e.level),\(e.name.dropLast(4)),\(pl),,,,\(a.schoolFull),\(e.markString)\(units),\(e.points),Finals\n"
                                           }
                         // if they didn't place leave spot open
                        else{
-                            textViewOutlet.text += "R,\(meet.gender),\(e.level),\(e.name.dropLast(4)), , , ,\(a.schoolFull),\(e.markString),\(e.points),Finals, , \n"
+                        textViewOutlet.text += "R,\(meet.gender),\(e.level),\(e.name.dropLast(4)),,,,,\(a.schoolFull),\(e.markString)\(units),\(e.points),Finals\n"
                             }
                     }
                       //  If event was individual
                     else{
                       if let pl = e.place{
-                        textViewOutlet.text += "E,\(meet.gender),\(e.level),\(e.name.dropLast(4)),\(pl),\(a.last),\(a.first),\(a.grade),\(a.schoolFull),\(e.markString),\(e.points),Finals, , \n"
+                        textViewOutlet.text += "E,\(meet.gender),\(e.level),\(e.name.dropLast(4)),\(pl),\(a.last),\(a.first) ,\(a.grade),\(a.schoolFull),\(e.markString)\(units),\(e.points),Finals, , \n"
                       }
                       else{
-                        textViewOutlet.text += "E,\(meet.gender),\(e.level),\(e.name.dropLast(4)), ,\(a.last),\(a.first),\(a.grade),\(a.schoolFull),\(e.markString),\(e.points),Finals, , \n"
+                        textViewOutlet.text += "E,\(meet.gender),\(e.level),\(e.name.dropLast(4)), ,\(a.last),\(a.first) ,\(a.grade),\(a.schoolFull),\(e.markString)\(units),\(e.points),Finals, , \n"
                         
                         }
                         }
@@ -143,23 +153,15 @@ class ScoresViewController: UIViewController {
             i+=1
         }
         
-//       for (key,value) in meet.schools{
-//                 var label = UILabel()
-//                       label.text = value
-//                       schoolsOutlet.append(label)
-//                 schoolsStackViewA.addArrangedSubview(label)
-//             }
-        
-//        CLCScoreOutlet.text = "\(teamPointsVAR["CLC"]!)"
-//        CLSScoreOutlet.text = "\(teamPointsVAR["CLS"]!)"
-//        CGScoreOutlet.text = "\(teamPointsVAR["CG"]!)"
-//        PRScoreOutlet.text = "\(teamPointsVAR["PR"]!)"
-//        
-//        CLCFSOutlet.text = "\(teamPointsFS["CLC"]!)"
-//        CLSFSOutlet.text = "\(teamPointsFS["CLS"]!)"
-//        CGFSOutlet.text = "\(teamPointsFS["CG"]!)"
-//        PRFSOutlet.text = "\(teamPointsFS["PR"]!)"
+
     }
         
 
+    @IBAction func copyAction(_ sender: UIButton) {
+        let pasteboard = UIPasteboard.general
+        pasteboard.string = textViewOutlet.text
+        if let url = URL(string: "https://www.athletic.net/TrackAndField/Illinois/") {
+                   UIApplication.shared.open(url)
+               }
+    }
 }

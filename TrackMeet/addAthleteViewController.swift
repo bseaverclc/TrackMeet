@@ -18,6 +18,7 @@ class addAthleteViewController: UIViewController {
     var lev = ""
     var meetName = ""
     var schools = [String]()
+  
     @IBOutlet weak var schoolOutlet: UISegmentedControl!
     @IBOutlet weak var yearOutlet: UISegmentedControl!
     @IBOutlet weak var lastOutlet: UITextField!

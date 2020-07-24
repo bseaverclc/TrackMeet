@@ -127,6 +127,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
        
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier != "unwindToEventEdit"{
+            selectAthletes()
         let nvc = segue.destination as! addAthleteViewController
         nvc.allAthletes = allAthletes
         nvc.eventAthletes = eventAthletes

@@ -14,41 +14,7 @@ class LaunchViewController: UIViewController {
    var allAthletes = [Athlete]()
    var schools = [String:String]()
     var initials = [String]()
-    
-    @IBAction func unwind3(_ seg: UIStoryboardSegue){
-           let pvc = seg.source as! SchoolsViewController
-           allAthletes = pvc.allAthletes
-        schools = pvc.schools
-        meets = pvc.meets
-           print("unwinding from Schools VC")
-       }
-    
-    @IBAction func unwindFromMeets(_ seg: UIStoryboardSegue){
-              let pvc = seg.source as! MeetsViewController
-              allAthletes = pvc.allAthletes
-              schools = pvc.schools
-              meets = pvc.meets
-              print("unwinding from Meets VC")
-          }
-    
-    
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toMeetsSegue"{
-            let nvc = segue.destination as! MeetsViewController
-            nvc.allAthletes = allAthletes
-            nvc.meets = meets
-            nvc.schools = schools
-            print("sent stuff to meets")
-        }
-        else{
-            let nvc = segue.destination as! SchoolsViewController
-            nvc.allAthletes = allAthletes
-            nvc.schools = schools
-            nvc.meets = meets
-        }
-    }
-    
+ 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
@@ -58,13 +24,10 @@ class LaunchViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
+        storeToUserDefaults()
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.title = "Home"
-        self.navigationController?.toolbar.isHidden = true
-        
+    func getCoreData(){
         let userDefaults = UserDefaults.standard
         
         // Get athletes from UserDefaults
@@ -104,11 +67,66 @@ class LaunchViewController: UIViewController {
             print("Got schools from file")
             print(schools)
             } catch {
-                schools = ["CRYSTAL LAKE CENTRAL": "CLC", "CRYSTAL LAKE SOUTH": "CLS", "CARY-GROVE": "CG", "PRAIRIE RIDGE": "PR"]
                       print(error.localizedDescription)
                 print(schools)
                     }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.title = "Home"
+        self.navigationController?.toolbar.isHidden = true
+        getCoreData()
+        for a in allAthletes{
+            for i in 0 ..< a.events.count{
+                if a.events[i].name.contains("4x400 VAR"){
+                    a.events[i].name = "4x400M VAR"
+                }
+                if a.events[i].name.contains("4x400 F/S"){
+                    a.events[i].name = "4x400M F/S"
+                }
+                if a.events[i].name.contains("4x200 VAR"){
+                    a.events[i].name = "4x200M VAR"
+                }
+                if a.events[i].name.contains("4x200 F/S"){
+                    a.events[i].name = "4x200M F/S"
+                }
+                if a.events[i].name.contains("4x800 VAR"){
+                    a.events[i].name = "4x800M VAR"
+                }
+                if a.events[i].name.contains("4x800 F/S"){
+                    a.events[i].name = "4x800M F/S"
+                }
+               
+            }
+        }
+        for m in meets{
+            for i in 0 ..< m.events.count{
+            
+                if m.events[i] == ("4x400 F/SM"){
+                    m.events[i] = "4x400M F/S"
+                }
+                if m.events[i] == ("4x400 VARM"){
+                    m.events[i] = "4x400M VAR"
+                }
+                if m.events[i] == ("4x800 F/SM"){
+                    m.events[i] = "4x800M F/S"
+                }
+                if m.events[i] == ("4x800 VARM"){
+                    m.events[i] = "4x800M VAR"
+                }
+                if m.events[i] == ("4x200 F/SM"){
+                    m.events[i] = "4x200M F/S"
+                }
+                if m.events[i] == ("4x200 VARM"){
+                    m.events[i] = "4x200M VAR"
+                }
+                 
+            }
+        
+        
 
+        }
     }
     
      func randomizeAthletes(){
@@ -157,5 +175,62 @@ class LaunchViewController: UIViewController {
 //        let url = URL(string: "https://www.athletic.net/TrackAndField/Illinois/")
 //        let svc = SFSafariViewController(url: url!)
 //        present(svc, animated: true, completion: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toMeetsSegue"{
+            let nvc = segue.destination as! MeetsViewController
+            nvc.allAthletes = allAthletes
+            nvc.meets = meets
+            nvc.schools = schools
+            print("sent stuff to meets")
+        }
+        else{
+            let nvc = segue.destination as! SchoolsViewController
+            nvc.allAthletes = allAthletes
+            nvc.schools = schools
+            nvc.meets = meets
+        }
+    }
+    
+    @IBAction func unwind3(_ seg: UIStoryboardSegue){
+           let pvc = seg.source as! SchoolsViewController
+           allAthletes = pvc.allAthletes
+        schools = pvc.schools
+        meets = pvc.meets
+           print("unwinding from Schools VC")
+       }
+    
+    @IBAction func unwindFromMeets(_ seg: UIStoryboardSegue){
+              let pvc = seg.source as! MeetsViewController
+              allAthletes = pvc.allAthletes
+              schools = pvc.schools
+              meets = pvc.meets
+              print("unwinding from Meets VC")
+          }
+    
+    func storeToUserDefaults(){
+        let userDefaults = UserDefaults.standard
+           do {
+                   try userDefaults.setObjects(meets, forKey: "meets")
+            
+                  } catch {
+                      print(error.localizedDescription)
+                  }
+        do {
+            try userDefaults.setObjects(allAthletes, forKey: "allAthletes")
+            print("Saving Athletes")
+        }
+        catch{
+            print("error saving athletes")
+        }
+        
+        do {
+                       try userDefaults.setObjects(schools, forKey: "schools")
+                       print("Saving Schools")
+                   }
+                   catch{
+                       print("error saving schools")
+                   }
     }
 }

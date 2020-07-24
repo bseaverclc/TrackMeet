@@ -19,7 +19,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     var schoolKeys = [String]()
     var selectedSchools = [String:String]()
     var lev = [String]()
-    var eve = ["4x800", "4x100", "3200M", "110HH", "100M", "800M", "4x200", "400M", "300IM", "1600", "200", "4x400", "Long Jump", "Triple Jump", "High Jump", "Pole Vault", "Shot Put", "Discus"]
+    var eve = ["4x800", "4x100M", "3200M", "110HH", "100M", "800M", "4x200", "400M", "300IM", "1600", "200", "4x400", "Long Jump", "Triple Jump", "High Jump", "Pole Vault", "Shot Put", "Discus"]
     var indP = [Int]()
     var relP = [Int]()
     var selectedAthletes = [Athlete]()
@@ -42,26 +42,26 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     @IBOutlet var relayScoringOutlet: [UITextField]!
     @IBOutlet weak var eventCodeOutlet: UITextField!
     
-    
-    
-    // Does not work
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-         print("textfield should return")
-        for textField in verticalStackViewOutlet.subviews where textField is UITextField {
-                   textField.resignFirstResponder()
-                   
-               }
-               return true
-    }
-    
-    // This is not working either.
-    // Need to find the right subviews and add delegates to these subviews also
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for textField in ScoreTableView.subviews where textField is UITextField {
-                          textField.resignFirstResponder()
-                          
-                      }
-        print("touchesBegan")
+    @objc func keyboardWillShow(notification: Notification){
+            if let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height {
+                   print("Notification: Keyboard will show")
+               scrollViewOutlet.contentInset.bottom = keyboardHeight
+               print(scrollViewOutlet.contentInset.bottom)
+               
+               
+              // view.frame.origin.y -= keyboardHeight
+                
+                
+        }
+        }
+        
+    @objc func keyboardWillHide(notification: Notification){
+        print("Notification: Keyboard will hide")
+        
+        scrollViewOutlet.contentInset.bottom = 0.0
+        // view.frame.origin.y += kHeight
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -75,39 +75,10 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
          NotificationCenter.default.removeObserver(self)
     }
     
-    @objc func keyboardWillShow(notification: Notification){
-         if let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height {
-                print("Notification: Keyboard will show")
-            scrollViewOutlet.contentInset.bottom = keyboardHeight
-            print(scrollViewOutlet.contentInset.bottom)
-            
-            
-           // view.frame.origin.y -= keyboardHeight
-             
-             
-     }
-     }
-     
-     @objc func keyboardWillHide(notification: Notification){
-         print("Notification: Keyboard will hide")
-         
-        scrollViewOutlet.contentInset.bottom = 0.0
-        // view.frame.origin.y += kHeight
-         
-         
-     }
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        for textField in verticalStackViewOutlet.subviews {
-            print("found a subview")
-            if let current = textField as? UITextField{
-            current.delegate = self
-                print("made textfield delegate")
-            }
-                  
-              }
         
         // sort the scoring textfields
         individualScoringOutlet.sort(by: {$0.tag < $1.tag})
@@ -173,7 +144,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         tableView.flashScrollIndicators()
         ScoreTableView.layer.borderWidth = 10
         
-        // Keep a copy of dictionary key
+        // make an array of the school keys and values
         schoolKeys = Array(schools.keys)
         initials = Array(schools.values)
         // You may want to sort it
@@ -190,10 +161,11 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         let school = schoolKeys[indexPath.row]
         cell.textLabel?.text = school
         cell.detailTextLabel?.text = schools[school]
+        
+        // highlighting previous selected schools
         if selectedMeet?.schools[school] != nil{
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableView.ScrollPosition(rawValue: 0)!)
-            //cell.isHighlighted = true
-            print("selecting and highlighting cell")
+           
         }
         return cell
         
@@ -202,6 +174,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     
     @IBAction func eventsAction(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex != 0{
+            // not functional yet!
             print("Go to new view controller that allows you to pick events")
         }
     }
@@ -236,7 +209,14 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     
     
     @IBAction func submitAction(_ sender: UIButton) {
-        print("hit submit button")
+       // print("hit submit button")
+        // Error Checking
+        if meetNameOutlet.text == ""{
+            showAlert(errorMessage: "You need to have a meet name!")
+            return
+        }
+        
+        
         if !changeMeet{
         for meet in meets{
             if meet.name == meetNameOutlet.text{
@@ -249,6 +229,10 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         getSchools()
         if selectedSchools.count == 0{
             showAlert(errorMessage: "You have to have at least 1 school")
+            return
+        }
+        else if selectedSchools.count > 4{
+            showAlert(errorMessage: "You can only have a max of 4 teams")
             return
         }
        //print(selectedSchools)
@@ -300,19 +284,10 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                    showAlert(errorMessage: "Must put some numbers in relay score fields")
                     return
             }
-            i+=1
-               }
+               i+=1
+            }
         
-//        var schoolInits = ""
-//        for (_,value) in selectedSchools{
-//             schoolInits = value
-//        }
-//
-//        for a in allAthletes{
-//            if schoolInits.contains(a.school){
-//                selectedAthletes.append(a)
-//            }
-//        }
+        // Take out the old meet
         if let oldMeet = selectedMeet{
             for i in 0 ... meets.count - 1{
                 if oldMeet.name == meets[i].name{
@@ -322,11 +297,31 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                 }
             }
         }
+        
+        
+        
+        // Create a new meet and add to meets array
         meet = Meet(name: meetNameOutlet.text!, date: datePickerOutlet.date, schools: selectedSchools, gender: gen, levels: lev , events: eventLeveled, indPoints: indP, relpoints: relP,  beenScored: beenScored)
         meets.append(meet)
-      //reCalcPoints()
-     
-        performSegue(withIdentifier: "unwindToMeetsSegue", sender: self)
+      
+        if changeMeet{
+            let alert = UIAlertController(title: "Meet has been changed!", message: "Be sure to reprocess all events that you have already processed", preferredStyle: .alert)
+            let ok = UIAlertAction(title: "OK", style: .default) { (action) in
+                self.performSegue(withIdentifier: "unwindToMeetsSegue", sender: self)
+            }
+            alert.addAction(ok)
+            present(alert, animated: true, completion: nil)
+        }
+        else{
+            let alert = UIAlertController(title: "Success!", message: "Meet Created", preferredStyle: .alert)
+            let ok = UIAlertAction(title: "OK", style: .default) { (action) in
+                self.performSegue(withIdentifier: "unwindToMeetsSegue", sender: self)
+            }
+            alert.addAction(ok)
+            present(alert, animated: true, completion: nil)
+        }
+        
+        
         //print("\(meet)")
     }
     
@@ -381,7 +376,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                 }
                         
     
-
+                 // adding school to dictionary
                 self.schools[alert.textFields![0].text!] = alert.textFields![1].text!
                 
                 // Save school to UserDefaults
@@ -393,7 +388,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                            print(error.localizedDescription)
                         print("Error saving schools in AddMeet")
                        }
-                
+                // Save athletes to userdefaults
                 do {
                     try userDefaults.setObjects(self.allAthletes, forKey: "allAthletes")
                                print("Saving Athletes")
@@ -420,35 +415,47 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     
     
     func readCSVURL(csvURL: String, fullSchool: String, initSchool: String){
+        var urlCut = csvURL
         if csvURL != ""{
-            if let editRange = csvURL.range(of: "edit"){
+            if let editRange = csvURL.range(of: "/edit"){
             let start = editRange.lowerBound
-            var urlCut = csvURL[csvURL.startIndex..<start]
-            var urlcompleted = urlCut + "pub?output=csv"
+            urlCut = String(csvURL[csvURL.startIndex..<start])
+            }
+            var urlcompleted = urlCut + "/pub?output=csv"
             let url = URL(string: String(urlcompleted))
+            print(url)
             
-            
-//                url of TrackMeet minus edit and adding pub?output=csv
-//            let url = URL(string: "https://docs.google.com/spreadsheets/d/1puxn4zdVrYcJwrEksSktMF-McK6VQhguOqnPOLjaSYQ/pub?output=csv")
-//            let url = URL(string: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQyjHaFeP9kJpDr_7bl9iF_OzrvMJ3mo-crGQ34DXTRF5Mx7f5NtYfwIPA5c6Ir3ESfVTGAG8Bfbo93/pub?output=csv")
-                 guard let requestUrl = url else { fatalError() }
+                 guard let requestUrl = url else {
+                    //fatalError()
+                    print("fatal error")
+                    return
+            }
                  // Create URL Request
                  var request = URLRequest(url: requestUrl)
                  // Specify HTTP Method to use
                  request.httpMethod = "GET"
+            
                  // Send HTTP Request
                  let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                     
+                   
                      // Check if Error took place
                      if let error = error {
                          print("Error took place \(error)")
-                         return
+//                        let alert = UIAlertController(title: "Error!", message: "Could not load athletes", preferredStyle: .alert)
+//                        let ok = UIAlertAction(title: "ok", style: .default)
+//                        alert.addAction(ok)
+//                        self.present(alert, animated: true, completion: nil)
+                        //self.showAlert(errorMessage: "Error loading Athletes from file")
+                         
                      }
                      
                      // Read HTTP Response Status code
                      if let response = response as? HTTPURLResponse {
                          print("Response HTTP Status code: \(response.statusCode)")
+                       
+                        //return
                      }
+                     
                      
                      // Convert HTTP Response Data to a simple String
                      if let data = data, let dataString = String(data: data, encoding: .utf8) {
@@ -466,77 +473,21 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                          }
                      }
                      
-
+                        
                      
+
+                    
                  }
                  task.resume()
-        }
+        
     }
     
     
 }
     
-        func reCalcPoints(){
-//            print("Recalculating points")
-//
-//            for eventName in eve{
-//                var eventAthletes = [Athlete]()
-//                for a in allAthletes{
-//                    for event in a.events{
-//                        if event.meetName == meet.name && eventName == event.name{
-//                            eventAthletes.append(a)
-//                        }
-//                    }
-//                }
-//                for ea in eventAthletes{
-//                    for event in ea.events{
-//                       if event.meetName == meet.name && eventName == event.name{
-//                            if let place = event.place{
-//                                var scoring = [Int]()
-//                                if event.name.contains("4x"){
-//                                    scoring = meet.relPoints
-//                                 }
-//                                else{scoring = meet.indPoints}
-//                                if place <= scoring.count{
-//                                    let ties = checkForTies(place: place, athletes: eventAthletes)
-//                                    var points = 0
-//                                    if ties != 0{
-//                                        for i in place - 1 ..< place - 1 + ties{
-//                                            if i > scoring.count - 1{
-//                                                points += 0
-//                                            }
-//                                            else{
-//                                                points += scoring[i]
-//                                            }
-//                                        }
-//                                        event.points = Double(points)/Double(ties)
-//                                    }
-//                                    else{event.points = 0}
-//                                    //print("\(a.last) points added = \(event.points)")
-//                                    }
-//
-//                        }
-//                    }
-//                    }
-//                }
-//
-//
-//        }
-        
-    }
+
     
-    func checkForTies(place: Int, athletes: [Athlete])-> Int{
-//           var ties = 0
-//           for a in athletes{
-//               if let event = a.getEvent(eventName: self.title!, meetName: meet.name){
-//                   if event.place == place{
-//                       ties += 1
-//                   }
-//           }
-//       }
-//           return ties
-        return 0
-       }
+
     
     
     @IBAction func tapAction(_ sender: UITapGestureRecognizer) {

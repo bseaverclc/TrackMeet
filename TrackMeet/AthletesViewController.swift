@@ -103,27 +103,43 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
-            var selected = self.displayedAthletes[indexPath.row]
-       
-            self.displayedAthletes.remove(at: indexPath.row)
-                   tableView.deleteRows(at: [indexPath], with: .fade)
+            let alert = UIAlertController(title: "Are you sure?", message: "Deleting this athlete will also delete any results stored for this athlete", preferredStyle:    .alert)
+            let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
+                var selected = self.displayedAthletes[indexPath.row]
+                self.allAthletes.removeAll { (athlete) -> Bool in
+                    athlete.equals(other: selected)
+               
+                }
+                     self.displayedAthletes.remove(at: indexPath.row)
+                            tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+            let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            
+            alert.addAction(cancel)
+            alert.addAction(ok)
+            self.present(alert, animated: true, completion: nil)
         }
-
-        let edit = UITableViewRowAction(style: .normal, title: "Edit") { (action, indexPath) in
+            
+            let edit = UITableViewRowAction(style: .normal, title: "Edit") { (action, indexPath) in
             let alert = UIAlertController(title: "", message: "Edit Athlete", preferredStyle: .alert)
                 alert.addTextField(configurationHandler: { (textField) in
+                    textField.autocapitalizationType = .allCharacters
                     textField.text = self.displayedAthletes[indexPath.row].first
                     
                 })
             alert.addTextField(configurationHandler: { (textField) in
+                textField.autocapitalizationType = .allCharacters
                 textField.text = self.displayedAthletes[indexPath.row].last
                 
             })
             alert.addTextField(configurationHandler: { (textField) in
+                textField.autocapitalizationType = .allCharacters
                 textField.text = self.displayedAthletes[indexPath.row].school
                 
             })
             alert.addTextField(configurationHandler: { (textField) in
+                textField.keyboardType = UIKeyboardType.numberPad
+                textField.autocapitalizationType = .allCharacters
                 textField.text = "\(self.displayedAthletes[indexPath.row].grade)"
                 
             })

@@ -54,28 +54,10 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
         if isMovingFromParent{
             performSegue(withIdentifier: "unwindFromSchoolsSegue", sender: nil)
         }
+        storeToUserDefaults()
     }
     
-    @IBAction func unwindtoSchools( _ seg: UIStoryboardSegue) {
-    let pvc = seg.source as! AthletesViewController
-     allAthletes = pvc.allAthletes
-     allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
-     print("unwind to schools")
-     
-     
-     }
-        
-//        override func viewWillDisappear(_ animated: Bool) {
-//            super.viewWillDisappear(animated)
-//            print("view disappearing")
-//            if isMovingFromParent{
-//            self.delegate?.savePreferences(athletes: allAthletes)
-//                print("is moving from parent")
-//            }
-//        }
-        
-
-        // MARK: - Table view data source
+  
 
          func numberOfSections(in tableView: UITableView) -> Int {
             // #warning Incomplete implementation, return the number of sections
@@ -105,25 +87,34 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
             var blankText = false
             var blankAlert = UIAlertController()
             let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
-                var selected = self.schoolNames[indexPath.row]
-                self.allAthletes.removeAll(where: {$0.schoolFull == selected})
                 
-                self.schoolNames.remove(at: indexPath.row) // remove from array
-                self.schools.removeValue(forKey: selected) // remove from dictionary
-                // Still need to remove all athletes from this school
-                tableView.deleteRows(at: [indexPath], with: .fade)
-                
-                let userDefaults = UserDefaults.standard
-                do {
-                   try userDefaults.setObjects(self.schools, forKey: "schools")
-                   print("Saving Schools")
+                let alert = UIAlertController(title: "Are you sure?", message: "Deleting this school will delete all the school's athletes and results", preferredStyle: .alert)
+                let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
+                    var selected = self.schoolNames[indexPath.row]
+                    self.allAthletes.removeAll(where: {$0.schoolFull == selected})
+                    
+                    self.schoolNames.remove(at: indexPath.row) // remove from array
+                    self.schools.removeValue(forKey: selected) // remove from dictionary
+                    // Still need to remove all athletes from this school
+                    tableView.deleteRows(at: [indexPath], with: .fade)
+                    
+                    let userDefaults = UserDefaults.standard
+                    do {
+                       try userDefaults.setObjects(self.schools, forKey: "schools")
+                       print("Saving Schools")
+                    }
+                    catch{
+                          print("error saving schools")
+                    }
                 }
-                catch{
-                      print("error saving schools")
-                }
-                
+                    
+                    alert.addAction(ok)
+                    alert.addAction(cancel)
+                    self.present(alert, animated: true, completion: nil)
+                    
             }
-
+  
             let edit = UITableViewRowAction(style: .normal, title: "Edit") { (action, indexPath) in
                 let alert = UIAlertController(title: "", message: "Edit School", preferredStyle: .alert)
                     alert.addTextField(configurationHandler: { (textField) in
@@ -193,26 +184,6 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                                                       print("error saving schools")
                                                   }
                                    
-                        
-                        // Still need to change all athletes with old school names
-//                        for i in 0 ..< self.allAthletes.count{
-//                           if self.displayedAthletes[indexPath.row].equals(other: self.allAthletes[i]){
-//                            self.allAthletes[i].first = alert.textFields![0].text!
-//                             self.allAthletes[i].last = alert.textFields![1].text!
-//                             self.allAthletes[i].school = alert.textFields![2].text!
-//                              if let grade = Int(alert.textFields![3].text!){
-//                                    self.allAthletes[i].grade = grade}
-//                            // save changes to userDefaults
-//                            let userDefaults = UserDefaults.standard
-//                            do {
-//
-//                                try userDefaults.setObjects(self.allAthletes, forKey: "allAthletes")
-//                                   } catch {
-//                                       print(error.localizedDescription)
-//                                   }
-//                                                  break
-//                                              }
-//                        }
                       
                         }
                         else{
@@ -333,36 +304,50 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                present(alert, animated: true, completion: nil)
     }
     
-        func readCSVURL(csvURL: String, fullSchool: String, initSchool: String){
+    
+    
+    func readCSVURL(csvURL: String, fullSchool: String, initSchool: String){
+            var urlCut = csvURL
             if csvURL != ""{
-                if let editRange = csvURL.range(of: "edit"){
+                if let editRange = csvURL.range(of: "/edit"){
                 let start = editRange.lowerBound
-                var urlCut = csvURL[csvURL.startIndex..<start]
-                var urlcompleted = urlCut + "pub?output=csv"
+                urlCut = String(csvURL[csvURL.startIndex..<start])
+                }
+                var urlcompleted = urlCut + "/pub?output=csv"
                 let url = URL(string: String(urlcompleted))
+                print(url)
                 
-                
-    //                url of TrackMeet minus edit and adding pub?output=csv
-    //            let url = URL(string: "https://docs.google.com/spreadsheets/d/1puxn4zdVrYcJwrEksSktMF-McK6VQhguOqnPOLjaSYQ/pub?output=csv")
-    //            let url = URL(string: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQyjHaFeP9kJpDr_7bl9iF_OzrvMJ3mo-crGQ34DXTRF5Mx7f5NtYfwIPA5c6Ir3ESfVTGAG8Bfbo93/pub?output=csv")
-                     guard let requestUrl = url else { fatalError() }
+                     guard let requestUrl = url else {
+                        //fatalError()
+                        print("fatal error")
+                        return
+                }
                      // Create URL Request
                      var request = URLRequest(url: requestUrl)
                      // Specify HTTP Method to use
                      request.httpMethod = "GET"
+                
                      // Send HTTP Request
                      let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                         
+                       
                          // Check if Error took place
                          if let error = error {
                              print("Error took place \(error)")
-                             return
+    //                        let alert = UIAlertController(title: "Error!", message: "Could not load athletes", preferredStyle: .alert)
+    //                        let ok = UIAlertAction(title: "ok", style: .default)
+    //                        alert.addAction(ok)
+    //                        self.present(alert, animated: true, completion: nil)
+                            //self.showAlert(errorMessage: "Error loading Athletes from file")
+                             
                          }
                          
                          // Read HTTP Response Status code
                          if let response = response as? HTTPURLResponse {
                              print("Response HTTP Status code: \(response.statusCode)")
+                           
+                            //return
                          }
+                         
                          
                          // Convert HTTP Response Data to a simple String
                          if let data = data, let dataString = String(data: data, encoding: .utf8) {
@@ -380,21 +365,22 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                              }
                          }
                          
-
+                            
                          
+
+                        
                      }
                      task.resume()
-            }
+            
         }
         
         
     }
-    
         
-        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            selectedSchool = schoolNames[indexPath.row]
-            performSegue(withIdentifier: "toAthletesSegue", sender: self)
-        }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedSchool = schoolNames[indexPath.row]
+        performSegue(withIdentifier: "toAthletesSegue", sender: self)
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toAthletesSegue"{
@@ -405,66 +391,40 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
         nvc.schools = [schools[selectedSchool]!]
         }
     }
+    
+    @IBAction func unwindtoSchools( _ seg: UIStoryboardSegue) {
+      let pvc = seg.source as! AthletesViewController
+       allAthletes = pvc.allAthletes
+       allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
+       print("unwind to schools")
+       
+       
+       }
+    
+    func storeToUserDefaults(){
+        let userDefaults = UserDefaults.standard
+           do {
+                   try userDefaults.setObjects(meets, forKey: "meets")
+            
+                  } catch {
+                      print(error.localizedDescription)
+                  }
+        do {
+            try userDefaults.setObjects(allAthletes, forKey: "allAthletes")
+            print("Saving Athletes")
+        }
+        catch{
+            print("error saving athletes")
+        }
+        
+        do {
+                       try userDefaults.setObjects(schools, forKey: "schools")
+                       print("Saving Schools")
+                   }
+                   catch{
+                       print("error saving schools")
+                   }
+    }
       
         
-    //     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-    //
-    //        if editingStyle == .delete{
-    //
-    //            var selected = displayedAthletes[indexPath.row]
-    //            for i in 0 ..< allAthletes.count{
-    //                if selected.equals(other: allAthletes[i]){
-    //                    allAthletes.remove(at: i)
-    //                    break
-    //                }
-    //            }
-    //            displayedAthletes.remove(at: indexPath.row)
-    //                   tableView.deleteRows(at: [indexPath], with: .fade)
-    //        }
-    //    }
-        
-    //     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    //        var selectedAthlete = displayedAthletes[indexPath.row]
-    //        selectedAthlete.events.append(Event(name: self.title!, level: "varsity"))
-    //        eventAthletes.append(selectedAthlete)
-    //        performSegue(withIdentifier: "backToEventSegue", sender: nil)
-    //    }
-        
-//        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//
-//
-//
-//            if segue.identifier == "backToEventSegue"{
-//            let nvc = segue.destination as! EventEditViewController
-//            nvc.eventAthletes = eventAthletes
-//            nvc.allAthletes = allAthletes
-//            }
-//            else if segue.identifier == "toAddAthleteSegue"{
-//                let nvc = segue.destination as! addAthleteViewController
-//                nvc.displayedAthletes = displayedAthletes
-//                nvc.allAthletes = allAthletes
-//                nvc.meet = meet
-//                nvc.from = "AthletesVC"
-//            }
-//            else if segue.identifier == "toAthleteResultsSegue"{
-//                let nvc = segue.destination as! AthleteResultsViewController
-//                nvc.athlete = selectedAthlete
-//            }
-//        }
-        
-        
-        
-//       @IBAction func unwind( _ seg: UIStoryboardSegue) {
-//        let pvc = seg.source as! addAthleteViewController
-//        allAthletes = pvc.allAthletes
-//        displayedAthletes = pvc.displayedAthletes
-//        tableView.reloadData()
-//        print("unwinding")
-//
-//       }
-
-//       func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//            return header
-//        }
-
     }
