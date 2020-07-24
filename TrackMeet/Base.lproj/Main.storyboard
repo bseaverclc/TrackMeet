@@ -313,23 +313,34 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ksc-rs-bkl">
+                                                    <rect key="frame" x="67.5" y="22" width="37.5" height="18"/>
+                                                    <color key="backgroundColor" red="0.45690524580000003" green="0.98142719270000001" blue="0.31922805310000002" alpha="0.9990234375" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="v8j-5x-ku8" firstAttribute="centerY" secondItem="E6Y-Oz-khb" secondAttribute="centerY" id="1XG-Zf-ive"/>
                                                 <constraint firstItem="Fkx-zS-Toz" firstAttribute="top" secondItem="E6Y-Oz-khb" secondAttribute="top" constant="2" id="6f1-TL-Iyn"/>
                                                 <constraint firstItem="Fkx-zS-Toz" firstAttribute="width" secondItem="E6Y-Oz-khb" secondAttribute="width" multiplier="0.450483" id="Bar-ah-hV9"/>
+                                                <constraint firstItem="Ksc-rs-bkl" firstAttribute="leading" secondItem="bRQ-Hf-BOo" secondAttribute="trailing" constant="10" id="HHa-A5-CpR"/>
                                                 <constraint firstItem="v8j-5x-ku8" firstAttribute="leading" secondItem="ZRn-hs-tml" secondAttribute="trailing" constant="10" id="MvT-wA-E6Y"/>
                                                 <constraint firstItem="ZRn-hs-tml" firstAttribute="centerY" secondItem="E6Y-Oz-khb" secondAttribute="centerY" id="SCW-Xs-WsR"/>
                                                 <constraint firstItem="Fkx-zS-Toz" firstAttribute="height" secondItem="E6Y-Oz-khb" secondAttribute="height" multiplier="0.563218" id="UaP-RP-YKu"/>
                                                 <constraint firstAttribute="trailing" secondItem="v8j-5x-ku8" secondAttribute="trailing" constant="10" id="ZF9-WX-bKR"/>
+                                                <constraint firstItem="Ksc-rs-bkl" firstAttribute="bottom" secondItem="bRQ-Hf-BOo" secondAttribute="bottom" id="ckD-yV-v61"/>
                                                 <constraint firstItem="Fkx-zS-Toz" firstAttribute="leading" secondItem="E6Y-Oz-khb" secondAttribute="leading" constant="5" id="j6v-86-j1t"/>
                                                 <constraint firstItem="bRQ-Hf-BOo" firstAttribute="leading" secondItem="E6Y-Oz-khb" secondAttribute="leading" constant="20" id="uKa-dD-ShL"/>
+                                                <constraint firstItem="Ksc-rs-bkl" firstAttribute="width" secondItem="E6Y-Oz-khb" secondAttribute="width" multiplier="0.1" id="wIj-VJ-e1s"/>
                                                 <constraint firstAttribute="bottom" secondItem="bRQ-Hf-BOo" secondAttribute="bottom" constant="3" id="yii-OG-FIo"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="nameOutlet" destination="Fkx-zS-Toz" id="T5r-Yj-2D2"/>
-                                            <outlet property="placeOutlet" destination="v8j-5x-ku8" id="Mhn-qA-tWf"/>
+                                            <outlet property="placeOutlet" destination="v8j-5x-ku8" id="lWa-Lo-kIw"/>
+                                            <outlet property="pointsOutlet" destination="Ksc-rs-bkl" id="XhN-KE-itx"/>
                                             <outlet property="schoolOutlet" destination="bRQ-Hf-BOo" id="G12-xT-TPa"/>
                                             <outlet property="timeOutlet" destination="ZRn-hs-tml" id="nfR-hw-8bi"/>
                                         </connections>
@@ -406,7 +417,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3747.826086956522" y="768.75"/>
+            <point key="canvasLocation" x="3746.4000000000001" y="768.66566716641682"/>
         </scene>
         <!--Athletes View Controller-->
         <scene sceneID="22p-cq-Wr0">

@@ -12,19 +12,31 @@ public class TimeTableViewCell : UITableViewCell{
   
     @IBOutlet weak var timeOutlet: UITextField!
     @IBOutlet weak var nameOutlet: UILabel!
-    @IBOutlet weak var placeOutlet: UITextField!
+  
     @IBOutlet weak var schoolOutlet: UILabel!
     
-   
+    @IBOutlet weak var placeOutlet: UITextField!
+    
+    @IBOutlet weak var pointsOutlet: UILabel!
+    
     
     func configure(text: String, placeholder : String, placeText : String){
         
         timeOutlet.placeholder = placeholder
         timeOutlet.text = text
         placeOutlet.placeholder = "PL"
-       
         placeOutlet.text = placeText
+        pointsOutlet.text = ""
     }
+    
+    func configure(text: String, placeholder : String, placeText : String, pointsText : String){
+           
+           timeOutlet.placeholder = placeholder
+           timeOutlet.text = text
+           placeOutlet.placeholder = "PL"
+           placeOutlet.text = placeText
+        pointsOutlet.text = "\(pointsText) points"
+       }
     
     func configure(text: String, placeholder : String){
            
@@ -32,6 +44,7 @@ public class TimeTableViewCell : UITableViewCell{
            timeOutlet.text = text
            placeOutlet.placeholder = "PL"
         placeOutlet.text = ""
+        pointsOutlet.text = ""
           
            
        }

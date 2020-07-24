@@ -185,9 +185,15 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
            }
            
            for event in currentAthletes[indexPath.row].events{
+            
                if event.name == title  && event.meetName == meet.name{
                    if let place = event.place{
+                    if !meet.beenScored[selectedRow]{
                    cell.configure(text: event.markString, placeholder: "Mark", placeText: "\(place)")
+                   }
+                    else{
+                        cell.configure(text: event.markString, placeholder: "Mark", placeText: "\(place)", pointsText: String(event.points))
+                    }
                    }
                    else{
                        cell.configure(text: event.markString, placeholder: "Mark")
@@ -640,14 +646,17 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     func calcPoints(){
             print("starting to calculate points.  Ind points \(meet.indPoints)")
             
-            
+            var scoringAthletes = [Athlete]()
             for a in heat1{
-                eventAthletes.append(a)
+                scoringAthletes.append(a)
             }
             for a in heat2{
-                eventAthletes.append(a)
+                scoringAthletes.append(a)
             }
-            for a in eventAthletes{
+        for a in eventAthletes{
+            scoringAthletes.append(a)
+        }
+            for a in scoringAthletes{
                 if let event = a.getEvent(eventName: self.title!, meetName: meet.name){
                     if let place = event.place{
                    // print("event.meetName \(event.meetName) meet.name \(meet.name)")
@@ -658,7 +667,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                     }
                     else{scoring = meet.indPoints}
                     if place <= scoring.count{
-                        let ties = checkForTies(place: place)
+                        let ties = checkForTies(place: place, athletes: scoringAthletes)
                         var points = 0
                         if ties != 0{
                             for i in place - 1 ..< place - 1 + ties{
@@ -688,12 +697,12 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                     }
                 }
         }
-        
+        tableViewOutlet.reloadData()
     }
     
-    func checkForTies(place: Int)-> Int{
+    func checkForTies(place: Int, athletes: [Athlete])-> Int{
         var ties = 0
-        for a in eventAthletes{
+        for a in athletes{
             if let event = a.getEvent(eventName: self.title!, meetName: meet.name){
                 if event.place == place{
                     ties += 1
