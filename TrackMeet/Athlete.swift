@@ -7,6 +7,7 @@
 //
 
 import Foundation
+//import FirebaseDatabase
 enum levels{
     
 }
@@ -26,6 +27,7 @@ public class Athlete : Codable{
         grade = g
         events = [Event]()
         schoolFull = sf
+        //saveToFirebase()
     }
     
     func addEvent(name: String, level: String, meetName: String){
@@ -47,6 +49,18 @@ public class Athlete : Codable{
         }
         else{return false}
     }
+    
+//    func saveToFirebase() {
+//        let ref = Database.database().reference()
+//       
+//        let dict = ["first": self.first, "last":self.last]
+//
+//        let thisUserRef = ref.childByAutoId()
+//        thisUserRef.setValue(dict)
+//        print("saving athlete to firebase")
+//     }
+    
+    
     
 }
 
