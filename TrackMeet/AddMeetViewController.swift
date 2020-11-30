@@ -12,6 +12,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     var kHeight : CGFloat = 0.0
 
     
+    @IBOutlet weak var ScoreTableView: UIStackView!
     @IBOutlet weak var scrollViewOutlet: UIScrollView!
     var allAthletes = [Athlete]()
     var schools = [String: String]()
@@ -30,7 +31,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     
     
     @IBOutlet weak var verticalStackViewOutlet: UIStackView!
-    @IBOutlet weak var ScoreTableView: UIStackView!
+   
     
     @IBOutlet weak var meetNameOutlet: UITextField!
     @IBOutlet weak var datePickerOutlet: UIDatePicker!
@@ -142,7 +143,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         
         
         tableView.flashScrollIndicators()
-        ScoreTableView.layer.borderWidth = 10
+        //ScoreTableView.layer.borderWidth = 2
         
         // make an array of the school keys and values
         schoolKeys = Array(schools.keys)
