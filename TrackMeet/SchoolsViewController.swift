@@ -217,7 +217,18 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
     
     
     @IBAction func addSchoolAction(_ sender: UIBarButtonItem) {
+        var gender = ""
         let alert = UIAlertController(title: "Add School", message: "", preferredStyle: .alert)
+        let genderAlert = UIAlertController(title: "Gender", message: "Men or Women?", preferredStyle: .alert)
+        genderAlert.addAction(UIAlertAction(title: "Men", style: .default, handler: { (action) in
+            gender = "(M)"
+            self.present(alert, animated: true, completion: nil)
+        }))
+        genderAlert.addAction(UIAlertAction(title: "Women", style: .default, handler: { (action) in
+            gender = "(W)"
+            self.present(alert, animated: true, completion: nil)
+        }))
+        genderAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                
                alert.addTextField(configurationHandler: { (textField) in
                    textField.autocapitalizationType = .allCharacters
@@ -230,7 +241,8 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                           textField.placeholder = "School Initials"
                           
                       })
-               
+        
+        
                alert.addTextField(configurationHandler: { (textField) in
              
                       textField.placeholder = "Roster csv url"
@@ -250,8 +262,8 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                        error = "Must include school initials"
                        badInput = true
                    }
-                   else if self.schoolNames.contains(fullSchool){
-                       error = "\(fullSchool) is already in database"
+                   else if self.schoolNames.contains("\(fullSchool) \(gender)"){
+                       error = "\(fullSchool) \(gender) is already in database"
                        badInput = true
                    }
                    else if self.initials.contains(initSchool){
@@ -261,13 +273,13 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                    
                    else{
                        if csvURL != ""{
-                           self.readCSVURL(csvURL: csvURL, fullSchool: fullSchool, initSchool: initSchool)
+                           self.readCSVURL(csvURL: csvURL, fullSchool: "\(fullSchool) \(gender)", initSchool: initSchool)
                            
                        }
                                
            
 
-                       self.schools[alert.textFields![0].text!] = alert.textFields![1].text!
+                       self.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
                        
                        // Save school to UserDefaults
                        let userDefaults = UserDefaults.standard
@@ -289,7 +301,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                         
                        
                        
-                       self.schoolNames.append(alert.textFields![0].text!)
+                       self.schoolNames.append("\(fullSchool) \(gender)")
                        self.tableView.reloadData()
                    }
                    if badInput{
@@ -301,7 +313,8 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                }))
            
                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-               present(alert, animated: true, completion: nil)
+        present(genderAlert, animated: true, completion: nil)
+               
     }
     
     

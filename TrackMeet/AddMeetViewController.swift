@@ -328,90 +328,103 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     
 
     @IBAction func addSchoolAction(_ sender: UIButton) {
+        var gender = ""
         let alert = UIAlertController(title: "Add School", message: "", preferredStyle: .alert)
-        
-        alert.addTextField(configurationHandler: { (textField) in
-            textField.autocapitalizationType = .allCharacters
-            textField.placeholder = "Full School Name"
-            
-        })
-        
-        alert.addTextField(configurationHandler: { (textField) in
-            textField.autocapitalizationType = .allCharacters
-                   textField.placeholder = "School Initials"
+        let genderAlert = UIAlertController(title: "Gender", message: "Men or Women?", preferredStyle: .alert)
+        genderAlert.addAction(UIAlertAction(title: "Men", style: .default, handler: { (action) in
+            gender = "(M)"
+            self.present(alert, animated: true, completion: nil)
+        }))
+        genderAlert.addAction(UIAlertAction(title: "Women", style: .default, handler: { (action) in
+            gender = "(W)"
+            self.present(alert, animated: true, completion: nil)
+        }))
+        genderAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+               
+               alert.addTextField(configurationHandler: { (textField) in
+                   textField.autocapitalizationType = .allCharacters
+                   textField.placeholder = "Full School Name"
                    
                })
+               
+               alert.addTextField(configurationHandler: { (textField) in
+                   textField.autocapitalizationType = .allCharacters
+                          textField.placeholder = "School Initials"
+                          
+                      })
         
-        alert.addTextField(configurationHandler: { (textField) in
-      
-               textField.placeholder = "Roster csv url"
-        })
         
-        alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { (updateAction) in
-            var badInput = false
-            var error = ""
-            var fullSchool = alert.textFields![0].text!
-            var initSchool = alert.textFields![1].text!
-            var csvURL = alert.textFields![2].text!
-            if fullSchool == ""{
-                error = "Must include school name"
-                badInput = true
-            }
-            else if initSchool == ""{
-                error = "Must include school initials"
-                badInput = true
-            }
-            else if self.schoolKeys.contains(fullSchool){
-                error = "\(fullSchool) is already in database"
-                badInput = true
-            }
-            else if self.initials.contains(initSchool){
-                error = "The initials \(initSchool) are already in use"
-                badInput = true
-            }
-            
-            else{
-                if csvURL != ""{
-                    self.readCSVURL(csvURL: csvURL, fullSchool: fullSchool, initSchool: initSchool)
-                    
-                }
-                        
-    
-                 // adding school to dictionary
-                self.schools[alert.textFields![0].text!] = alert.textFields![1].text!
-                
-                // Save school to UserDefaults
-                let userDefaults = UserDefaults.standard
-                do {
-                    try userDefaults.setObjects(self.schools, forKey: "schools")
-                    print("Saved Schools in Add Meet VC")
-                       } catch {
-                           print(error.localizedDescription)
-                        print("Error saving schools in AddMeet")
+               alert.addTextField(configurationHandler: { (textField) in
+             
+                      textField.placeholder = "Roster csv url"
+               })
+               
+               alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { (updateAction) in
+                   var badInput = false
+                   var error = ""
+                   var fullSchool = alert.textFields![0].text!
+                   var initSchool = alert.textFields![1].text!
+                   var csvURL = alert.textFields![2].text!
+                   if fullSchool == ""{
+                       error = "Must include school name"
+                       badInput = true
+                   }
+                   else if initSchool == ""{
+                       error = "Must include school initials"
+                       badInput = true
+                   }
+                   else if self.schoolKeys.contains("\(fullSchool) \(gender)"){
+                       error = "\(fullSchool) \(gender) is already in database"
+                       badInput = true
+                   }
+                   else if self.initials.contains(initSchool){
+                       error = "The initials \(initSchool) are already in use"
+                       badInput = true
+                   }
+                   
+                   else{
+                       if csvURL != ""{
+                           self.readCSVURL(csvURL: csvURL, fullSchool: "\(fullSchool) \(gender)", initSchool: initSchool)
+                           
                        }
-                // Save athletes to userdefaults
-                do {
-                    try userDefaults.setObjects(self.allAthletes, forKey: "allAthletes")
-                               print("Saving Athletes")
-                           }
-                           catch{
-                               print("error saving athletes")
-                           }
-                
-                
-                self.schoolKeys.append(alert.textFields![0].text!)
-                self.tableView.reloadData()
-            }
-            if badInput{
-            let alert2 = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            alert2.addAction(okAction)
-            self.present(alert2, animated: true, completion: nil)
-            }
-        }))
-    
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        present(alert, animated: true, completion: nil)
+                               
+           
+
+                       self.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
+                       
+                       // Save school to UserDefaults
+                       let userDefaults = UserDefaults.standard
+                       do {
+                           try userDefaults.setObjects(self.schools, forKey: "schools")
+                           print("Saved Schools in Add Meet VC")
+                              } catch {
+                                  print(error.localizedDescription)
+                               print("Error saving schools in AddMeet")
+                              }
+                    
+                       do {
+                        try userDefaults.setObjects(self.allAthletes, forKey: "allAthletes")
+                                   print("Saving Athletes")
+                               }
+                               catch{
+                                   print("error saving athletes")
+                               }
+                        
+                       
+                       
+                       self.schoolKeys.append("\(fullSchool) \(gender)")
+                       self.tableView.reloadData()
+                   }
+                   if badInput{
+                   let alert2 = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
+                   let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                   alert2.addAction(okAction)
+                   self.present(alert2, animated: true, completion: nil)
+                   }
+               }))
+           
+               alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(genderAlert, animated: true, completion: nil)
     }
     
     
@@ -497,3 +510,4 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
      // resignFirstResponder()
     }
 }
+
