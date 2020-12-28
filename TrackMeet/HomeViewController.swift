@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 public protocol DataBackDelegate: class {
     func savePreferences (athletes: [Athlete])
@@ -18,6 +19,7 @@ class HomeViewController: UIViewController, DataBackDelegate {
     var allAthletes : [Athlete]!
     var meet : Meet!
     var meets : [Meet]!
+    var ref: DatabaseReference!
     
     
     func savePreferences(athletes: [Athlete]) {
@@ -40,6 +42,8 @@ class HomeViewController: UIViewController, DataBackDelegate {
         print(meet.gender)
         print("Individual Points: \(meet.indPoints)")
         self.title = "\(meet.name) Home"
+        
+        ref = Database.database().reference()
         
     }
     

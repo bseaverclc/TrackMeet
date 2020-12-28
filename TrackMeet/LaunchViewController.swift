@@ -8,7 +8,7 @@
 
 import UIKit
 import SafariServices
-//import FirebaseDatabase
+import FirebaseDatabase
 
 class LaunchViewController: UIViewController {
    var meets = [Meet]()
@@ -115,6 +115,9 @@ class LaunchViewController: UIViewController {
                
             }
         }
+        allAthletes[0].saveToFirebase()
+       // allAthletes[0].updateFirebase()
+        
         for m in meets{
             for i in 0 ..< m.events.count{
             

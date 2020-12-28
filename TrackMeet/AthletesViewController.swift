@@ -110,6 +110,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
                     athlete.equals(other: selected)
                
                 }
+                selected.deleteFromFirebase()
                      self.displayedAthletes.remove(at: indexPath.row)
                             tableView.deleteRows(at: [indexPath], with: .fade)
             }
@@ -158,6 +159,9 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
                          self.allAthletes[i].school = alert.textFields![2].text!
                           if let grade = Int(alert.textFields![3].text!){
                                 self.allAthletes[i].grade = grade}
+                        
+                        // updateFirebase
+                        self.allAthletes[i].updateFirebase()
                         // save changes to userDefaults
                         let userDefaults = UserDefaults.standard
                         do {

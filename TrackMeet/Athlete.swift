@@ -7,7 +7,7 @@
 //
 
 import Foundation
-//import FirebaseDatabase
+import FirebaseDatabase
 enum levels{
     
 }
@@ -19,6 +19,7 @@ public class Athlete : Codable{
     var schoolFull: String
     var grade: Int
     var events: [Event]
+    var uid: String?
     
     init(f: String, l: String, s: String, g: Int, sf: String) {
         first = f
@@ -50,16 +51,45 @@ public class Athlete : Codable{
         else{return false}
     }
     
-//    func saveToFirebase() {
-//        let ref = Database.database().reference()
-//       
-//        let dict = ["first": self.first, "last":self.last]
-//
-//        let thisUserRef = ref.childByAutoId()
-//        thisUserRef.setValue(dict)
-//        print("saving athlete to firebase")
-//     }
+    func saveToFirebase() {
+        let ref = Database.database().reference()
+       
+        let dict = ["first": self.first, "last":self.last, "school": self.school, "schoolFull":self.schoolFull, "grade":self.grade] as [String : Any]
+       
+        
+        let thisUserRef = ref.child("athletes").childByAutoId()
+        uid = thisUserRef.key
+        thisUserRef.setValue(dict)
+        
+        for e in events{
+            let eventDict = ["meetName": e.meetName,"name": e.name, "level":e.level, "mark": e.mark, "markString": e.markString, "place":e.place ?? 0 , "points": e.points] as [String : Any]
+            let eventsID = thisUserRef.childByAutoId()
+            e.uid = eventsID.key
+            eventsID.setValue(eventDict)
+            
+        }
+     print("saving athlete to firebase")
+     }
     
+    func updateFirebase(){
+        let ref = Database.database().reference().child("athletes").child(uid!)
+        let dict = ["first": self.first, "last":self.last, "school": self.school, "schoolFull":self.schoolFull, "grade":self.grade] as [String : Any]
+        
+        ref.updateChildValues(dict)
+        
+        for e in events{
+            let eventDict = ["meetName": e.meetName,"name": e.name, "level":e.level, "mark": e.mark, "markString": e.markString, "place":e.place ?? 0 , "points": e.points] as [String : Any]
+            ref.child(e.uid!).updateChildValues(eventDict)
+        
+        print("updating athlete in firebase")
+        
+    }
+}
+   
+    func deleteFromFirebase(){
+        let ref = Database.database().reference().child("athletes").child(uid!)
+        ref.removeValue()
+    }
     
     
 }
@@ -75,6 +105,7 @@ public class Event:Codable{
     var points = 0.0
     var heat = 0
     var meetName = ""
+    var uid : String?
     
     init(name: String, level: String, meetName: String) {
         self.name = name
