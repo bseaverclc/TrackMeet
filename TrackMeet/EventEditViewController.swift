@@ -104,6 +104,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
        
        override func viewDidLoad() {
            super.viewDidLoad()
+        eventAthletes = [Athlete]()
            if meet.beenScored[selectedRow]{
                 processOutlet.setTitle("Processed", for: .normal)
                processOutlet.backgroundColor = UIColor.green
@@ -117,18 +118,18 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
            let fontAttributes2 = [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.title3)]
            UITabBarItem.appearance().setTitleTextAttributes(fontAttributes2, for: .normal)
         
-           for lev in meet.levels{
-           for event in fieldEvents{
-               fieldEventsLev.append("\(event) \(lev)")
-               }
-           }
+//           for lev in meet.levels{
+//           for event in fieldEvents{
+//               fieldEventsLev.append("\(event) \(lev)")
+//               }
+//           }
            
            self.title = screenTitle
            for a in allAthletes{
                      for e in a.events{
                        if e.name == screenTitle && e.meetName == meet.name{
                            switch e.heat{
-                           case 0: eventAthletes.append(a)
+                           //case 0: eventAthletes.append(a)
                            case 1: heat1.append(a)
                            case 2: heat2.append(a)
                            default: eventAthletes.append(a)
@@ -461,12 +462,17 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         meet.beenScored[selectedRow] = true
            calcPoints()
            // save to userdefaults
+        
               let userDefaults = UserDefaults.standard
               do {
                       try userDefaults.setObjects(allAthletes, forKey: "allAthletes")
                      } catch {
                          print(error.localizedDescription)
                      }
+       // save to firebase
+        for a in eventAthletes{
+            a.updateFirebase()
+        }
 
        }
     
@@ -657,6 +663,8 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             scoringAthletes.append(a)
         }
             for a in scoringAthletes{
+                
+                print("Scoring \(a.last)")
                 if let event = a.getEvent(eventName: self.title!, meetName: meet.name){
                     if let place = event.place{
                    // print("event.meetName \(event.meetName) meet.name \(meet.name)")
@@ -680,10 +688,15 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                                 }
                             }
                             event.points = Double(points)/Double(ties)
+                            
                         }
                         else{event.points = 0}  // if ties somehow = 0
                         
                         print("\(a.last) points added = \(event.points)")
+                        for blah in a.events{
+                            print("\(a.last) \(blah.name) \(blah.points)")
+                        }
+                        
                         }
                     else{
                         event.points = 0  // if place is not for a score
@@ -697,6 +710,8 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                     }
                 }
         }
+       
+        
         tableViewOutlet.reloadData()
     }
     
@@ -751,12 +766,20 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
        eventAthletes = pvc.eventAthletes
          tableViewOutlet.reloadData()
          print("unwinding from AddAthleteToEvent")
+        print("checking events after unwinding to eventeditvc")
+        for ath in eventAthletes{
+            for eve in ath.events{
+                print("\(ath.last) \(eve.name)")
+            }
+        }
        }
        else{
            let pvc = seg.source as! addAthleteViewController
            allAthletes = pvc.allAthletes
              screenTitle = pvc.from
            eventAthletes = pvc.eventAthletes
+      
+            
              tableViewOutlet.reloadData()
              print("unwinding from addAthlete")
            

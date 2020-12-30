@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class AthletesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarDelegate {
 
@@ -29,6 +30,14 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let ref = Database.database().reference().child("athletes")
+         ref.observe(.childChanged, with: { (snapshot) in
+            print(snapshot)
+            
+     })
+         
+        
         
         let fontAttributes2 = [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.title3)]
         UITabBarItem.appearance().setTitleTextAttributes(fontAttributes2, for: .normal)
@@ -161,6 +170,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
                                 self.allAthletes[i].grade = grade}
                         
                         // updateFirebase
+                        print(self.allAthletes[i].first)
                         self.allAthletes[i].updateFirebase()
                         // save changes to userDefaults
                         let userDefaults = UserDefaults.standard

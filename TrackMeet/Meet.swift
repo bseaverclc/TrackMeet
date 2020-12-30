@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Firebase
 
 public class Meet: Codable{
     
@@ -19,7 +20,57 @@ public class Meet: Codable{
     var indPoints: [Int]
     var relPoints: [Int]
     var beenScored: [Bool]
+    var uid : String?
     
+    
+    init(key: String, dict: [String:Any]  ){
+        uid = key
+        name = dict["name"] as! String
+        
+        let formatter1 = DateFormatter()
+        formatter1.dateFormat = "mm/dd/yy"
+        if let d = formatter1.date(from: dict["date"] as! String){
+        date = d
+        }
+        else{ date = Date()}
+        
+        gender = dict["gender"] as! String
+        
+        
+        schools = dict["schools"] as! [String:String]
+        
+        levels = [String]()
+        let levelsArray = dict["levels"] as! NSArray
+        for i in 0..<levelsArray.count{
+            levels.append(levelsArray[i] as! String)
+        }
+        
+        events = [String]()
+        let eventsArray = dict["events"] as! NSArray
+        for i in 0..<eventsArray.count{
+            events.append(eventsArray[i] as! String)
+        }
+        
+        indPoints = [Int]()
+        let indPointsArray = dict["indPoints"] as! NSArray
+        for i in 0..<indPointsArray.count{
+            indPoints.append(indPointsArray[i] as! Int)
+        }
+        
+        relPoints = [Int]()
+        let relPointsArray = dict["relPoints"] as! NSArray
+        for i in 0..<relPointsArray.count{
+            relPoints.append(relPointsArray[i] as! Int)
+        }
+        
+        beenScored = [Bool]()
+        let beenScoredArray = dict["beenScored"] as! NSArray
+        for i in 0..<beenScoredArray.count{
+            beenScored.append(beenScoredArray[i] as! Bool)
+        }
+        
+
+    }
     
     init(name n : String, date d:Date, schools s: [String:String], gender g: String, levels l : [String], events e : [String], indPoints ip:  [Int], relpoints rp : [Int],  beenScored se: [Bool] ){
         name = n
@@ -31,6 +82,24 @@ public class Meet: Codable{
         indPoints = ip
         relPoints = rp
         beenScored = se
+        saveMeetToFirebase()
+    }
+    
+    func saveMeetToFirebase(){
+        let ref = Database.database().reference()
+        
+        
+        let formatter1 = DateFormatter()
+        formatter1.dateStyle = .short
+        let dateString = formatter1.string(from: date)
+       
+        let dict = ["name": self.name, "date": dateString, "schools": self.schools, "gender":self.gender, "levels":self.levels, "events": self.events, "indPoints":self.indPoints, "relPoints": self.relPoints, "beenScored": self.beenScored] as [String : Any]
+       
+        
+        let thisUserRef = ref.child("meets").childByAutoId()
+        uid = thisUserRef.key
+        
+        thisUserRef.setValue(dict)
     }
     
     

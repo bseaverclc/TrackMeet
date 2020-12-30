@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDataSource {
 
@@ -281,6 +282,10 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
 
                        self.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
                        
+                       //Save schools to firebase
+                    let ref = Database.database().reference().child("schools")
+                    ref.updateChildValues(self.schools)
+                    
                        // Save school to UserDefaults
                        let userDefaults = UserDefaults.standard
                        do {

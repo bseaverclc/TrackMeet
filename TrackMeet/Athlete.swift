@@ -28,11 +28,51 @@ public class Athlete : Codable{
         grade = g
         events = [Event]()
         schoolFull = sf
+       // saveToFirebase()
+    }
+    
+    init(key: String, dict: [String:Any] ) {
+        first = dict["first"] as! String
+        last = dict["last"] as! String
+        school = dict["school"] as! String
+        grade = dict["grade"] as! Int
+        events = [Event]()
+        schoolFull = dict["schoolFull"] as! String
+        uid = key
         //saveToFirebase()
     }
     
+    init(id: String,f: String, l: String, s: String, g: Int, sf: String ) {
+        first = f
+        last = l
+        school = s
+        grade = g
+        events = [Event]()
+        schoolFull = sf
+        uid = id
+        //saveToFirebase()
+    }
+    
+    // called when getting from firebase
+    func addEvent(key: String, dict: [String:Any] ){
+        events.append(Event(key: key, dict: dict))
+    }
+    
+    func addEvent(e: Event){
+        events.append(e)
+        let ref = Database.database().reference().child(uid!)
+        e.uid = ref.childByAutoId().key
+        print("added event with key \(e.uid!)")
+        updateFirebase()
+    }
+    
     func addEvent(name: String, level: String, meetName: String){
-        events.append(Event(name: name, level: level, meetName: meetName))
+        let e = Event(name: name, level: level, meetName: meetName)
+        events.append(e)
+        let ref = Database.database().reference().child(uid!)
+        e.uid = ref.childByAutoId().key
+        print("added event with key \(e.uid!)")
+        updateFirebase()
     }
     
     func getEvent(eventName: String, meetName: String) -> Event?{
@@ -62,8 +102,8 @@ public class Athlete : Codable{
         thisUserRef.setValue(dict)
         
         for e in events{
-            let eventDict = ["meetName": e.meetName,"name": e.name, "level":e.level, "mark": e.mark, "markString": e.markString, "place":e.place ?? 0 , "points": e.points] as [String : Any]
-            let eventsID = thisUserRef.childByAutoId()
+            let eventDict = ["meetName": e.meetName,"name": e.name, "level":e.level, "mark": e.mark, "markString": e.markString, "place":e.place ?? nil , "points": e.points] as [String : Any]
+            let eventsID = thisUserRef.child("events").childByAutoId()
             e.uid = eventsID.key
             eventsID.setValue(eventDict)
             
@@ -72,18 +112,20 @@ public class Athlete : Codable{
      }
     
     func updateFirebase(){
-        let ref = Database.database().reference().child("athletes").child(uid!)
+        var ref = Database.database().reference().child("athletes").child(uid!)
         let dict = ["first": self.first, "last":self.last, "school": self.school, "schoolFull":self.schoolFull, "grade":self.grade] as [String : Any]
         
         ref.updateChildValues(dict)
+        ref = ref.child("events")
         
         for e in events{
-            let eventDict = ["meetName": e.meetName,"name": e.name, "level":e.level, "mark": e.mark, "markString": e.markString, "place":e.place ?? 0 , "points": e.points] as [String : Any]
+            let eventDict = ["meetName": e.meetName,"name": e.name, "level":e.level, "mark": e.mark, "markString": e.markString, "place":e.place ?? nil , "points": e.points] as [String : Any]
             ref.child(e.uid!).updateChildValues(eventDict)
         
-        print("updating athlete in firebase")
+        
         
     }
+        print("updating athlete in firebase")
 }
    
     func deleteFromFirebase(){
@@ -102,10 +144,29 @@ public class Event:Codable{
     var mark: Float
     var markString: String
     var place: Int?
-    var points = 0.0
+    var points = 99.0
     var heat = 0
     var meetName = ""
     var uid : String?
+    
+    init(key: String, dict: [String:Any] ) {
+        uid = key
+        name = dict["name"] as! String
+        level = dict["level"] as! String
+        mark = dict["mark"] as! Float
+        markString = dict["markString"] as! String
+        if let p = dict["place"] as? Int{
+        place = p
+        }
+        else{place = nil}
+        points = dict["points"] as! Double
+        if let heater = dict["heat"]{
+            heat = heater as! Int
+        }
+       
+        meetName = dict["meetName"] as! String
+      
+    }
     
     init(name: String, level: String, meetName: String) {
         self.name = name
@@ -113,6 +174,7 @@ public class Event:Codable{
         self.mark = 0.0
         markString = ""
         self.meetName = meetName
+        self.place = nil
         
         
     }

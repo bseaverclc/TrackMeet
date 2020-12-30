@@ -92,6 +92,7 @@ class addAthleteViewController: UIViewController {
                 eventAthletes.append(athlete)
                 performSegue(withIdentifier: "unwindToRosters", sender: self)
             }
+                athlete.saveToFirebase()
             }
         }
         else{

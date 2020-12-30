@@ -10,16 +10,24 @@ import UIKit
 import SafariServices
 import FirebaseDatabase
 
+
+
+
 class LaunchViewController: UIViewController {
-   var meets = [Meet]()
-   var allAthletes = [Athlete]()
-   var schools = [String:String]()
+    var meets = [Meet]()
+    var allAthletes = [Athlete]()
+    var schools = [String:String]()
     var initials = [String]()
  
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
         self.navigationController?.toolbar.isHidden = true
+        
+//       let ref = Database.database().reference()
+//        ref.child("athletes").observeSingleEvent(of: .value) { (snapshot) in
+//        print(snapshot)
+//        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -28,12 +36,18 @@ class LaunchViewController: UIViewController {
         storeToUserDefaults()
     }
     
-    func getCoreData(){
+    func deleteCoreData(){
         let userDefaults = UserDefaults.standard
         // Delete data from userdefaults
-//        let domain = Bundle.main.bundleIdentifier!
-//        userDefaults.removePersistentDomain(forName: domain)
-//        userDefaults.synchronize()
+                let domain = Bundle.main.bundleIdentifier!
+                userDefaults.removePersistentDomain(forName: domain)
+                userDefaults.synchronize()
+    }
+    
+    func getCoreData(){
+        let userDefaults = UserDefaults.standard
+        
+        
         // Get athletes from UserDefaults
         do {
             let athletes = try userDefaults.getObjects(forKey: "allAthletes", castTo: [Athlete].self)
@@ -41,7 +55,7 @@ class LaunchViewController: UIViewController {
             for athlete in athletes{
                 allAthletes.append(athlete)
             }
-            
+
                    //print(playingItMyWay[0].schoolFull)
                } catch {
                    print(error.localizedDescription)
@@ -62,6 +76,7 @@ class LaunchViewController: UIViewController {
         for meet in inMeets{
             meets.append(meet)
         }
+            print("got meets from file")
         
                //print(playingItMyWay[0].schoolFull)
            } catch {
@@ -81,17 +96,25 @@ class LaunchViewController: UIViewController {
                       print(error.localizedDescription)
                 print(schools)
                     }
+        print("get core data is done")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       // let ref = Database.database().reference()
-        
-        
         self.title = "Home"
         self.navigationController?.toolbar.isHidden = true
-        getCoreData()
+        //getCoreData()
+        getAthletesFromFirebase()
+        //storeSchoolsToFirebase()
+        getSchoolsFromFirebase()
+        getMeetsFromFirebase()
+        
+        
+        
+        
+//        print("about to save athletes to firebase")
         for a in allAthletes{
+            //print("saving an athlete to firebase")
             //a.saveToFirebase()
             for i in 0 ..< a.events.count{
                 if a.events[i].name.contains("4x400 VAR"){
@@ -112,15 +135,16 @@ class LaunchViewController: UIViewController {
                 if a.events[i].name.contains("4x800 F/S"){
                     a.events[i].name = "4x800M F/S"
                 }
-               
+
             }
         }
-        allAthletes[0].saveToFirebase()
-       // allAthletes[0].updateFirebase()
+        //allAthletes[0].saveToFirebase()
+        //allAthletes[1].saveToFirebase()
+        //allAthletes[0].updateFirebase()
         
         for m in meets{
             for i in 0 ..< m.events.count{
-            
+
                 if m.events[i] == ("4x400 F/SM"){
                     m.events[i] = "4x400M F/S"
                 }
@@ -139,10 +163,10 @@ class LaunchViewController: UIViewController {
                 if m.events[i] == ("4x200 VARM"){
                     m.events[i] = "4x200M VAR"
                 }
-                 
+
             }
-        
-        
+
+
 
         }
     }
@@ -227,6 +251,14 @@ class LaunchViewController: UIViewController {
               print("unwinding from Meets VC")
           }
     
+    func storeSchoolsToFirebase(){
+        let ref = Database.database().reference().child("schools")
+        ref.updateChildValues(schools)
+        
+    }
+    
+    
+    
     func storeToUserDefaults(){
         let userDefaults = UserDefaults.standard
            do {
@@ -252,12 +284,79 @@ class LaunchViewController: UIViewController {
                    }
     }
     
-    func writeToFirebase(){
+   
+    
+    
+    func getSchoolsFromFirebase(){
+        var ref: DatabaseReference!
+
+        ref = Database.database().reference()
+        ref.child("schools").observeSingleEvent(of: .value, with: { (snapshot) in
+            self.schools = snapshot.value as! [String:String]
+        })
+       
+    }
+    
+    func getMeetsFromFirebase(){
+        var ref: DatabaseReference!
+
+        ref = Database.database().reference()
+        ref.child("meets").observe(.childAdded, with: { (snapshot) in
+            
+            let dict = snapshot.value as! [String:Any]
+            self.meets.append(Meet(key: snapshot.key, dict: dict))
+        })
+       
+    }
+    
+    func athleteChangedInFirebase(){
         
     }
     
-    
-    func getFromFirebase(){
+    func getAthletesFromFirebase(){
+        var ref: DatabaseReference!
+
+        ref = Database.database().reference()
+        
+        ref.child("athletes").observe(.childAdded) { (snapshot) in
+            print("athlete observed")
+            let uid = snapshot.key
+            print(uid)
+           
+            guard let dict = snapshot.value as? [String:Any]
+            else{ print("Error")
+                return
+            }
+            
+            
+            let a = Athlete(key: uid, dict: dict)
+            self.allAthletes.append(a)
+            print("Added Athlete to allAthletes \(self.allAthletes[self.allAthletes.count-1].first) ")
+            for e in a.events{
+                print(e.name)
+            }
+            ref.child("athletes").child(uid).child("events").observe(.childAdded) { (snapshot2) in
+                guard let dict2 = snapshot2.value as? [String:Any]
+                else{ print("Error")
+                    return
+                }
+//                print("printing events")
+//                print(dict2)
+                var add = true
+                for e in a.events{
+                    if dict2["name"] as! String == e.name && dict2["meetName"] as! String == e.meetName{
+                        add = false
+                    }
+                }
+                if add{
+                a.addEvent(key: snapshot2.key, dict: dict2)
+                print("Added Event")
+                print("\(a.first) \(a.events[a.events.count-1].name)")
+                }
+                
+            }
+        
+               }
         
     }
     

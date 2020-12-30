@@ -102,9 +102,15 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
                      var selectedAthlete = displayedAthletes[path.row]
                     
                      print("level of selected athletes: \(lev)")
-                    selectedAthlete.events.append(Event(name: self.title!, level: lev, meetName: meet.name))
+                    selectedAthlete.addEvent(e: Event(name: self.title!, level: lev, meetName: meet.name))
                      eventAthletes.append(selectedAthlete)
                  }
+            print("Athletes in the event")
+            for ath in eventAthletes{
+                for eve in ath.events{
+                    print("\(ath.last) \(eve.name)")
+                }
+            }
              }
     }
         
