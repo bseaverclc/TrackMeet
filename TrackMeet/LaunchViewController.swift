@@ -113,6 +113,7 @@ class LaunchViewController: UIViewController {
         getSchoolsFromFirebase()
         getMeetsFromFirebase()
         athleteChangedInFirebase2()
+        athleteDeletedInFirebase()
         
         
         
@@ -313,7 +314,66 @@ class LaunchViewController: UIViewController {
        
     }
     
+    func getAthletesFromFirebase(){
+        var ref: DatabaseReference!
+        var handle1 : UInt! // These did not work!
+        var handle2 : UInt!  // These did not work!
 
+        ref = Database.database().reference()
+        
+        handle1 = ref.child("athletes").observe(.childAdded) { (snapshot) in
+            print("athlete observed")
+            let uid = snapshot.key
+            print(uid)
+           
+            guard let dict = snapshot.value as? [String:Any]
+            else{ print("Error")
+                return
+            }
+            
+            var addAth = true
+            let a = Athlete(key: uid, dict: dict)
+            for ath in Data.allAthletes{
+                if ath.uid == a.uid{
+                    addAth = false
+                }
+            }
+            if addAth{
+            Data.allAthletes.append(a)
+            print("Added Athlete to allAthletes \(Data.allAthletes[Data.allAthletes.count-1].first) ")
+            }
+            for e in a.events{
+                print(e.name)
+            }
+            handle2 = ref.child("athletes").child(uid).child("events").observe(.childAdded) { (snapshot2) in
+                guard let dict2 = snapshot2.value as? [String:Any]
+                else{ print("Error")
+                    return
+                }
+//                print("printing events")
+//                print(dict2)
+                var add = true
+                for e in a.events{
+                    if dict2["name"] as! String == e.name && dict2["meetName"] as! String == e.meetName{
+                        add = false
+                    }
+                }
+                if add{
+                a.addEvent(key: snapshot2.key, dict: dict2)
+                print("Added Event")
+                print("\(a.first) \(a.events[a.events.count-1].name)")
+                }
+                
+            }
+            ref.removeObserver(withHandle: handle2)
+            print("removing handle2")
+               }
+        
+        ref.removeObserver(withHandle: handle1)
+        print("removing handle1")
+        
+        ref.removeAllObservers()
+    }
     
     func athleteChangedInFirebase2(){
         var ref: DatabaseReference!
@@ -335,6 +395,10 @@ class LaunchViewController: UIViewController {
             
            // Data.allAthletes.append(a)
            // ref.child("athletes").child(uid).child("events").
+            ref.child("athletes").child(uid).child("events").observe(.childRemoved, with: { (snapshot2) in
+                print("event removed")
+            })
+            
             
             ref.child("athletes").child(uid).child("events").observe(.childAdded, with: { (snapshot2) in
                 print("snapshot2 \(snapshot2)")
@@ -354,7 +418,7 @@ class LaunchViewController: UIViewController {
                 }
                 if add{
                 a.addEvent(key: snapshot2.key, dict: dict2)
-                    print("in changed event added")
+                print("in changed event added")
                 
                 }
                     
@@ -367,7 +431,7 @@ class LaunchViewController: UIViewController {
         for i in 0..<Data.allAthletes.count{
             if(Data.allAthletes[i].uid == uid){
                 Data.allAthletes[i] = a
-                print("Athlete Changed \(Data.allAthletes[i].last)")
+                print("Athlete \(i)Changed \(Data.allAthletes[i].last)")
             }
         
                 
@@ -381,52 +445,25 @@ class LaunchViewController: UIViewController {
                 
     }
     
-    func getAthletesFromFirebase(){
+    func athleteDeletedInFirebase(){
         var ref: DatabaseReference!
-
+        print("Removing athleted observed")
         ref = Database.database().reference()
-        
-        ref.child("athletes").observe(.childAdded) { (snapshot) in
-            print("athlete observed")
-            let uid = snapshot.key
-            print(uid)
-           
-            guard let dict = snapshot.value as? [String:Any]
-            else{ print("Error")
-                return
-            }
-            
-            
-            let a = Athlete(key: uid, dict: dict)
-            Data.allAthletes.append(a)
-            print("Added Athlete to allAthletes \(Data.allAthletes[Data.allAthletes.count-1].first) ")
-            for e in a.events{
-                print(e.name)
-            }
-            ref.child("athletes").child(uid).child("events").observe(.childAdded) { (snapshot2) in
-                guard let dict2 = snapshot2.value as? [String:Any]
-                else{ print("Error")
-                    return
-                }
-//                print("printing events")
-//                print(dict2)
-                var add = true
-                for e in a.events{
-                    if dict2["name"] as! String == e.name && dict2["meetName"] as! String == e.meetName{
-                        add = false
-                    }
-                }
-                if add{
-                a.addEvent(key: snapshot2.key, dict: dict2)
-                print("Added Event")
-                print("\(a.first) \(a.events[a.events.count-1].name)")
-                }
+        ref.child("athletes").observe(.childRemoved, with: { (snapshot) in
+            print("Removing athleted observed from Array")
+            for i in 0..<Data.allAthletes.count{
                 
+                if Data.allAthletes[i].uid == snapshot.key{
+                    print("\(Data.allAthletes[i].last) has been removed")
+                    Data.allAthletes.remove(at: i)
+                    break
+                }
             }
-        
-               }
-        
+            
+        })
     }
+    
+    
     
     func readCSVURL(csvURL: String, fullSchool: String, initSchool: String){
             var urlCut = csvURL

@@ -259,7 +259,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             eventAthletes.insert(movingAthlete, at: destinationIndexPath.row)
             
         }
-        
+        movingAthlete.updateFirebase()
         tableView.reloadData()
 
 
@@ -280,19 +280,47 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             switch sec{
             case 0:
                 heat1[indexPath.row].events.removeAll { (e) -> Bool in
-                    e.name == self.title && e.meetName == self.meet.name
+                    print(e.uid)
+                    if e.name == self.title && e.meetName == self.meet.name {
+                        if let euid = e.uid{
+                            print("calling deleteEventFromFirebase")
+                        heat1[indexPath.row].deleteEventFromFirebase(euid: euid)
+                       
+                        }
+                        return true
+                    }
+                    return false
                 }
                 heat1.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
             case 1:
                 heat2[indexPath.row].events.removeAll { (e) -> Bool in
-                    e.name == self.title && e.meetName == self.meet.name
+                    print(e.uid)
+                    if e.name == self.title && e.meetName == self.meet.name {
+                        if let euid = e.uid{
+                            print("calling deleteEventFromFirebase")
+                        heat2[indexPath.row].deleteEventFromFirebase(euid: euid)
+                       
+                        }
+                        return true
+                    }
+                    return false
                 }
                 heat2.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
             default:
+                
                 eventAthletes[indexPath.row].events.removeAll { (e) -> Bool in
-                    e.name == self.title && e.meetName == self.meet.name
+                    print(e.uid)
+                    if e.name == self.title && e.meetName == self.meet.name {
+                        if let euid = e.uid{
+                            print("calling deleteEventFromFirebase")
+                        eventAthletes[indexPath.row].deleteEventFromFirebase(euid: euid)
+                       
+                        }
+                        return true
+                    }
+                    return false
                 }
                 eventAthletes.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
@@ -300,8 +328,17 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             }
             else{
                 eventAthletes[indexPath.row].events.removeAll { (e) -> Bool in
-                                   e.name == self.title && e.meetName == self.meet.name
-                               }
+                    print(e.uid)
+                    if e.name == self.title && e.meetName == self.meet.name {
+                        if let euid = e.uid{
+                            print("calling deleteEventFromFirebase")
+                        eventAthletes[indexPath.row].deleteEventFromFirebase(euid: euid)
+                       
+                        }
+                        return true
+                    }
+                    return false
+                }
                                eventAthletes.remove(at: indexPath.row)
                                tableView.deleteRows(at: [indexPath], with: .fade)
                 
@@ -471,6 +508,12 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                      }
        // save to firebase
         for a in eventAthletes{
+            a.updateFirebase()
+        }
+        for a in heat1{
+            a.updateFirebase()
+        }
+        for a in heat2{
             a.updateFirebase()
         }
 
@@ -738,7 +781,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                          } catch {
                              print(error.localizedDescription)
                          }
-               
+          
               //calcPoints()
               // print("Calculated Points")
            }
