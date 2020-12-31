@@ -122,7 +122,7 @@ class EventsTableViewController: UITableViewController {
             nvc.meet = meet
       
         //nvc.eventAthletes = sentAthletes
-        nvc.allAthletes = athletes
+       // nvc.allAthletes = athletes
         nvc.screenTitle = selectedEvent!
             
             nvc.selectedRow = selectedRow
@@ -139,9 +139,9 @@ class EventsTableViewController: UITableViewController {
     
  @IBAction func unwind( _ seg: UIStoryboardSegue) {
     let pvc = seg.source as! EventEditViewController
-    athletes = pvc.allAthletes
+    //athletes = pvc.allAthletes
     meet = pvc.meet
     tableView.reloadData()
-    "Unwind to events table"
+    //"Unwind to events table"
 }
 }

@@ -11,7 +11,7 @@ import UIKit
 class addAthleteViewController: UIViewController {
     var meet : Meet!
     var athlete : Athlete!
-    var allAthletes = [Athlete]()
+    //var allAthletes = [Athlete]()
     var displayedAthletes = [Athlete]()
     var eventAthletes = [Athlete]()
     var from = ""
@@ -63,7 +63,7 @@ class addAthleteViewController: UIViewController {
            
             athlete = Athlete(f: first!, l: last!, s: school!, g: Int(year!)!, sf: schoolFull)
             
-            for a in allAthletes{
+            for a in Data.allAthletes{
                 if a.equals(other: athlete){
                    resignFirstResponder()
                    addAthlete = sameAthleteError()
@@ -73,11 +73,11 @@ class addAthleteViewController: UIViewController {
             }
             if addAthlete{
             print("Created Athlete")
-            allAthletes.insert(athlete, at: 0)
+            Data.allAthletes.insert(athlete, at: 0)
                 // Save
                 let userDefaults = UserDefaults.standard
                 do {
-                    try userDefaults.setObjects(allAthletes, forKey: "allAthletes")
+                    try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
                        } catch {
                            print(error.localizedDescription)
                        }

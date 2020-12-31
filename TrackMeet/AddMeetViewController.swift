@@ -14,7 +14,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     
     @IBOutlet weak var ScoreTableView: UIStackView!
     @IBOutlet weak var scrollViewOutlet: UIScrollView!
-    var allAthletes = [Athlete]()
+    //var allAthletes = [Athlete]()
     var schools = [String: String]()
     var initials = [String]()
     var schoolKeys = [String]()
@@ -403,7 +403,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                               }
                     
                        do {
-                        try userDefaults.setObjects(self.allAthletes, forKey: "allAthletes")
+                        try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
                                    print("Saving Athletes")
                                }
                                catch{
@@ -481,7 +481,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                             if person[0] != "First"{
                              var athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2])!, sf: fullSchool)
                             print(athlete)
-                            self.allAthletes.append(athlete)
+                                Data.allAthletes.append(athlete)
                             }
                              
                          }

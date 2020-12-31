@@ -19,7 +19,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
        
         var header = "Schools"
         var screenTitle = "Schools"
-        var allAthletes = [Athlete]()
+        //var allAthletes = [Athlete]()
         var eventAthletes = [Athlete]()
         var displayedAthletes = [Athlete]()
         var selectedSchool : String!
@@ -93,7 +93,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                 let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
                 let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
                     var selected = self.schoolNames[indexPath.row]
-                    self.allAthletes.removeAll(where: {$0.schoolFull == selected})
+                    Data.allAthletes.removeAll(where: {$0.schoolFull == selected})
                     
                     self.schoolNames.remove(at: indexPath.row) // remove from array
                     self.schools.removeValue(forKey: selected) // remove from dictionary
@@ -134,7 +134,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                         
                             //changing school names to new names
                             
-                                    for a in self.allAthletes{
+                            for a in Data.allAthletes{
                                         print(a.schoolFull)
                                         print(self.schoolNames[indexPath.row])
                                         if a.schoolFull == self.schoolNames[indexPath.row]{
@@ -170,7 +170,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                                                      print(error.localizedDescription)
                                                  }
                                        do {
-                                        try userDefaults.setObjects(self.allAthletes, forKey: "allAthletes")
+                                        try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
                                            print("Saving Athletes")
                                        }
                                        catch{
@@ -297,7 +297,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                               }
                     
                        do {
-                        try userDefaults.setObjects(self.allAthletes, forKey: "allAthletes")
+                        try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
                                    print("Saving Athletes")
                                }
                                catch{
@@ -377,7 +377,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                                 if person[0] != "First"{
                                  var athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2])!, sf: fullSchool)
                                 print(athlete)
-                                self.allAthletes.append(athlete)
+                                    Data.allAthletes.append(athlete)
                                 }
                                  
                              }
@@ -404,7 +404,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
         if segue.identifier == "toAthletesSegue"{
         let nvc = segue.destination as! AthletesViewController
         nvc.pvcScreenTitle = screenTitle
-        nvc.allAthletes = allAthletes
+       // nvc.allAthletes = allAthletes
             nvc.meets = meets
         nvc.schools = [schools[selectedSchool]!]
         }
@@ -412,8 +412,8 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
     
     @IBAction func unwindtoSchools( _ seg: UIStoryboardSegue) {
       let pvc = seg.source as! AthletesViewController
-       allAthletes = pvc.allAthletes
-       allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
+      // allAthletes = pvc.allAthletes
+        Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
        print("unwind to schools")
        
        
@@ -428,7 +428,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                       print(error.localizedDescription)
                   }
         do {
-            try userDefaults.setObjects(allAthletes, forKey: "allAthletes")
+            try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
             print("Saving Athletes")
         }
         catch{

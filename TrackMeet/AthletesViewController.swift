@@ -19,7 +19,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
    
     var header = ""
     var screenTitle = "Rosters"
-    var allAthletes = [Athlete]()
+    //var allAthletes = [Athlete]()
     var eventAthletes = [Athlete]()
     var displayedAthletes = [Athlete]()
     var selectedAthlete : Athlete!
@@ -46,7 +46,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
            
         
         self.title = screenTitle
-        displayedAthletes = allAthletes
+        displayedAthletes = Data.allAthletes
         
         if pvcScreenTitle == ""{
         schools = [String](meet!.schools.values)
@@ -74,7 +74,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         print("view disappearing")
         if isMovingFromParent{
             if let del = self.delegate{
-        del.savePreferences(athletes: allAthletes)
+        del.savePreferences(athletes: Data.allAthletes)
             }
             else{
                 performSegue(withIdentifier: "unwindtoSchoolsSegue", sender: nil)
@@ -115,7 +115,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
             let alert = UIAlertController(title: "Are you sure?", message: "Deleting this athlete will also delete any results stored for this athlete", preferredStyle:    .alert)
             let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
                 var selected = self.displayedAthletes[indexPath.row]
-                self.allAthletes.removeAll { (athlete) -> Bool in
+                Data.allAthletes.removeAll { (athlete) -> Bool in
                     athlete.equals(other: selected)
                
                 }
@@ -161,22 +161,22 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
                     if let grade = Int(alert.textFields![3].text!){
                         self.displayedAthletes[indexPath.row].grade = grade}
                     self.tableView.reloadRows(at: [indexPath], with: .fade)
-                    for i in 0 ..< self.allAthletes.count{
-                       if self.displayedAthletes[indexPath.row].equals(other: self.allAthletes[i]){
-                        self.allAthletes[i].first = alert.textFields![0].text!
-                         self.allAthletes[i].last = alert.textFields![1].text!
-                         self.allAthletes[i].school = alert.textFields![2].text!
+                    for i in 0 ..< Data.allAthletes.count{
+                       if self.displayedAthletes[indexPath.row].equals(other: Data.allAthletes[i]){
+                        Data.allAthletes[i].first = alert.textFields![0].text!
+                         Data.allAthletes[i].last = alert.textFields![1].text!
+                         Data.allAthletes[i].school = alert.textFields![2].text!
                           if let grade = Int(alert.textFields![3].text!){
-                                self.allAthletes[i].grade = grade}
+                                Data.allAthletes[i].grade = grade}
                         
                         // updateFirebase
-                        print(self.allAthletes[i].first)
-                        self.allAthletes[i].updateFirebase()
+                        print(Data.allAthletes[i].first)
+                        Data.allAthletes[i].updateFirebase()
                         // save changes to userDefaults
                         let userDefaults = UserDefaults.standard
                         do {
 
-                            try userDefaults.setObjects(self.allAthletes, forKey: "allAthletes")
+                            try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
                                } catch {
                                    print(error.localizedDescription)
                                }
@@ -233,12 +233,12 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         if segue.identifier == "backToEventSegue"{
         let nvc = segue.destination as! EventEditViewController
         nvc.eventAthletes = eventAthletes
-        nvc.allAthletes = allAthletes
+       // nvc.allAthletes = allAthletes
         }
         else if segue.identifier == "toAddAthleteSegue"{
             let nvc = segue.destination as! addAthleteViewController
             nvc.displayedAthletes = displayedAthletes
-            nvc.allAthletes = allAthletes
+           // nvc.allAthletes = allAthletes
             if let aMeet = meet{
                 nvc.meet = aMeet
             }
@@ -257,7 +257,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         displayedAthletes = [Athlete]()
-        for a in allAthletes{
+        for a in Data.allAthletes{
         
             if item.title == a.school{
                 displayedAthletes.append(a)
@@ -271,7 +271,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     
    @IBAction func unwind( _ seg: UIStoryboardSegue) {
     let pvc = seg.source as! addAthleteViewController
-    allAthletes = pvc.allAthletes
+   // allAthletes = pvc.allAthletes
     displayedAthletes = pvc.displayedAthletes
     tableView.reloadData()
     print("unwinding")

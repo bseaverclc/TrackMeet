@@ -14,7 +14,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
     @IBOutlet weak var tabBarOutlet: UITabBar!
     var lev = ""
         var screenTitle = ""
-        var allAthletes = [Athlete]()
+       // var allAthletes = [Athlete]()
         var eventAthletes = [Athlete]()
         var displayedAthletes = [Athlete]()
     var meet : Meet!
@@ -25,7 +25,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
             super.viewDidLoad()
             self.title = screenTitle
             lev = String(screenTitle.suffix(3))
-            for a in allAthletes{
+            for a in Data.allAthletes{
                 if meet.schools.values.contains(a.school){
                     displayedAthletes.append(a)
                 }
@@ -119,7 +119,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
         func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
             selectAthletes()
             displayedAthletes = [Athlete]()
-            for a in allAthletes{
+            for a in Data.allAthletes{
             
                 if item.title == a.school{
                     displayedAthletes.append(a)
@@ -135,7 +135,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
         if segue.identifier != "unwindToEventEdit"{
             selectAthletes()
         let nvc = segue.destination as! addAthleteViewController
-        nvc.allAthletes = allAthletes
+       // nvc.allAthletes = allAthletes
         nvc.eventAthletes = eventAthletes
         nvc.from = screenTitle
         nvc.schools = schools

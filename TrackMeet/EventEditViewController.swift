@@ -44,7 +44,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     var fieldEventsLev = [String]()
     var meet : Meet!
     var sections = false
-    var allAthletes = [Athlete]()
+    //var allAthletes = [Athlete]()
     var eventAthletes = [Athlete]()
     var heat1 = [Athlete]()
     var heat2 = [Athlete]()
@@ -85,7 +85,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         //calcPoints()
         let userDefaults = UserDefaults.standard
                          do {
-                                 try userDefaults.setObjects(allAthletes, forKey: "allAthletes")
+                                 try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
                                 } catch {
                                     print(error.localizedDescription)
                                 }
@@ -125,7 +125,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
 //           }
            
            self.title = screenTitle
-           for a in allAthletes{
+           for a in Data.allAthletes{
                      for e in a.events{
                        if e.name == screenTitle && e.meetName == meet.name{
                            switch e.heat{
@@ -465,7 +465,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         
               let userDefaults = UserDefaults.standard
               do {
-                      try userDefaults.setObjects(allAthletes, forKey: "allAthletes")
+                      try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
                      } catch {
                          print(error.localizedDescription)
                      }
@@ -734,7 +734,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                // save to userdefaults
                   let userDefaults = UserDefaults.standard
                   do {
-                          try userDefaults.setObjects(allAthletes, forKey: "allAthletes")
+                          try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
                          } catch {
                              print(error.localizedDescription)
                          }
@@ -746,7 +746,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
            
            
            let nvc = segue.destination as! AddAthleteToEventViewController
-           nvc.allAthletes = allAthletes
+          // nvc.allAthletes = allAthletes
            nvc.eventAthletes = eventAthletes
            nvc.screenTitle = screenTitle
                nvc.meet = meet
@@ -761,7 +761,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
        
        
        if let pvc = seg.source as? AddAthleteToEventViewController{
-         allAthletes = pvc.allAthletes
+         //allAthletes = pvc.allAthletes
          screenTitle = pvc.screenTitle
        eventAthletes = pvc.eventAthletes
          tableViewOutlet.reloadData()
@@ -775,7 +775,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
        }
        else{
            let pvc = seg.source as! addAthleteViewController
-           allAthletes = pvc.allAthletes
+          // allAthletes = pvc.allAthletes
              screenTitle = pvc.from
            eventAthletes = pvc.eventAthletes
       
@@ -788,7 +788,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
        // save to userdefaults
        let userDefaults = UserDefaults.standard
        do {
-               try userDefaults.setObjects(allAthletes, forKey: "allAthletes")
+               try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
               } catch {
                   print(error.localizedDescription)
               }

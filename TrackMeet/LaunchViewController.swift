@@ -10,12 +10,16 @@ import UIKit
 import SafariServices
 import FirebaseDatabase
 
-
+class Data{
+    static var meets = [Meet]()
+    static var allAthletes = [Athlete]()
+    static var schools = [String:String]()
+}
 
 
 class LaunchViewController: UIViewController {
     var meets = [Meet]()
-    var allAthletes = [Athlete]()
+    //var allAthletes = [Athlete]()
     var schools = [String:String]()
     var initials = [String]()
  
@@ -53,7 +57,7 @@ class LaunchViewController: UIViewController {
             let athletes = try userDefaults.getObjects(forKey: "allAthletes", castTo: [Athlete].self)
             print("loading athletes from userdefaults")
             for athlete in athletes{
-                allAthletes.append(athlete)
+                Data.allAthletes.append(athlete)
             }
 
                    //print(playingItMyWay[0].schoolFull)
@@ -108,12 +112,12 @@ class LaunchViewController: UIViewController {
         //storeSchoolsToFirebase()
         getSchoolsFromFirebase()
         getMeetsFromFirebase()
-        
+        athleteChangedInFirebase2()
         
         
         
 //        print("about to save athletes to firebase")
-        for a in allAthletes{
+        for a in Data.allAthletes{
             //print("saving an athlete to firebase")
             //a.saveToFirebase()
             for i in 0 ..< a.events.count{
@@ -222,14 +226,14 @@ class LaunchViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toMeetsSegue"{
             let nvc = segue.destination as! MeetsViewController
-            nvc.allAthletes = allAthletes
+            //nvc.allAthletes = allAthletes
             nvc.meets = meets
             nvc.schools = schools
             print("sent stuff to meets")
         }
         else{
             let nvc = segue.destination as! SchoolsViewController
-            nvc.allAthletes = allAthletes
+            //nvc.allAthletes = allAthletes
             nvc.schools = schools
             nvc.meets = meets
         }
@@ -237,7 +241,7 @@ class LaunchViewController: UIViewController {
     
     @IBAction func unwind3(_ seg: UIStoryboardSegue){
            let pvc = seg.source as! SchoolsViewController
-           allAthletes = pvc.allAthletes
+           //allAthletes = pvc.allAthletes
         schools = pvc.schools
         meets = pvc.meets
            print("unwinding from Schools VC")
@@ -245,7 +249,7 @@ class LaunchViewController: UIViewController {
     
     @IBAction func unwindFromMeets(_ seg: UIStoryboardSegue){
               let pvc = seg.source as! MeetsViewController
-              allAthletes = pvc.allAthletes
+             // allAthletes = pvc.allAthletes
               schools = pvc.schools
               meets = pvc.meets
               print("unwinding from Meets VC")
@@ -268,7 +272,7 @@ class LaunchViewController: UIViewController {
                       print(error.localizedDescription)
                   }
         do {
-            try userDefaults.setObjects(allAthletes, forKey: "allAthletes")
+            try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
             print("Saving Athletes")
         }
         catch{
@@ -309,8 +313,72 @@ class LaunchViewController: UIViewController {
        
     }
     
-    func athleteChangedInFirebase(){
+
+    
+    func athleteChangedInFirebase2(){
+        var ref: DatabaseReference!
+
+        ref = Database.database().reference()
         
+        ref.child("athletes").observe(.childChanged) { (snapshot) in
+            print("athlete observed2")
+            let uid = snapshot.key
+            //print(uid)
+           
+            guard let dict = snapshot.value as? [String:Any]
+            else{ print("Error")
+                return
+            }
+            
+            
+            let a = Athlete(key: uid, dict: dict)
+            
+           // Data.allAthletes.append(a)
+           // ref.child("athletes").child(uid).child("events").
+            
+            ref.child("athletes").child(uid).child("events").observe(.childAdded, with: { (snapshot2) in
+                print("snapshot2 \(snapshot2)")
+                
+                    
+                
+                guard let dict2 = snapshot2.value as? [String:Any]
+                else{ print("Error")
+                    return
+                }
+                
+                var add = true
+                for e in a.events{
+                    if dict2["name"] as! String == e.name && dict2["meetName"] as! String == e.meetName{
+                        add = false
+                    }
+                }
+                if add{
+                a.addEvent(key: snapshot2.key, dict: dict2)
+                    print("in changed event added")
+                
+                }
+                    
+                
+                
+            })
+        
+               
+        
+        for i in 0..<Data.allAthletes.count{
+            if(Data.allAthletes[i].uid == uid){
+                Data.allAthletes[i] = a
+                print("Athlete Changed \(Data.allAthletes[i].last)")
+            }
+        
+                
+            }
+            
+        }
+          
+                
+//                print("printing events")
+//                print(dict2)
+                
     }
     
     func getAthletesFromFirebase(){
@@ -330,8 +398,8 @@ class LaunchViewController: UIViewController {
             
             
             let a = Athlete(key: uid, dict: dict)
-            self.allAthletes.append(a)
-            print("Added Athlete to allAthletes \(self.allAthletes[self.allAthletes.count-1].first) ")
+            Data.allAthletes.append(a)
+            print("Added Athlete to allAthletes \(Data.allAthletes[Data.allAthletes.count-1].first) ")
             for e in a.events{
                 print(e.name)
             }
@@ -413,7 +481,7 @@ class LaunchViewController: UIViewController {
                                 if person[0] != "First"{
                                  var athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2])!, sf: fullSchool)
                                 print(athlete)
-                                self.allAthletes.append(athlete)
+                                    Data.allAthletes.append(athlete)
                                 }
                                  
                              }

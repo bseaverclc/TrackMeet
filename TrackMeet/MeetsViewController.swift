@@ -54,7 +54,7 @@ extension UserDefaults: ObjectSavable {
 class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var meets = [Meet]()
-    var allAthletes = [Athlete]()
+    //var allAthletes = [Athlete]()
     var schools = [String:String]()
     var selectedMeet : Meet?
     
@@ -78,31 +78,31 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     
     func randomizeAthletes(){
-        allAthletes.append(Athlete(f: "OWEN", l: "MIZE", s: "CLC", g: 12, sf: "CRYSTAL LAKE CENTRAL"))
-            allAthletes.append(Athlete(f: "JAKHARI", l: "ANDERSON", s: "CG", g: 12, sf: "CARY-GROVE"))
-            allAthletes.append(Athlete(f: "DREW", l: "MCGINNESS", s: "CLS", g: 9, sf: "CRYSTAL LAKE SOUTH"))
-        let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        let chars = Array(letters)
-        let schoolArray = ["CLC","CG","CLS","PR"]
-        let schoolFullArray = ["CRYSTAL LAKE CENTRAL", "CARY-GROVE", "CRYSTAL LAKE SOUTH", "PRAIRIE RIDGE"]
-                            
-        
-        for _ in 3...1000{
-            var first = ""
-            var last = ""
-            for _ in 0...4{
-                first.append(String(chars[Int.random(in: 0 ..< chars.count)]))
-                last.append(String(chars[Int.random(in: 0 ..< chars.count)]))
-            }
-            var choice = Int.random(in: 0..<schoolArray.count)
-            let school = schoolArray[choice]
-            let schoolF = schoolFullArray[choice]
-            //let school = schoolArray.randomElement()!
-            let grade = Int.random(in: 9...12)
-            
-            allAthletes.append(Athlete(f: first, l: last, s: school, g: grade, sf: schoolF))
-            
-        }
+//        allAthletes.append(Athlete(f: "OWEN", l: "MIZE", s: "CLC", g: 12, sf: "CRYSTAL LAKE CENTRAL"))
+//            allAthletes.append(Athlete(f: "JAKHARI", l: "ANDERSON", s: "CG", g: 12, sf: "CARY-GROVE"))
+//            allAthletes.append(Athlete(f: "DREW", l: "MCGINNESS", s: "CLS", g: 9, sf: "CRYSTAL LAKE SOUTH"))
+//        let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+//        let chars = Array(letters)
+//        let schoolArray = ["CLC","CG","CLS","PR"]
+//        let schoolFullArray = ["CRYSTAL LAKE CENTRAL", "CARY-GROVE", "CRYSTAL LAKE SOUTH", "PRAIRIE RIDGE"]
+//
+//
+//        for _ in 3...1000{
+//            var first = ""
+//            var last = ""
+//            for _ in 0...4{
+//                first.append(String(chars[Int.random(in: 0 ..< chars.count)]))
+//                last.append(String(chars[Int.random(in: 0 ..< chars.count)]))
+//            }
+//            var choice = Int.random(in: 0..<schoolArray.count)
+//            let school = schoolArray[choice]
+//            let schoolF = schoolFullArray[choice]
+//            //let school = schoolArray.randomElement()!
+//            let grade = Int.random(in: 9...12)
+//
+//            allAthletes.append(Athlete(f: first, l: last, s: school, g: grade, sf: schoolF))
+//
+//        }
 //        var teams = ["A","B","C"]
 //        var levels = ["VAR", "F/S"]
 //        for school in schoolArray{
@@ -115,7 +115,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func sortByName(){
-        allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
+        Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
     }
      
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -199,20 +199,20 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toAddMeetSegue"{
             let nvc = segue.destination as! AddMeetViewController
-            nvc.allAthletes = allAthletes
+           // nvc.allAthletes = allAthletes
             nvc.schools = schools
             nvc.meets = meets
         }
         if segue.identifier == "toHomeSegue"{
             let nvc = segue.destination as! HomeViewController
             nvc.meet = selectedMeet
-            nvc.allAthletes = allAthletes
+           // nvc.allAthletes = allAthletes
             nvc.meets = meets
         }
         
         if segue.identifier == "changeMeetSegue"{
             let nvc = segue.destination as! AddMeetViewController
-            nvc.allAthletes = allAthletes
+            //nvc.allAthletes = allAthletes
             nvc.schools = schools
             nvc.meets = meets
             nvc.selectedMeet = selectedMeet
@@ -224,7 +224,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @IBAction func unwind2(_ seg: UIStoryboardSegue){
         let pvc = seg.source as! HomeViewController
-        allAthletes = pvc.allAthletes
+       // allAthletes = pvc.allAthletes
         print("unwinding from Home VC")
     }
     
@@ -232,7 +232,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         print("unwinding from addMeets VC")
      
      let pvc = seg.source as! AddMeetViewController
-     allAthletes = pvc.allAthletes
+    // allAthletes = pvc.allAthletes
      schools = pvc.schools
      meets = pvc.meets
      if let m = pvc.meet{
@@ -254,7 +254,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
                       print(error.localizedDescription)
                   }
         do {
-            try userDefaults.setObjects(allAthletes, forKey: "allAthletes")
+            try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
             print("Saving Athletes")
         }
         catch{

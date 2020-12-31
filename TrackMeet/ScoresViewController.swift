@@ -9,7 +9,7 @@
 import UIKit
 
 class ScoresViewController: UIViewController {
-    var allAthletes: [Athlete]!
+    //var allAthletes: [Athlete]!
     @IBOutlet weak var textViewOutlet: UITextView!
     
     @IBOutlet weak var copyButton: UIButton!
@@ -69,7 +69,7 @@ class ScoresViewController: UIViewController {
 
     func computeScores(){
         
-        for a in allAthletes{
+        for a in Data.allAthletes{
             var updated = false
             
             for e in a.events{

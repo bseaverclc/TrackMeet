@@ -16,15 +16,15 @@ public protocol DataBackDelegate: class {
 
 class HomeViewController: UIViewController, DataBackDelegate {
     
-    var allAthletes : [Athlete]!
+   // var allAthletes : [Athlete]!
     var meet : Meet!
     var meets : [Meet]!
     var ref: DatabaseReference!
     
     
     func savePreferences(athletes: [Athlete]) {
-        allAthletes = athletes
-        allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
+        Data.allAthletes = athletes
+        Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
         print("delegate function called")
     }
     
@@ -56,7 +56,7 @@ class HomeViewController: UIViewController, DataBackDelegate {
         print(segue.description)
         if segue.identifier == "eventsSegue"{
             let nvc = segue.destination as! EventsTableViewController
-            nvc.athletes = allAthletes
+           // nvc.athletes = allAthletes
             nvc.events = meet.events
             nvc.meet = meet
             
@@ -64,12 +64,12 @@ class HomeViewController: UIViewController, DataBackDelegate {
         }
         else if segue.identifier == "scoresSegue"{
             let nvc = segue.destination as! ScoresViewController
-            nvc.allAthletes = allAthletes
+            //nvc.allAthletes = allAthletes
             nvc.meet = meet
         }
         else if segue.identifier == "athletesSegue"{
             let nvc = segue.destination as! AthletesViewController
-            nvc.allAthletes = allAthletes
+            //nvc.allAthletes = allAthletes
             nvc.delegate = self
             nvc.meet = meet
             nvc.meets = meets
@@ -80,8 +80,8 @@ class HomeViewController: UIViewController, DataBackDelegate {
     
    @IBAction func unwind( _ seg: UIStoryboardSegue) {
    let pvc = seg.source as! EventsTableViewController
-    allAthletes = pvc.athletes
-    allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
+   // allAthletes = pvc.athletes
+    Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
     print("unwind to home screen")
     
     
