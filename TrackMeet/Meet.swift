@@ -28,7 +28,7 @@ public class Meet: Codable{
         name = dict["name"] as! String
         
         let formatter1 = DateFormatter()
-        formatter1.dateFormat = "mm/dd/yy"
+        formatter1.dateFormat = "MM/dd/yy"
         if let d = formatter1.date(from: dict["date"] as! String){
         date = d
         }
@@ -40,33 +40,38 @@ public class Meet: Codable{
         schools = dict["schools"] as! [String:String]
         
         levels = [String]()
-        let levelsArray = dict["levels"] as! NSArray
+        if let levelsArray = dict["levels"] as? NSArray{
         for i in 0..<levelsArray.count{
             levels.append(levelsArray[i] as! String)
         }
+        }
         
         events = [String]()
-        let eventsArray = dict["events"] as! NSArray
+        if let eventsArray = dict["events"] as? NSArray{
         for i in 0..<eventsArray.count{
             events.append(eventsArray[i] as! String)
         }
+        }
         
         indPoints = [Int]()
-        let indPointsArray = dict["indPoints"] as! NSArray
+        if let indPointsArray = dict["indPoints"] as? NSArray{
         for i in 0..<indPointsArray.count{
             indPoints.append(indPointsArray[i] as! Int)
         }
+        }
         
         relPoints = [Int]()
-        let relPointsArray = dict["relPoints"] as! NSArray
+        if let relPointsArray = dict["relPoints"] as? NSArray{
         for i in 0..<relPointsArray.count{
             relPoints.append(relPointsArray[i] as! Int)
         }
+        }
         
         beenScored = [Bool]()
-        let beenScoredArray = dict["beenScored"] as! NSArray
+        if let beenScoredArray = dict["beenScored"] as? NSArray{
         for i in 0..<beenScoredArray.count{
             beenScored.append(beenScoredArray[i] as! Bool)
+        }
         }
         
 
@@ -100,6 +105,16 @@ public class Meet: Codable{
         uid = thisUserRef.key
         
         thisUserRef.setValue(dict)
+    }
+    
+    func deleteFromFirebase(){
+        if let ui = uid{
+        let ref = Database.database().reference().child("meets").child(ui).removeValue()
+        print("Meet has been removed from Firebase")
+        }
+        else{
+            print("Error Deleting Athlete! Athlete not in Firebase")
+        }
     }
     
     

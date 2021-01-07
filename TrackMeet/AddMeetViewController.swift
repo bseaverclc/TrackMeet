@@ -262,9 +262,11 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
               }
         
         indP.removeAll()
+        print("Individual points")
         var i = 0
-        while individualScoringOutlet[i].text != ""{
+        while i < 8 && individualScoringOutlet[i].text != ""  {
             if let points = Int(individualScoringOutlet[i].text!){
+                print("points")
             indP.append(points)
             }
             else{
@@ -277,8 +279,10 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         
         relP.removeAll()
         i = 0
-        while relayScoringOutlet[i].text != ""{
+        print("Relay points")
+        while i<8 && relayScoringOutlet[i].text != ""{
                    if let points = Int(relayScoringOutlet[i].text!){
+                    print(points)
                    relP.append(points)
                    }
                    else{
@@ -292,6 +296,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         if let oldMeet = selectedMeet{
             for i in 0 ... meets.count - 1{
                 if oldMeet.name == meets[i].name{
+                    meets[i].deleteFromFirebase()
                     meets.remove(at: i)
                     print("removed meet")
                     break;
@@ -481,6 +486,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                             if person[0] != "First"{
                              var athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2])!, sf: fullSchool)
                             print(athlete)
+                                athlete.saveToFirebase()
                                 Data.allAthletes.append(athlete)
                             }
                              

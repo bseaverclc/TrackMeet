@@ -77,43 +77,6 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     
-    func randomizeAthletes(){
-//        allAthletes.append(Athlete(f: "OWEN", l: "MIZE", s: "CLC", g: 12, sf: "CRYSTAL LAKE CENTRAL"))
-//            allAthletes.append(Athlete(f: "JAKHARI", l: "ANDERSON", s: "CG", g: 12, sf: "CARY-GROVE"))
-//            allAthletes.append(Athlete(f: "DREW", l: "MCGINNESS", s: "CLS", g: 9, sf: "CRYSTAL LAKE SOUTH"))
-//        let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-//        let chars = Array(letters)
-//        let schoolArray = ["CLC","CG","CLS","PR"]
-//        let schoolFullArray = ["CRYSTAL LAKE CENTRAL", "CARY-GROVE", "CRYSTAL LAKE SOUTH", "PRAIRIE RIDGE"]
-//
-//
-//        for _ in 3...1000{
-//            var first = ""
-//            var last = ""
-//            for _ in 0...4{
-//                first.append(String(chars[Int.random(in: 0 ..< chars.count)]))
-//                last.append(String(chars[Int.random(in: 0 ..< chars.count)]))
-//            }
-//            var choice = Int.random(in: 0..<schoolArray.count)
-//            let school = schoolArray[choice]
-//            let schoolF = schoolFullArray[choice]
-//            //let school = schoolArray.randomElement()!
-//            let grade = Int.random(in: 9...12)
-//
-//            allAthletes.append(Athlete(f: first, l: last, s: school, g: grade, sf: schoolF))
-//
-//        }
-//        var teams = ["A","B","C"]
-//        var levels = ["VAR", "F/S"]
-//        for school in schoolArray{
-//            for letter in teams{
-//                allAthletes.append(Athlete(f: letter, l: school, s: school, g: 12))
-//        }
-//     }
-             
-        
-    }
-    
     func sortByName(){
         Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
     }
@@ -149,6 +112,8 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     let blankAlert = UIAlertController(title: "Are you sure?", message: "Deleting this meet will also delete all results", preferredStyle: .alert)
                     let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
                         //var selected = self.meets[indexPath.row]
+                        self.meets[indexPath.row].deleteFromFirebase()
+                         
                         self.meets.remove(at: indexPath.row)
                         tableView.deleteRows(at: [indexPath], with: .fade)
                         

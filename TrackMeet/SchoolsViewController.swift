@@ -93,10 +93,24 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                 let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
                 let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
                     var selected = self.schoolNames[indexPath.row]
-                    Data.allAthletes.removeAll(where: {$0.schoolFull == selected})
+                    // removing all athletes from app with this school name
+                    //Data.allAthletes.removeAll(where: {$0.schoolFull == selected})
+                  
+                    //attempt to delete from firebase and Data.allAthletes
+                    for (index, item) in Data.allAthletes.reversed().enumerated() {
+                        
+                        if item.schoolFull == selected{
+                            item.deleteFromFirebase()
+                            Data.allAthletes.remove(at: index)
+                        }
+                    }
+                    
+                    
                     
                     self.schoolNames.remove(at: indexPath.row) // remove from array
                     self.schools.removeValue(forKey: selected) // remove from dictionary
+                    let ref = Database.database().reference().child("schools").child(selected).removeValue()
+                    
                     // Still need to remove all athletes from this school
                     tableView.deleteRows(at: [indexPath], with: .fade)
                     
@@ -377,6 +391,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                                 if person[0] != "First"{
                                  var athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2])!, sf: fullSchool)
                                 print(athlete)
+                                    athlete.saveToFirebase()
                                     Data.allAthletes.append(athlete)
                                 }
                                  
