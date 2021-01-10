@@ -15,7 +15,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     @IBOutlet weak var ScoreTableView: UIStackView!
     @IBOutlet weak var scrollViewOutlet: UIScrollView!
     //var allAthletes = [Athlete]()
-    var schools = [String: String]()
+    //var schools = [String: String]()
     var initials = [String]()
     var schoolKeys = [String]()
     var selectedSchools = [String:String]()
@@ -25,14 +25,17 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     var relP = [Int]()
     var selectedAthletes = [Athlete]()
     var meet : Meet!
-    var meets: [Meet]!
+   // var meets: [Meet]!
     var selectedMeet : Meet?
     var changeMeet = false
-    
+    var coachCode = ""
+    var managerCode = ""
     
     @IBOutlet weak var verticalStackViewOutlet: UIStackView!
    
+    @IBOutlet weak var coachesCodeOutlet: UITextField!
     
+    @IBOutlet weak var managerCodeOutlet: UITextField!
     @IBOutlet weak var meetNameOutlet: UITextField!
     @IBOutlet weak var datePickerOutlet: UIDatePicker!
     @IBOutlet weak var tableView: UITableView!
@@ -130,7 +133,8 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                 j+=1
             }
             
-            
+            coachesCodeOutlet.text = meet.coachCode
+            managerCodeOutlet.text = meet.managerCode
             
         }
         else{
@@ -146,22 +150,22 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         //ScoreTableView.layer.borderWidth = 2
         
         // make an array of the school keys and values
-        schoolKeys = Array(schools.keys)
-        initials = Array(schools.values)
+        schoolKeys = Array(Data.schools.keys)
+        initials = Array(Data.schools.values)
         // You may want to sort it
         schoolKeys.sort(by: {$0 < $1})
         // Do any additional setup after loading the view.
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return schools.count
+        return Data.schools.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
         let school = schoolKeys[indexPath.row]
         cell.textLabel?.text = school
-        cell.detailTextLabel?.text = schools[school]
+        cell.detailTextLabel?.text = Data.schools[school]
         
         // highlighting previous selected schools
         if selectedMeet?.schools[school] != nil{
@@ -195,7 +199,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                           //print(selectedPaths)
                           for path in selectedPaths{
                               var selectedSchoolKey = schoolKeys[path.row]
-                            selectedSchools[selectedSchoolKey] = schools[selectedSchoolKey]
+                            selectedSchools[selectedSchoolKey] = Data.schools[selectedSchoolKey]
                           }
                       }
     }
@@ -219,7 +223,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         
         
         if !changeMeet{
-        for meet in meets{
+        for meet in Data.meets{
             if meet.name == meetNameOutlet.text{
                 showAlert(errorMessage: "Meet name already in use")
                 return
@@ -291,13 +295,27 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
             }
                i+=1
             }
+        if coachesCodeOutlet.text != ""{
+            coachCode = coachesCodeOutlet.text!
+        }
+        else{
+        showAlert(errorMessage: "You must enter a coaches code")
+         return
+        }
+        if managerCodeOutlet.text != ""{
+            managerCode = managerCodeOutlet.text!
+        }
+        else{
+        showAlert(errorMessage: "You must enter a meet manager code")
+         return
+        }
         
         // Take out the old meet
         if let oldMeet = selectedMeet{
-            for i in 0 ... meets.count - 1{
-                if oldMeet.name == meets[i].name{
-                    meets[i].deleteFromFirebase()
-                    meets.remove(at: i)
+            for i in 0 ... Data.meets.count - 1{
+                if oldMeet.name == Data.meets[i].name{
+                    Data.meets[i].deleteFromFirebase()
+                    Data.meets.remove(at: i)
                     print("removed meet")
                     break;
                 }
@@ -307,8 +325,8 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         
         
         // Create a new meet and add to meets array
-        meet = Meet(name: meetNameOutlet.text!, date: datePickerOutlet.date, schools: selectedSchools, gender: gen, levels: lev , events: eventLeveled, indPoints: indP, relpoints: relP,  beenScored: beenScored)
-        meets.append(meet)
+        meet = Meet(name: meetNameOutlet.text!, date: datePickerOutlet.date, schools: selectedSchools, gender: gen, levels: lev , events: eventLeveled, indPoints: indP, relpoints: relP,  beenScored: beenScored, coach: coachCode, manager: managerCode)
+        Data.meets.append(meet)
       
         if changeMeet{
             let alert = UIAlertController(title: "Meet has been changed!", message: "Be sure to reprocess all events that you have already processed", preferredStyle: .alert)
@@ -395,12 +413,12 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                                
            
 
-                       self.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
+                    Data.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
                        
                        // Save school to UserDefaults
                        let userDefaults = UserDefaults.standard
                        do {
-                           try userDefaults.setObjects(self.schools, forKey: "schools")
+                           try userDefaults.setObjects(Data.schools, forKey: "schools")
                            print("Saved Schools in Add Meet VC")
                               } catch {
                                   print(error.localizedDescription)

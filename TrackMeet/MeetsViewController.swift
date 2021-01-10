@@ -53,9 +53,9 @@ extension UserDefaults: ObjectSavable {
 
 class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var meets = [Meet]()
+    //var meets = [Meet]()
     //var allAthletes = [Athlete]()
-    var schools = [String:String]()
+    //var schools = [String:String]()
     var selectedMeet : Meet?
     
     @IBOutlet weak var tableView: UITableView!
@@ -82,7 +82,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
      
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        meets.count
+        Data.meets.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -90,10 +90,10 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
       
         let formatter1 = DateFormatter()
         formatter1.dateStyle = .short
-        var dateString = formatter1.string(from: meets[indexPath.row].date)
+        var dateString = formatter1.string(from: Data.meets[indexPath.row].date)
         
         cell.textLabel?.text = dateString
-        cell.detailTextLabel?.text = meets[indexPath.row].name
+        cell.detailTextLabel?.text = Data.meets[indexPath.row].name
         return cell
         
         
@@ -111,15 +111,15 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
                     let blankAlert = UIAlertController(title: "Are you sure?", message: "Deleting this meet will also delete all results", preferredStyle: .alert)
                     let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
-                        //var selected = self.meets[indexPath.row]
-                        self.meets[indexPath.row].deleteFromFirebase()
+                        //var selected = Data.meets[indexPath.row]
+                        Data.meets[indexPath.row].deleteFromFirebase()
                          
-                        self.meets.remove(at: indexPath.row)
+                        Data.meets.remove(at: indexPath.row)
                         tableView.deleteRows(at: [indexPath], with: .fade)
                         
                         let userDefaults = UserDefaults.standard
                         do {
-                           try userDefaults.setObjects(self.meets, forKey: "meets")
+                           try userDefaults.setObjects(Data.meets, forKey: "meets")
                            print("Saving meets")
                         }
                         catch{
@@ -138,7 +138,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
                 let edit = UITableViewRowAction(style: .normal, title: "Edit") { (action, indexPath) in
                   
-                    self.selectedMeet = self.meets[indexPath.row]
+                    self.selectedMeet = Data.meets[indexPath.row]
                     self.performSegue(withIdentifier: "changeMeetSegue", sender: nil)
                       
 
@@ -150,7 +150,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedMeet = meets[indexPath.row]
+        selectedMeet = Data.meets[indexPath.row]
         performSegue(withIdentifier: "toHomeSegue", sender: nil)
     }
     
@@ -165,21 +165,21 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         if segue.identifier == "toAddMeetSegue"{
             let nvc = segue.destination as! AddMeetViewController
            // nvc.allAthletes = allAthletes
-            nvc.schools = schools
-            nvc.meets = meets
+           // nvc.schools = schools
+            //nvc.meets = meets
         }
         if segue.identifier == "toHomeSegue"{
             let nvc = segue.destination as! HomeViewController
             nvc.meet = selectedMeet
            // nvc.allAthletes = allAthletes
-            nvc.meets = meets
+            //nvc.meets = meets
         }
         
         if segue.identifier == "changeMeetSegue"{
             let nvc = segue.destination as! AddMeetViewController
             //nvc.allAthletes = allAthletes
-            nvc.schools = schools
-            nvc.meets = meets
+            //nvc.schools = schools
+           // nvc.meets = meets
             nvc.selectedMeet = selectedMeet
             
         }
@@ -198,8 +198,8 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
      
      let pvc = seg.source as! AddMeetViewController
     // allAthletes = pvc.allAthletes
-     schools = pvc.schools
-     meets = pvc.meets
+     //schools = pvc.schools
+     //meets = pvc.meets
      if let m = pvc.meet{
        // meets.append(m)
         tableView.reloadData()
@@ -213,7 +213,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func storeToUserDefaults(){
         let userDefaults = UserDefaults.standard
            do {
-                   try userDefaults.setObjects(meets, forKey: "meets")
+            try userDefaults.setObjects(Data.meets, forKey: "meets")
             
                   } catch {
                       print(error.localizedDescription)
@@ -227,7 +227,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
         
         do {
-                       try userDefaults.setObjects(schools, forKey: "schools")
+            try userDefaults.setObjects(Data.schools, forKey: "schools")
                        print("Saving Schools")
                    }
                    catch{

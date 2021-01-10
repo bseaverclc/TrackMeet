@@ -9,6 +9,7 @@
 import UIKit
 import SafariServices
 import FirebaseDatabase
+//import GoggleSignIn
 
 class Data{
     static var meets = [Meet]()
@@ -18,9 +19,9 @@ class Data{
 
 
 class LaunchViewController: UIViewController {
-    var meets = [Meet]()
+    //var meets = [Meet]()
     //var allAthletes = [Athlete]()
-    var schools = [String:String]()
+   // var schools = [String:String]()
     var initials = [String]()
  
     override func viewWillAppear(_ animated: Bool) {
@@ -64,11 +65,11 @@ class LaunchViewController: UIViewController {
                } catch {
                    print(error.localizedDescription)
                    readCSVURL(csvURL: "https://docs.google.com/spreadsheets/d/1WLDFBqmA6GyiTYBHjeuNOBMl_id64vZ6HNLCFRzCIQc/edit#gid=0", fullSchool: "Cary-Grove", initSchool: "CG")
-                self.schools["Cary-Grove"] = "CG"
+                Data.schools["Cary-Grove"] = "CG"
                 readCSVURL(csvURL: "https://docs.google.com/spreadsheets/d/1puxn4zdVrYcJwrEksSktMF-McK6VQhguOqnPOLjaSYQ/edit#gid=0", fullSchool: "Crystal Lake Central", initSchool: "CLC")
-             self.schools["Crystal Lake Central"] = "CLC"
+             Data.schools["Crystal Lake Central"] = "CLC"
                 readCSVURL(csvURL: "https://docs.google.com/spreadsheets/d/1gfZWGg0cjEdOO_9tKKSHrWm8KufLt8MViYOrzlC-XpY/edit#gid=0", fullSchool: "Crystal Lake South", initSchool: "CLS")
-             self.schools["Crystal Lake South"] = "CLS"
+             Data.schools["Crystal Lake South"] = "CLS"
                   //randomizeAthletes()
                }
                //randomizeAthletes()
@@ -78,7 +79,7 @@ class LaunchViewController: UIViewController {
         do {
                let inMeets = try userDefaults.getObjects(forKey: "meets", castTo: [Meet].self)
         for meet in inMeets{
-            meets.append(meet)
+            Data.meets.append(meet)
         }
             print("got meets from file")
         
@@ -91,14 +92,14 @@ class LaunchViewController: UIViewController {
         do {
             let inSchools = try userDefaults.getObjects(forKey: "schools", castTo: [String:String].self)
                for (key,value) in inSchools{
-                   schools[key] = value
+                Data.schools[key] = value
                }
-            initials = Array(schools.values)
+            initials = Array(Data.schools.values)
             print("Got schools from file")
-            print(schools)
+            print(Data.schools)
             } catch {
                       print(error.localizedDescription)
-                print(schools)
+                print(Data.schools)
                     }
         print("get core data is done")
     }
@@ -109,71 +110,75 @@ class LaunchViewController: UIViewController {
         self.navigationController?.toolbar.isHidden = true
         //getCoreData()
         getAthletesFromFirebase()
+        
         //storeSchoolsToFirebase()
         getSchoolsFromFirebase()
         getMeetsFromFirebase()
         athleteChangedInFirebase2()
         athleteDeletedInFirebase()
+        beenScoredChangedInFirebase()
+        
+        Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
         
         
-        
-//        print("about to save athletes to firebase")
-        for a in Data.allAthletes{
-            //print("saving an athlete to firebase")
-            //a.saveToFirebase()
-            for i in 0 ..< a.events.count{
-                if a.events[i].name.contains("4x400 VAR"){
-                    a.events[i].name = "4x400M VAR"
-                }
-                if a.events[i].name.contains("4x400 F/S"){
-                    a.events[i].name = "4x400M F/S"
-                }
-                if a.events[i].name.contains("4x200 VAR"){
-                    a.events[i].name = "4x200M VAR"
-                }
-                if a.events[i].name.contains("4x200 F/S"){
-                    a.events[i].name = "4x200M F/S"
-                }
-                if a.events[i].name.contains("4x800 VAR"){
-                    a.events[i].name = "4x800M VAR"
-                }
-                if a.events[i].name.contains("4x800 F/S"){
-                    a.events[i].name = "4x800M F/S"
-                }
-
-            }
-        }
-        //allAthletes[0].saveToFirebase()
-        //allAthletes[1].saveToFirebase()
-        //allAthletes[0].updateFirebase()
-        
-        for m in meets{
-            for i in 0 ..< m.events.count{
-
-                if m.events[i] == ("4x400 F/SM"){
-                    m.events[i] = "4x400M F/S"
-                }
-                if m.events[i] == ("4x400 VARM"){
-                    m.events[i] = "4x400M VAR"
-                }
-                if m.events[i] == ("4x800 F/SM"){
-                    m.events[i] = "4x800M F/S"
-                }
-                if m.events[i] == ("4x800 VARM"){
-                    m.events[i] = "4x800M VAR"
-                }
-                if m.events[i] == ("4x200 F/SM"){
-                    m.events[i] = "4x200M F/S"
-                }
-                if m.events[i] == ("4x200 VARM"){
-                    m.events[i] = "4x200M VAR"
-                }
-
-            }
-
-
-
-        }
+//
+////        print("about to save athletes to firebase")
+//        for a in Data.allAthletes{
+//            //print("saving an athlete to firebase")
+//            //a.saveToFirebase()
+//            for i in 0 ..< a.events.count{
+//                if a.events[i].name.contains("4x400 VAR"){
+//                    a.events[i].name = "4x400M VAR"
+//                }
+//                if a.events[i].name.contains("4x400 F/S"){
+//                    a.events[i].name = "4x400M F/S"
+//                }
+//                if a.events[i].name.contains("4x200 VAR"){
+//                    a.events[i].name = "4x200M VAR"
+//                }
+//                if a.events[i].name.contains("4x200 F/S"){
+//                    a.events[i].name = "4x200M F/S"
+//                }
+//                if a.events[i].name.contains("4x800 VAR"){
+//                    a.events[i].name = "4x800M VAR"
+//                }
+//                if a.events[i].name.contains("4x800 F/S"){
+//                    a.events[i].name = "4x800M F/S"
+//                }
+//
+//            }
+//        }
+//        //allAthletes[0].saveToFirebase()
+//        //allAthletes[1].saveToFirebase()
+//        //allAthletes[0].updateFirebase()
+//
+//        for m in meets{
+//            for i in 0 ..< m.events.count{
+//
+//                if m.events[i] == ("4x400 F/SM"){
+//                    m.events[i] = "4x400M F/S"
+//                }
+//                if m.events[i] == ("4x400 VARM"){
+//                    m.events[i] = "4x400M VAR"
+//                }
+//                if m.events[i] == ("4x800 F/SM"){
+//                    m.events[i] = "4x800M F/S"
+//                }
+//                if m.events[i] == ("4x800 VARM"){
+//                    m.events[i] = "4x800M VAR"
+//                }
+//                if m.events[i] == ("4x200 F/SM"){
+//                    m.events[i] = "4x200M F/S"
+//                }
+//                if m.events[i] == ("4x200 VARM"){
+//                    m.events[i] = "4x200M VAR"
+//                }
+//
+//            }
+//
+//
+//
+//        }
     }
     
      func randomizeAthletes(){
@@ -228,37 +233,37 @@ class LaunchViewController: UIViewController {
         if segue.identifier == "toMeetsSegue"{
             let nvc = segue.destination as! MeetsViewController
             //nvc.allAthletes = allAthletes
-            nvc.meets = meets
-            nvc.schools = schools
+            //nvc.meets = meets
+           // nvc.schools = schools
             print("sent stuff to meets")
         }
         else{
             let nvc = segue.destination as! SchoolsViewController
             //nvc.allAthletes = allAthletes
-            nvc.schools = schools
-            nvc.meets = meets
+           // nvc.schools = schools
+           // nvc.meets = meets
         }
     }
     
     @IBAction func unwind3(_ seg: UIStoryboardSegue){
            let pvc = seg.source as! SchoolsViewController
            //allAthletes = pvc.allAthletes
-        schools = pvc.schools
-        meets = pvc.meets
+       // schools = pvc.schools
+        //meets = pvc.meets
            print("unwinding from Schools VC")
        }
     
     @IBAction func unwindFromMeets(_ seg: UIStoryboardSegue){
               let pvc = seg.source as! MeetsViewController
              // allAthletes = pvc.allAthletes
-              schools = pvc.schools
-              meets = pvc.meets
+              //schools = pvc.schools
+             // meets = pvc.meets
               print("unwinding from Meets VC")
           }
     
     func storeSchoolsToFirebase(){
         let ref = Database.database().reference().child("schools")
-        ref.updateChildValues(schools)
+        ref.updateChildValues(Data.schools)
         
     }
     
@@ -267,7 +272,7 @@ class LaunchViewController: UIViewController {
     func storeToUserDefaults(){
         let userDefaults = UserDefaults.standard
            do {
-                   try userDefaults.setObjects(meets, forKey: "meets")
+            try userDefaults.setObjects(Data.meets, forKey: "meets")
             
                   } catch {
                       print(error.localizedDescription)
@@ -281,7 +286,7 @@ class LaunchViewController: UIViewController {
         }
         
         do {
-                       try userDefaults.setObjects(schools, forKey: "schools")
+            try userDefaults.setObjects(Data.schools, forKey: "schools")
                        print("Saving Schools")
                    }
                    catch{
@@ -297,7 +302,7 @@ class LaunchViewController: UIViewController {
 
         ref = Database.database().reference()
         ref.child("schools").observeSingleEvent(of: .value, with: { (snapshot) in
-            self.schools = snapshot.value as! [String:String]
+            Data.schools = snapshot.value as! [String:String]
         })
        
     }
@@ -309,7 +314,7 @@ class LaunchViewController: UIViewController {
         ref.child("meets").observe(.childAdded, with: { (snapshot) in
             
             let dict = snapshot.value as! [String:Any]
-            self.meets.append(Meet(key: snapshot.key, dict: dict))
+            Data.meets.append(Meet(key: snapshot.key, dict: dict))
         })
        
     }
@@ -534,5 +539,30 @@ class LaunchViewController: UIViewController {
         }
         
         
+    }
+}
+
+func beenScoredChangedInFirebase(){
+    var ref: DatabaseReference!
+
+    ref = Database.database().reference()
+    
+    ref.child("meets").observe(.childChanged) { (snapshot) in
+        print("meet changed")
+        print(snapshot.key)
+        let uid = snapshot.key
+        for meet in Data.meets{
+            print("looping through meets")
+            if meet.uid == uid{
+                
+                guard let dict = snapshot.value as? [String:Any]
+                else{ print("Error")
+                    return
+                }
+                meet.beenScored =  dict["beenScored"] as! Array
+                print("Heard beenScored change in firebase and updated")
+                print(meet.beenScored)
+            }
+        }
     }
 }

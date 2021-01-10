@@ -213,6 +213,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         meet.beenScored[selectedRow] = false
+        meet.updatebeenScoredFirebase()
         processOutlet.backgroundColor = UIColor.lightGray
         processOutlet.setTitle("Process Event", for: .normal)
         
@@ -272,6 +273,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
             meet.beenScored[selectedRow] = false
+            meet.updatebeenScoredFirebase()
             processOutlet.backgroundColor = UIColor.lightGray
             processOutlet.setTitle("Process Event", for: .normal)
             if sections{
@@ -358,6 +360,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         print("time action happening")
         
         meet.beenScored[selectedRow] = false
+        meet.updatebeenScoredFirebase()
         processOutlet.backgroundColor = UIColor.lightGray
         processOutlet.setTitle("Process Event", for: .normal)
         
@@ -422,6 +425,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     @IBAction func placeAction(_ sender: UITextField) {
         
         meet.beenScored[selectedRow] = false
+        meet.updatebeenScoredFirebase()
         processOutlet.backgroundColor = UIColor.lightGray
         processOutlet.setTitle("Process Event", for: .normal)
         var editingArray : [Athlete]!
@@ -497,6 +501,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
            processOutlet.backgroundColor = UIColor.green
            processOutlet.setTitle("Processed", for: .normal)
         meet.beenScored[selectedRow] = true
+        meet.updatebeenScoredFirebase()
            calcPoints()
            // save to userdefaults
         
@@ -798,6 +803,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
        
     @IBAction func unwind( _ seg: UIStoryboardSegue) {
        meet.beenScored[selectedRow] = false
+        meet.updatebeenScoredFirebase()
       processOutlet.backgroundColor = UIColor.lightGray
        processOutlet.setTitle("Process Event", for: .normal)
        

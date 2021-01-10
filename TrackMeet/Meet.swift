@@ -21,6 +21,8 @@ public class Meet: Codable{
     var relPoints: [Int]
     var beenScored: [Bool]
     var uid : String?
+    var coachCode = ""
+    var managerCode = ""
     
     
     init(key: String, dict: [String:Any]  ){
@@ -73,11 +75,17 @@ public class Meet: Codable{
             beenScored.append(beenScoredArray[i] as! Bool)
         }
         }
+        if let c = dict["coachCode"] as? String{
+            coachCode = c
+        }
+        if let m = dict["managerCode"] as? String{
+            managerCode = m
+        }
         
 
     }
     
-    init(name n : String, date d:Date, schools s: [String:String], gender g: String, levels l : [String], events e : [String], indPoints ip:  [Int], relpoints rp : [Int],  beenScored se: [Bool] ){
+    init(name n : String, date d:Date, schools s: [String:String], gender g: String, levels l : [String], events e : [String], indPoints ip:  [Int], relpoints rp : [Int],  beenScored se: [Bool], coach: String, manager: String ){
         name = n
         date = d
         schools = s
@@ -87,6 +95,8 @@ public class Meet: Codable{
         indPoints = ip
         relPoints = rp
         beenScored = se
+        coachCode = coach
+        managerCode = manager
         saveMeetToFirebase()
     }
     
@@ -98,7 +108,7 @@ public class Meet: Codable{
         formatter1.dateStyle = .short
         let dateString = formatter1.string(from: date)
        
-        let dict = ["name": self.name, "date": dateString, "schools": self.schools, "gender":self.gender, "levels":self.levels, "events": self.events, "indPoints":self.indPoints, "relPoints": self.relPoints, "beenScored": self.beenScored] as [String : Any]
+        let dict = ["name": self.name, "date": dateString, "schools": self.schools, "gender":self.gender, "levels":self.levels, "events": self.events, "indPoints":self.indPoints, "relPoints": self.relPoints, "beenScored": self.beenScored, "coachCode": coachCode, "managerCode": managerCode] as [String : Any]
        
         
         let thisUserRef = ref.child("meets").childByAutoId()
@@ -117,6 +127,13 @@ public class Meet: Codable{
         }
     }
     
+    
+    func updatebeenScoredFirebase(){
+        var ref = Database.database().reference().child("meets").child(uid!)
+        
+            ref.updateChildValues(["beenScored": beenScored])
+        
+    }
     
     
 }

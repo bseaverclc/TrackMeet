@@ -26,7 +26,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     var schools = [String]()
     var meet : Meet?
     var pvcScreenTitle = ""
-    var meets : [Meet]!
+   // var meets : [Meet]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +47,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         
         self.title = screenTitle
         displayedAthletes = Data.allAthletes
+       
         
         if pvcScreenTitle == ""{
         schools = [String](meet!.schools.values)
@@ -243,14 +244,14 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
                 nvc.meet = aMeet
             }
             else{
-                nvc.meet = Meet(name: "Blank", date: Date(), schools: ["Full School":schools[0]], gender: "M", levels: ["VAR"], events: ["none"], indPoints: [Int](), relpoints: [Int](), beenScored: [false])
+                nvc.meet = Meet(name: "Blank", date: Date(), schools: ["Full School":schools[0]], gender: "M", levels: ["VAR"], events: ["none"], indPoints: [Int](), relpoints: [Int](), beenScored: [false], coach: "", manager: "")
             }
             nvc.from = "AthletesVC"
         }
         else if segue.identifier == "toAthleteResultsSegue"{
             let nvc = segue.destination as! AthleteResultsViewController
             nvc.athlete = selectedAthlete
-            nvc.meets = meets
+           // nvc.meets = meets
             nvc.meet = meet
         }
     }

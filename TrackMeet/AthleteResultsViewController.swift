@@ -10,7 +10,7 @@ import UIKit
 
 class AthleteResultsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var athlete : Athlete!
-    var meets : [Meet]!
+    //var meets : [Meet]!
     var meet : Meet?
     
     @IBOutlet weak var eventLabel: UILabel!
@@ -62,7 +62,7 @@ class AthleteResultsViewController: UIViewController, UITableViewDataSource, UIT
             cell.eventOutlet.text =  athlete.events[indexPath.row].name
             cell.markOutlet.text = athlete.events[indexPath.row].markString
             cell.meetOutlet.text = athlete.events[indexPath.row].meetName
-        for m in meets{
+            for m in Data.meets{
             if m.name == athlete.events[indexPath.row].meetName{
                 let formatter = DateFormatter()
                 formatter.dateStyle = .short

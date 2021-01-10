@@ -18,7 +18,7 @@ class HomeViewController: UIViewController, DataBackDelegate {
     
    // var allAthletes : [Athlete]!
     var meet : Meet!
-    var meets : [Meet]!
+    //var meets : [Meet]!
     var ref: DatabaseReference!
     
     
@@ -72,7 +72,7 @@ class HomeViewController: UIViewController, DataBackDelegate {
             //nvc.allAthletes = allAthletes
             nvc.delegate = self
             nvc.meet = meet
-            nvc.meets = meets
+            //nvc.meets = meets
         }
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.

@@ -23,10 +23,10 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
         var eventAthletes = [Athlete]()
         var displayedAthletes = [Athlete]()
         var selectedSchool : String!
-        var schools = [String:String]()
+       // var schools = [String:String]()
         var schoolNames = [String]()
         var initials = [String]()
-        var meets : [Meet]!
+        //var meets : [Meet]!
    
         
         
@@ -36,7 +36,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
             tableView.dataSource = self
             
             self.title = screenTitle
-            for (key,_) in schools{
+            for (key,_) in Data.schools{
                 schoolNames.append(key)
             }
             schoolNames.sort()
@@ -75,7 +75,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
             let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
             let school = schoolNames[indexPath.row]
             cell.textLabel?.text = school
-            cell.detailTextLabel?.text = schools[school]
+            cell.detailTextLabel?.text = Data.schools[school]
             //print(athlete.grade)
             return cell
         }
@@ -108,7 +108,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                     
                     
                     self.schoolNames.remove(at: indexPath.row) // remove from array
-                    self.schools.removeValue(forKey: selected) // remove from dictionary
+                    Data.schools.removeValue(forKey: selected) // remove from dictionary
                     let ref = Database.database().reference().child("schools").child(selected).removeValue()
                     
                     // Still need to remove all athletes from this school
@@ -116,7 +116,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                     
                     let userDefaults = UserDefaults.standard
                     do {
-                       try userDefaults.setObjects(self.schools, forKey: "schools")
+                        try userDefaults.setObjects(Data.schools, forKey: "schools")
                        print("Saving Schools")
                     }
                     catch{
@@ -139,7 +139,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                     })
                 alert.addTextField(configurationHandler: { (textField) in
                      textField.autocapitalizationType = .allCharacters
-                    textField.text = self.schools[self.schoolNames[indexPath.row]]
+                    textField.text = Data.schools[self.schoolNames[indexPath.row]]
                     
                 })
               
@@ -159,15 +159,15 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                                     }
                             
                             // changing all meets to new school names
-                            for m in self.meets{
+                            for m in Data.meets{
                                 m.schools.removeValue(forKey: self.schoolNames[indexPath.row])
                                 m.schools[alert.textFields![0].text!] = alert.textFields![1].text!
                             
                             }
                               
                             
-                       self.schools.removeValue(forKey: self.schoolNames[indexPath.row]) // remove old from Dict
-                        self.schools[alert.textFields![0].text!] = alert.textFields![1].text! // add new to dict
+                            Data.schools.removeValue(forKey: self.schoolNames[indexPath.row]) // remove old from Dict
+                            Data.schools[alert.textFields![0].text!] = alert.textFields![1].text! // add new to dict
                         self.schoolNames[indexPath.row] = alert.textFields![0].text! // change Array of schools
                         self.tableView.reloadRows(at: [indexPath], with: .fade)
                             
@@ -178,7 +178,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                             
                             
                                           do {
-                                            try userDefaults.setObjects(self.meets, forKey: "meets")
+                                            try userDefaults.setObjects(Data.meets, forKey: "meets")
                                            
                                                  } catch {
                                                      print(error.localizedDescription)
@@ -192,7 +192,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                                        }
                                        
                                        do {
-                                        try userDefaults.setObjects(self.schools, forKey: "schools")
+                                        try userDefaults.setObjects(Data.schools, forKey: "schools")
                                                       print("Saving Schools")
                                                   }
                                                   catch{
@@ -294,16 +294,16 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                                
            
 
-                       self.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
+                    Data.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
                        
                        //Save schools to firebase
                     let ref = Database.database().reference().child("schools")
-                    ref.updateChildValues(self.schools)
+                    ref.updateChildValues(Data.schools)
                     
                        // Save school to UserDefaults
                        let userDefaults = UserDefaults.standard
                        do {
-                           try userDefaults.setObjects(self.schools, forKey: "schools")
+                        try userDefaults.setObjects(Data.schools, forKey: "schools")
                            print("Saved Schools in Add Meet VC")
                               } catch {
                                   print(error.localizedDescription)
@@ -420,9 +420,10 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
         let nvc = segue.destination as! AthletesViewController
         nvc.pvcScreenTitle = screenTitle
        // nvc.allAthletes = allAthletes
-            nvc.meets = meets
-        nvc.schools = [schools[selectedSchool]!]
+           // nvc.meets = meets
+        //nvc.schools = [schools[selectedSchool]!]
         }
+        Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
     }
     
     @IBAction func unwindtoSchools( _ seg: UIStoryboardSegue) {
@@ -437,7 +438,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
     func storeToUserDefaults(){
         let userDefaults = UserDefaults.standard
            do {
-                   try userDefaults.setObjects(meets, forKey: "meets")
+            try userDefaults.setObjects(Data.meets, forKey: "meets")
             
                   } catch {
                       print(error.localizedDescription)
@@ -451,7 +452,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
         }
         
         do {
-                       try userDefaults.setObjects(schools, forKey: "schools")
+            try userDefaults.setObjects(Data.schools, forKey: "schools")
                        print("Saving Schools")
                    }
                    catch{
