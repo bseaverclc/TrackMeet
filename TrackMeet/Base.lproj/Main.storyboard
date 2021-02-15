@@ -28,7 +28,7 @@
                                 <rect key="frame" x="0.0" y="179.66666666666669" width="390" height="610.33333333333326"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SM8-4x-2i2">
-                                        <rect key="frame" x="0.0" y="0.0" width="390" height="176.66666666666666"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="390" height="122.66666666666667"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                         <state key="normal" title="Meets">
@@ -39,7 +39,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iei-54-9c6">
-                                        <rect key="frame" x="0.0" y="216.66666666666663" width="390" height="177"/>
+                                        <rect key="frame" x="0.0" y="162.66666666666666" width="390" height="122.33333333333334"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                         <state key="normal" title="Schools">
@@ -50,7 +50,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fBa-ho-XkR">
-                                        <rect key="frame" x="0.0" y="433.6666666666668" width="390" height="176.66666666666669"/>
+                                        <rect key="frame" x="0.0" y="325" width="390" height="122.66666666666669"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                         <state key="normal" title="Athletic.net">
@@ -59,6 +59,10 @@
                                         <connections>
                                             <action selector="athleticNetAction:" destination="iXb-bg-nrS" eventType="touchUpInside" id="1R0-7A-1qR"/>
                                         </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xs7-wk-5XH" customClass="GIDSignInButton">
+                                        <rect key="frame" x="0.0" y="487.6666666666668" width="390" height="122.66666666666669"/>
+                                        <state key="normal" title="Button"/>
                                     </button>
                                 </subviews>
                             </stackView>

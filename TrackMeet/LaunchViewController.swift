@@ -9,7 +9,7 @@
 import UIKit
 import SafariServices
 import FirebaseDatabase
-//import GoggleSignIn
+import GoogleSignIn
 
 class Data{
     static var meets = [Meet]()
@@ -19,6 +19,8 @@ class Data{
 
 
 class LaunchViewController: UIViewController {
+    
+    
     //var meets = [Meet]()
     //var allAthletes = [Athlete]()
    // var schools = [String:String]()
@@ -106,6 +108,9 @@ class LaunchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        GIDSignIn.sharedInstance().presentingViewController = self
+        
         self.title = "Home"
         self.navigationController?.toolbar.isHidden = true
         //getCoreData()

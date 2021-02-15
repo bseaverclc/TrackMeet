@@ -9,17 +9,29 @@
 import UIKit
 import CoreData
 import Firebase
-//import GoogleSignIn
+import GoogleSignIn
 
 @available(iOS 13.0, *)
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate{
 
 var window: UIWindow?
+    
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        if (error == nil) {
+              print("attempting to sign in")
+            } else {
+              print("\(error.localizedDescription)")
+            }
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
+        
+        GIDSignIn.sharedInstance().clientID = "277683121299-ppqm8tlvngt5ddn2g3ka402bvpnaodoe.apps.googleusercontent.com"
+            GIDSignIn.sharedInstance().delegate = self  // If AppDelegate conforms to GIDSignInDelegate
+            return true
         return true
     }
 
