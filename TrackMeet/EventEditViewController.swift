@@ -35,6 +35,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     
     @IBOutlet weak var processOutlet: UIButton!
     
+    @IBOutlet weak var addButtonOutlet: UIBarButtonItem!
     
     var selectedRow : Int!
     
@@ -99,7 +100,12 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
        
        override func viewDidAppear(_ animated: Bool) {
            tabBarY = tabBarOutlet.frame.origin.y
-           
+        if Meet.canCoach{
+            addButtonOutlet.isEnabled = true
+        }
+        else{
+            addButtonOutlet.isEnabled = false
+        }
        }
        
        override func viewDidLoad() {
@@ -212,6 +218,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
        }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        if Meet.canCoach{
         meet.beenScored[selectedRow] = false
         meet.updatebeenScoredFirebase()
         processOutlet.backgroundColor = UIColor.lightGray
@@ -247,7 +254,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                     )?.heat = 2
             }
             
-            else {eventAthletes.insert(movingAthlete, at: destinationIndexPath.row)
+            else if sectionTo == 2 {eventAthletes.insert(movingAthlete, at: destinationIndexPath.row)
                 movingAthlete.getEvent(eventName: screenTitle, meetName: meet.name)?.heat = 0
             }
             }
@@ -260,17 +267,29 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             eventAthletes.insert(movingAthlete, at: destinationIndexPath.row)
             
         }
+        if movingAthlete != nil{
         movingAthlete.updateFirebase()
+        }
         tableView.reloadData()
 
-
-           }
+        }
+       }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(indexPath.row)
     }
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if Meet.canCoach{
+            return true
+        }
+        else{
+            return false
+        }
+    }
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if Meet.canCoach{
         if editingStyle == .delete{
             meet.beenScored[selectedRow] = false
             meet.updatebeenScoredFirebase()
@@ -349,6 +368,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             
         }
     }
+    }
   
     // Actions
     @IBAction func timeAction(_ sender: UITextField) {
@@ -356,7 +376,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         // print(sender.text)
 //         var indexPath = IndexPath(row: sender.tag, section: 0)
 //         var cell = tableViewOutlet.cellForRow(at: indexPath) as! TimeTableViewCell
-        
+        if Meet.canManage{
         print("time action happening")
         
         meet.beenScored[selectedRow] = false
@@ -419,11 +439,12 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                        
                    
        }
-        
+       
+     }
     }
     
     @IBAction func placeAction(_ sender: UITextField) {
-        
+        if Meet.canManage{
         meet.beenScored[selectedRow] = false
         meet.updatebeenScoredFirebase()
         processOutlet.backgroundColor = UIColor.lightGray
@@ -494,10 +515,11 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             }
                     
                 
-    
+     }
     }
     
     @IBAction func processEventAction(_ sender: UIButton) {
+        if Meet.canManage{
            processOutlet.backgroundColor = UIColor.green
            processOutlet.setTitle("Processed", for: .normal)
         meet.beenScored[selectedRow] = true
@@ -521,7 +543,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         for a in heat2{
             a.updateFirebase()
         }
-
+        }
        }
     
     @IBAction func tapAction(_ sender: UITapGestureRecognizer) {
@@ -841,7 +863,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
               } catch {
                   print(error.localizedDescription)
               }
-
+    
      }
 }
 

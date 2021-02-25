@@ -10,16 +10,21 @@ import UIKit
 import SafariServices
 import FirebaseDatabase
 import GoogleSignIn
+import Firebase
 
 class Data{
     static var meets = [Meet]()
     static var allAthletes = [Athlete]()
     static var schools = [String:String]()
+    static var userID = ""
+    static var coach = ""
+    static var manager = ""
 }
 
 
 class LaunchViewController: UIViewController {
     
+    @IBOutlet weak var nameOutlet: UILabel!
     
     //var meets = [Meet]()
     //var allAthletes = [Athlete]()
@@ -31,10 +36,10 @@ class LaunchViewController: UIViewController {
         navigationController?.setNavigationBarHidden(true, animated: animated)
         self.navigationController?.toolbar.isHidden = true
         
-//       let ref = Database.database().reference()
-//        ref.child("athletes").observeSingleEvent(of: .value) { (snapshot) in
-//        print(snapshot)
-//        }
+     
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        print("View Did appear")
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -108,8 +113,19 @@ class LaunchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print("view is loading")
         GIDSignIn.sharedInstance().presentingViewController = self
+        GIDSignIn.sharedInstance()?.restorePreviousSignIn()
+        //if let blah = GID
+        if let user = Auth.auth().currentUser{
+            Data.userID = user.uid
+           
+            //nameOutlet.text = "Welcome \(user.displayName!)"
+        }
+       else{
+            //nameOutlet.text = "Not Logged in"
+       }
+                    
         
         self.title = "Home"
         self.navigationController?.toolbar.isHidden = true
@@ -186,7 +202,34 @@ class LaunchViewController: UIViewController {
 //        }
     }
     
-     func randomizeAthletes(){
+    @IBAction func logInAction(_ sender: GIDSignInButton) {
+        
+    }
+    
+    
+    @IBAction func logOutAction(_ sender: UIButton) {
+        //GIDSignIn.sharedInstance().signOut()
+        print(GIDSignIn.sharedInstance()?.currentUser != nil) // true - signed in
+        GIDSignIn.sharedInstance()?.signOut()
+        print(GIDSignIn.sharedInstance()?.currentUser != nil) // false - signed out
+        
+        let firebaseAuth = Auth.auth()
+      do {
+        try firebaseAuth.signOut()
+        Data.userID = ""
+      } catch let signOutError as NSError {
+        print ("Error signing out: %@", signOutError)
+      }
+        
+        if let user = Auth.auth().currentUser{
+            Data.userID = user.uid
+            //nameOutlet.text = "Welcome \(user.email!)"
+        }
+       else{
+           // nameOutlet.text = "Not Logged in"
+       }
+    }
+    func randomizeAthletes(){
 //            allAthletes.append(Athlete(f: "OWEN", l: "MIZE", s: "CLC", g: 12, sf: "CRYSTAL LAKE CENTRAL"))
 //                allAthletes.append(Athlete(f: "JAKHARI", l: "ANDERSON", s: "CG", g: 12, sf: "CARY-GROVE"))
 //                allAthletes.append(Athlete(f: "DREW", l: "MCGINNESS", s: "CLS", g: 9, sf: "CRYSTAL LAKE SOUTH"))

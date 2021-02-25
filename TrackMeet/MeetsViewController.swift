@@ -8,6 +8,7 @@
 
 import UIKit
 import SafariServices
+
 //import GTMSessionFetcher
 //import GoogleAPIClientForREST
 // Testing Moving Folders
@@ -60,13 +61,21 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @IBOutlet weak var tableView: UITableView!
    
+    @IBOutlet weak var addMeetOutlet: UIBarButtonItem!
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "All Meets"
+        if(Data.userID == "")
+        {
+            addMeetOutlet.isEnabled = false
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.toolbar.isHidden = false
+        Meet.canCoach = false
+        Meet.canManage = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -102,7 +111,16 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        print(Data.meets[indexPath.row].name)
+        print(Data.meets[indexPath.row].userId)
+        print(Data.userID)
+        if Data.meets[indexPath.row].userId != Data.userID
+        {
+            
+            return false
+        }
         return true
+        
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -151,7 +169,83 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedMeet = Data.meets[indexPath.row]
-        performSegue(withIdentifier: "toHomeSegue", sender: nil)
+        
+        print(selectedMeet?.coachCode)
+        print(selectedMeet?.managerCode)
+        let errorAlert = UIAlertController(title: "Incorrect Code!", message: "", preferredStyle: .alert)
+        errorAlert.addAction(UIAlertAction(title: "OK", style: .destructive, handler: nil))
+        
+        let coachAlert = UIAlertController(title: "", message: "Enter Coach Code", preferredStyle: .alert)
+        
+        coachAlert.addTextField(configurationHandler: { (textField) in
+            textField.autocapitalizationType = .allCharacters
+                   textField.placeholder = "CODE"
+                   
+               })
+        
+        coachAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (updateAction) in
+            
+            var coachCode = coachAlert.textFields![0].text!
+            if coachCode == self.selectedMeet?.coachCode{
+                Data.coach = coachCode
+                Meet.canCoach = true
+                self.performSegue(withIdentifier: "toHomeSegue", sender: nil)
+            }
+            else{
+                self.present(errorAlert, animated: true, completion: nil)
+            }
+        }))
+        
+        let manageAlert = UIAlertController(title: "", message: "Enter Meet Manager Code", preferredStyle: .alert)
+        
+        manageAlert.addTextField(configurationHandler: { (textField) in
+            textField.autocapitalizationType = .allCharacters
+                   textField.placeholder = "CODE"
+                   
+               })
+        
+        manageAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (updateAction) in
+            
+            var manageCode = manageAlert.textFields![0].text!
+            if manageCode == self.selectedMeet?.managerCode{
+                Data.manager = manageCode
+                Meet.canManage = true
+                Meet.canCoach = true
+                self.performSegue(withIdentifier: "toHomeSegue", sender: nil)
+            }
+            else{
+                self.present(errorAlert, animated: true, completion: nil)
+            }
+        }))
+        
+        
+            
+        
+        
+        
+        let chooseAlert = UIAlertController(title: "", message: "Choose Access", preferredStyle: .alert)
+        let fan = UIAlertAction(title: "Fan", style: .default) { (alert) in
+            self.performSegue(withIdentifier: "toHomeSegue", sender: nil)
+        }
+        let coach = UIAlertAction(title: "Coach", style: .default) { (alert) in
+            self.present(coachAlert, animated: true, completion: nil)
+        }
+        let manager = UIAlertAction(title: "Meet Manager", style: .default) { (alert) in
+            self.present(manageAlert, animated: true, completion: nil)
+        }
+        chooseAlert.addAction(fan)
+        chooseAlert.addAction(coach)
+        chooseAlert.addAction(manager)
+        if(selectedMeet!.userId == Data.userID)
+        {
+            Meet.canCoach = true
+            Meet.canManage = true
+            self.performSegue(withIdentifier: "toHomeSegue", sender: nil)
+        }
+        else{
+        self.present(chooseAlert, animated: true, completion: nil)
+        }
+        //performSegue(withIdentifier: "toHomeSegue", sender: nil)
     }
     
     @IBAction func athleticNetAction(_ sender: UIBarButtonItem) {

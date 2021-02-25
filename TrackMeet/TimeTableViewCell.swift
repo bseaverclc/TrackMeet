@@ -20,8 +20,16 @@ public class TimeTableViewCell : UITableViewCell{
     @IBOutlet weak var pointsOutlet: UILabel!
     
     
+    
     func configure(text: String, placeholder : String, placeText : String){
-        
+        if Meet.canManage{
+            timeOutlet.isEnabled = true
+            placeOutlet.isEnabled = true
+        }
+        else{
+            timeOutlet.isEnabled = false
+            placeOutlet.isEnabled = false
+        }
         timeOutlet.placeholder = placeholder
         timeOutlet.text = text
         placeOutlet.placeholder = "PL"
@@ -30,7 +38,14 @@ public class TimeTableViewCell : UITableViewCell{
     }
     
     func configure(text: String, placeholder : String, placeText : String, pointsText : String){
-           
+        if Meet.canManage{
+            timeOutlet.isEnabled = true
+            placeOutlet.isEnabled = true
+        }
+        else{
+            timeOutlet.isEnabled = false
+            placeOutlet.isEnabled = false
+        }
            timeOutlet.placeholder = placeholder
            timeOutlet.text = text
            placeOutlet.placeholder = "PL"
@@ -39,7 +54,14 @@ public class TimeTableViewCell : UITableViewCell{
        }
     
     func configure(text: String, placeholder : String){
-           
+        if Meet.canManage{
+            timeOutlet.isEnabled = true
+            placeOutlet.isEnabled = true
+        }
+        else{
+            timeOutlet.isEnabled = false
+            placeOutlet.isEnabled = false
+        }
            timeOutlet.placeholder = placeholder
            timeOutlet.text = text
            placeOutlet.placeholder = "PL"

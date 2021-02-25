@@ -11,6 +11,8 @@ import Firebase
 
 public class Meet: Codable{
     
+    static var canManage = false
+    static var canCoach = false
     var name : String
     var date : Date
      var schools: [String : String]
@@ -23,8 +25,9 @@ public class Meet: Codable{
     var uid : String?
     var coachCode = ""
     var managerCode = ""
+    var userId = ""
     
-    
+    // build objects from firebase
     init(key: String, dict: [String:Any]  ){
         uid = key
         name = dict["name"] as! String
@@ -81,10 +84,15 @@ public class Meet: Codable{
         if let m = dict["managerCode"] as? String{
             managerCode = m
         }
+        if let u = dict["userId"] as? String
+        {
+            userId = u
+        }
         
 
     }
     
+    // Creating a new Meet
     init(name n : String, date d:Date, schools s: [String:String], gender g: String, levels l : [String], events e : [String], indPoints ip:  [Int], relpoints rp : [Int],  beenScored se: [Bool], coach: String, manager: String ){
         name = n
         date = d
@@ -97,6 +105,7 @@ public class Meet: Codable{
         beenScored = se
         coachCode = coach
         managerCode = manager
+        userId = Data.userID
         saveMeetToFirebase()
     }
     
@@ -108,7 +117,7 @@ public class Meet: Codable{
         formatter1.dateStyle = .short
         let dateString = formatter1.string(from: date)
        
-        let dict = ["name": self.name, "date": dateString, "schools": self.schools, "gender":self.gender, "levels":self.levels, "events": self.events, "indPoints":self.indPoints, "relPoints": self.relPoints, "beenScored": self.beenScored, "coachCode": coachCode, "managerCode": managerCode] as [String : Any]
+        let dict = ["name": self.name, "date": dateString, "schools": self.schools, "gender":self.gender, "levels":self.levels, "events": self.events, "indPoints":self.indPoints, "relPoints": self.relPoints, "beenScored": self.beenScored, "coachCode": coachCode, "managerCode": managerCode, "userId": userId] as [String : Any]
        
         
         let thisUserRef = ref.child("meets").childByAutoId()

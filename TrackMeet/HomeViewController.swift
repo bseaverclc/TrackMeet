@@ -34,6 +34,10 @@ class HomeViewController: UIViewController, DataBackDelegate {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        
+    }
+    
 
    
     
@@ -43,7 +47,15 @@ class HomeViewController: UIViewController, DataBackDelegate {
         print("Individual Points: \(meet.indPoints)")
         self.title = "\(meet.name) Home"
         
-        ref = Database.database().reference()
+        
+        
+        if(meet.userId == Data.userID)
+        {
+            Meet.canCoach = true
+            Meet.canManage = true
+        }
+        
+        
         
     }
     
