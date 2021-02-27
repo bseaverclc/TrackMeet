@@ -37,6 +37,9 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     
     @IBOutlet weak var addButtonOutlet: UIBarButtonItem!
     
+    @IBOutlet weak var clearPlaceOutlet: UIButton!
+    
+    @IBOutlet weak var refreshOutlet: UIButton!
     var selectedRow : Int!
     
     @IBOutlet weak var tableViewOutlet: UITableView!
@@ -83,13 +86,9 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
        override func viewWillDisappear(_ animated: Bool) {
             super.viewWillDisappear(animated)
         print("editEvent is disappearing")
-        //calcPoints()
-        let userDefaults = UserDefaults.standard
-                         do {
-                                 try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
-                                } catch {
-                                    print(error.localizedDescription)
-                                }
+        
+
+       
            if isMovingFromParent{
            performSegue(withIdentifier: "unwindToEventsSegue", sender: self)
            }
@@ -107,9 +106,29 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             addButtonOutlet.isEnabled = false
         }
        }
+    
+    func scaleStuff(){
+        clearPlaceOutlet.titleLabel?.minimumScaleFactor = 0.5
+       clearPlaceOutlet.titleLabel?.numberOfLines = 1
+        clearPlaceOutlet.titleLabel?.adjustsFontSizeToFitWidth = true
+        
+        processOutlet.titleLabel?.minimumScaleFactor = 0.5
+        processOutlet.titleLabel?.numberOfLines = 1
+        processOutlet.titleLabel?.adjustsFontSizeToFitWidth = true
+        
+       refreshOutlet.titleLabel?.minimumScaleFactor = 0.5
+        refreshOutlet.titleLabel?.numberOfLines = 1
+        refreshOutlet.titleLabel?.adjustsFontSizeToFitWidth = true
+        
+        if !Meet.canManage{
+            clearPlaceOutlet.isHidden = true
+            processOutlet.isEnabled = false;
+        }
+    }
        
        override func viewDidLoad() {
            super.viewDidLoad()
+        scaleStuff()
         eventAthletes = [Athlete]()
            if meet.beenScored[selectedRow]{
                 processOutlet.setTitle("Processed", for: .normal)
@@ -124,11 +143,11 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
            let fontAttributes2 = [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.title3)]
            UITabBarItem.appearance().setTitleTextAttributes(fontAttributes2, for: .normal)
         
-//           for lev in meet.levels{
-//           for event in fieldEvents{
-//               fieldEventsLev.append("\(event) \(lev)")
-//               }
-//           }
+           for lev in meet.levels{
+           for event in fieldEvents{
+               fieldEventsLev.append("\(event) \(lev)")
+               }
+           }
            
            self.title = screenTitle
            for a in Data.allAthletes{
@@ -399,6 +418,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                             
                            event.markString = mark
                            print("section 0 set mark")
+                        heat1[indexPath2.row].updateFirebase()
                             
                         }
                     }
@@ -410,6 +430,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                             
                    event.markString = mark
                             print("section 1 set mark")
+                            heat2[indexPath2.row].updateFirebase()
                             
                         }
                     }
@@ -420,6 +441,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                            
                    event.markString = mark
                             print("sections but no section set mark")
+                            eventAthletes[indexPath2.row].updateFirebase()
                             
                         }
                     }
@@ -432,7 +454,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                   
                        event.markString = mark
                        print("no sections set mark")
-                                
+                eventAthletes[indexPath2.row].updateFirebase()
                             }
                         }
             }
@@ -466,11 +488,12 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                 for event in heat1[indexPath2.row].events{
                      if event.name == title && event.meetName == meet.name{
                          if let intPlace = Int(place){
-                event.place = intPlace
+                             event.place = intPlace
                          }
                          else{
                             sender.text = ""
                             event.place = nil}
+                        heat1[indexPath2.row].updateFirebase()
                      }
                  }
                 
@@ -484,6 +507,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                         else{
                         sender.text = ""
                         event.place = nil}
+                        heat2[indexPath2.row].updateFirebase()
                      }
                  }
             }
@@ -496,6 +520,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                         else{
                         sender.text = ""
                         event.place = nil}
+                        eventAthletes[indexPath2.row].updateFirebase()
                      }
                  }
                 
@@ -510,6 +535,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                 else{
                 sender.text = ""
                 event.place = nil}
+                eventAthletes[indexPath2.row].updateFirebase()
                          }
                      }
             }
@@ -546,6 +572,27 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         }
        }
     
+    @IBAction func clearPlacesAction(_ sender: UIButton) {
+        if Meet.canManage{
+        for a in eventAthletes{
+            for e in a.events{
+                if e.name == title  && e.meetName == meet.name{
+                    e.place = nil
+                    a.updateFirebase()
+                }
+                    
+            }
+        }
+            meet.beenScored[selectedRow] = false
+            meet.updatebeenScoredFirebase()
+            processOutlet.backgroundColor = UIColor.lightGray
+            processOutlet.setTitle("Process Event", for: .normal)
+            calcPoints()
+        tableViewOutlet.reloadData()
+            
+        }
+    }
+        
     @IBAction func tapAction(_ sender: UITapGestureRecognizer) {
         view.endEditing(true)
     }

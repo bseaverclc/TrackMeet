@@ -76,6 +76,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         self.navigationController?.toolbar.isHidden = false
         Meet.canCoach = false
         Meet.canManage = false
+        Data.meets.sort(by: { $0.date > $1.date })
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -175,7 +176,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let errorAlert = UIAlertController(title: "Incorrect Code!", message: "", preferredStyle: .alert)
         errorAlert.addAction(UIAlertAction(title: "OK", style: .destructive, handler: nil))
         
-        let coachAlert = UIAlertController(title: "", message: "Enter Coach Code", preferredStyle: .alert)
+        let coachAlert = UIAlertController(title: "Enter Coach Code", message: "", preferredStyle: .alert)
         
         coachAlert.addTextField(configurationHandler: { (textField) in
             textField.autocapitalizationType = .allCharacters
@@ -196,7 +197,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
             }
         }))
         
-        let manageAlert = UIAlertController(title: "", message: "Enter Meet Manager Code", preferredStyle: .alert)
+        let manageAlert = UIAlertController(title: "Enter Meet Manager Code", message: "", preferredStyle: .alert)
         
         manageAlert.addTextField(configurationHandler: { (textField) in
             textField.autocapitalizationType = .allCharacters
@@ -223,7 +224,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         
         
-        let chooseAlert = UIAlertController(title: "", message: "Choose Access", preferredStyle: .alert)
+        let chooseAlert = UIAlertController(title: "Choose Access", message: "", preferredStyle: .alert)
         let fan = UIAlertAction(title: "Fan", style: .default) { (alert) in
             self.performSegue(withIdentifier: "toHomeSegue", sender: nil)
         }
@@ -236,6 +237,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         chooseAlert.addAction(fan)
         chooseAlert.addAction(coach)
         chooseAlert.addAction(manager)
+        chooseAlert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: nil))
         if(selectedMeet!.userId == Data.userID)
         {
             Meet.canCoach = true
@@ -290,18 +292,18 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
   @IBAction func unwind( _ seg: UIStoryboardSegue) {
         print("unwinding from addMeets VC")
      
-     let pvc = seg.source as! AddMeetViewController
+     //let pvc = seg.source as! AddMeetViewController
     // allAthletes = pvc.allAthletes
      //schools = pvc.schools
      //meets = pvc.meets
-     if let m = pvc.meet{
+     //if let m = pvc.meet{
        // meets.append(m)
         tableView.reloadData()
             
         // store meets to UserDefaults
         storeToUserDefaults()
                
-        }
+       // }
     }
     
     func storeToUserDefaults(){

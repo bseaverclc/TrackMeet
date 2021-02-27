@@ -51,6 +51,12 @@ class AthleteResultsViewController: UIViewController, UITableViewDataSource, UIT
             cell.eventOutlet.text =  thisMeetEvents[indexPath.row].name
             cell.markOutlet.text = thisMeetEvents[indexPath.row].markString
             cell.meetOutlet.text = thisMeetEvents[indexPath.row].meetName
+            if let place = thisMeetEvents[indexPath.row].place{
+            cell.placeOutlet.text = "place: \(place)"
+            }
+            else{
+                cell.placeOutlet.text = ""
+            }
         
             print("single meet")
             let formatter = DateFormatter()

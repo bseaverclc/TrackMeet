@@ -326,7 +326,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         
         // Create a new meet and add to meets array
         meet = Meet(name: meetNameOutlet.text!, date: datePickerOutlet.date, schools: selectedSchools, gender: gen, levels: lev , events: eventLeveled, indPoints: indP, relpoints: relP,  beenScored: beenScored, coach: coachCode, manager: managerCode)
-        Data.meets.append(meet)
+        //Data.meets.append(meet)
       
         if changeMeet{
             let alert = UIAlertController(title: "Meet has been changed!", message: "Be sure to reprocess all events that you have already processed", preferredStyle: .alert)

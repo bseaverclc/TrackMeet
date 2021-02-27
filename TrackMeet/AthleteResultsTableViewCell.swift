@@ -14,6 +14,7 @@ class AthleteResultsTableViewCell: UITableViewCell {
     @IBOutlet weak var meetOutlet: UILabel!
     @IBOutlet weak var dateOutlet: UILabel!
     @IBOutlet weak var markOutlet: UILabel!
+    @IBOutlet weak var placeOutlet: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
