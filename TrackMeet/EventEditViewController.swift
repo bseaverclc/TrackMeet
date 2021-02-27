@@ -593,6 +593,9 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         }
     }
         
+    @IBAction func refreshAction(_ sender: UIButton) {
+        viewDidLoad()
+    }
     @IBAction func tapAction(_ sender: UITapGestureRecognizer) {
         view.endEditing(true)
     }

@@ -91,6 +91,8 @@ var window: UIWindow?
                     if let user = Auth.auth().currentUser{
                         Data.userID = user.uid
                     }
+                    NotificationCenter.default.post(
+                            name: Notification.Name("SuccessfulSignInNotification"), object: nil, userInfo: nil)
                    }
                }
     }

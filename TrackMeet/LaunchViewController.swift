@@ -26,6 +26,8 @@ class LaunchViewController: UIViewController {
     
     @IBOutlet weak var nameOutlet: UILabel!
     
+    @IBOutlet weak var logOutOutlet: UIButton!
+    @IBOutlet weak var logInOutlet: GIDSignInButton!
     //var meets = [Meet]()
     //var allAthletes = [Athlete]()
    // var schools = [String:String]()
@@ -111,20 +113,31 @@ class LaunchViewController: UIViewController {
         print("get core data is done")
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        print("view is loading")
-        GIDSignIn.sharedInstance().presentingViewController = self
-        GIDSignIn.sharedInstance()?.restorePreviousSignIn()
+    @objc func didSignIn(){
+        
         //if let blah = GID
         if let user = Auth.auth().currentUser{
             Data.userID = user.uid
            
-            //nameOutlet.text = "Welcome \(user.displayName!)"
+            nameOutlet.text = "Welcome \(user.displayName!)"
+            logInOutlet.isHidden = true
+            logOutOutlet.isHidden = false
         }
        else{
-            //nameOutlet.text = "Not Logged in"
+            nameOutlet.text = "Not Logged in"
+        logInOutlet.isHidden = false
+        logOutOutlet.isHidden = true
        }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(didSignIn), name: NSNotification.Name("SuccessfulSignInNotification"), object: nil)
+        GIDSignIn.sharedInstance().presentingViewController = self
+        GIDSignIn.sharedInstance()?.restorePreviousSignIn()
+        didSignIn()
+        print("view is loading")
+       
                     
         
         self.title = "Home"
@@ -221,14 +234,21 @@ class LaunchViewController: UIViewController {
         print ("Error signing out: %@", signOutError)
       }
         
+        //if let blah = GID
         if let user = Auth.auth().currentUser{
             Data.userID = user.uid
-            //nameOutlet.text = "Welcome \(user.email!)"
+           
+            nameOutlet.text = "Welcome \(user.displayName!)"
+            logInOutlet.isHidden = true
+            logOutOutlet.isHidden = false
         }
        else{
-           // nameOutlet.text = "Not Logged in"
+            nameOutlet.text = "Not Logged in"
+        logInOutlet.isHidden = false
+        logOutOutlet.isHidden = true
        }
     }
+    
     func randomizeAthletes(){
 //            allAthletes.append(Athlete(f: "OWEN", l: "MIZE", s: "CLC", g: 12, sf: "CRYSTAL LAKE CENTRAL"))
 //                allAthletes.append(Athlete(f: "JAKHARI", l: "ANDERSON", s: "CG", g: 12, sf: "CARY-GROVE"))
@@ -266,7 +286,6 @@ class LaunchViewController: UIViewController {
 
         }
   
-
     @IBAction func athleticNetAction(_ sender: UIButton) {
         if let url = URL(string: "https://www.athletic.net/TrackAndField/Illinois/") {
             UIApplication.shared.open(url)
@@ -315,8 +334,6 @@ class LaunchViewController: UIViewController {
         
     }
     
-    
-    
     func storeToUserDefaults(){
         let userDefaults = UserDefaults.standard
            do {
@@ -341,9 +358,6 @@ class LaunchViewController: UIViewController {
                        print("error saving schools")
                    }
     }
-    
-   
-    
     
     func getSchoolsFromFirebase(){
         var ref: DatabaseReference!
@@ -515,8 +529,6 @@ class LaunchViewController: UIViewController {
             
         })
     }
-    
-    
     
     func readCSVURL(csvURL: String, fullSchool: String, initSchool: String){
             var urlCut = csvURL

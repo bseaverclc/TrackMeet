@@ -27,7 +27,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="40" translatesAutoresizingMaskIntoConstraints="NO" id="o4V-O6-Qo8">
                                 <rect key="frame" x="0.0" y="179.66666666666669" width="390" height="610.33333333333326"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dhs-Ye-dax">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dhs-Ye-dax">
                                         <rect key="frame" x="0.0" y="0.0" width="390" height="122.66666666666667"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
                                         <color key="textColor" red="0.9881371927" green="0.43642098419999997" blue="0.0073013339010000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -66,7 +66,9 @@
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xM7-aR-lSv">
                                                 <rect key="frame" x="195" y="0.0" width="195" height="122.66666666666667"/>
-                                                <state key="normal" title="Log out"/>
+                                                <state key="normal" title="Log out">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="logOutAction:" destination="iXb-bg-nrS" eventType="touchUpInside" id="DvX-9q-6CS"/>
                                                 </connections>
@@ -91,6 +93,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="Jdb-IJ-dUh"/>
                     <connections>
+                        <outlet property="logInOutlet" destination="xs7-wk-5XH" id="tmk-mt-ZhO"/>
+                        <outlet property="logOutOutlet" destination="xM7-aR-lSv" id="ZPu-2a-wnR"/>
                         <outlet property="nameOutlet" destination="Dhs-Ye-dax" id="LIn-5v-wYU"/>
                     </connections>
                 </viewController>
@@ -298,6 +302,9 @@
                                         <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                         <state key="normal" title="Refresh"/>
+                                        <connections>
+                                            <action selector="refreshAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hOc-kF-Rpp"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="ccE-MG-Z5G">
                                         <rect key="frame" x="268" y="0.0" width="122" height="36"/>
