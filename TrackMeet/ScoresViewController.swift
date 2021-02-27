@@ -40,6 +40,7 @@ class ScoresViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        textViewOutlet.isEditable = false
         copyButton.titleLabel?.numberOfLines = 2
         copyButton.setTitle("Copy results and\ngo to athletic.net", for: .normal)
         meetNameOutlet.text = meet.name
@@ -119,14 +120,15 @@ class ScoresViewController: UIViewController {
         // I think I should add the labels in view did load and update their text values here
         // I will need to build an array of uiLabels
             var i = 0
-        for (level,scores) in teamPoints {
+        var sortedTeamPoints = teamPoints.sorted{ $0.key < $1.key }
+        for (level,scores) in sortedTeamPoints {
             if i < schoolsStackView.count{
             // add level text header
             levelsOutlet[i].text = "\(level) Scores"
         
                 
-                
-            for (initials,score) in scores{
+               var sortedScores = scores.sorted{ $0.key < $1.key }
+            for (initials,score) in sortedScores{
                 // print info to textview
                 var fullSchool = ""
                 for (sch,ini) in meet.schools{
@@ -135,6 +137,7 @@ class ScoresViewController: UIViewController {
                     }
                 }
             textViewOutlet.text += "S,\(meet.gender),\(level),,\(fullSchool),\(score)\n"
+                
                 // set up school labels
                 var label = UILabel()
                 label.text = "\(initials)"
