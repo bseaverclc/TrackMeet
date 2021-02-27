@@ -54,6 +54,7 @@ class HomeViewController: UIViewController, DataBackDelegate {
             Meet.canCoach = true
             Meet.canManage = true
         }
+        Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
         
         
         

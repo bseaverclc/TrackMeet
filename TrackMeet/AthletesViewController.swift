@@ -34,6 +34,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         let ref = Database.database().reference().child("athletes")
          ref.observe(.childChanged, with: { (snapshot) in
             print(snapshot)
+            Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
             
      })
          
