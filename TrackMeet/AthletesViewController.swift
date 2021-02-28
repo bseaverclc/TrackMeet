@@ -104,6 +104,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         let athlete = displayedAthletes[indexPath.row]
         cell.textLabel?.text = "\(athlete.last), \(athlete.first)"
         cell.detailTextLabel?.text = "\(athlete.school)"
+       
         //print(athlete.grade)
         return cell
     }

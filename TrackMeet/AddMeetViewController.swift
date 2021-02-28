@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDataSource, UIScrollViewDelegate, UITextFieldDelegate {
     var kHeight : CGFloat = 0.0
@@ -152,6 +153,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         // make an array of the school keys and values
         schoolKeys = Array(Data.schools.keys)
         initials = Array(Data.schools.values)
+        
         // You may want to sort it
         schoolKeys.sort(by: {$0 < $1})
         // Do any additional setup after loading the view.
@@ -216,6 +218,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     @IBAction func submitAction(_ sender: UIButton) {
        // print("hit submit button")
         // Error Checking
+        var gen = ""
         if meetNameOutlet.text == ""{
             showAlert(errorMessage: "You need to have a meet name!")
             return
@@ -241,9 +244,16 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
             return
         }
        //print(selectedSchools)
-        var gen = "M"
-        if genderPicker.selectedSegmentIndex == 1{
-            gen = "W"
+        else if genderPicker.selectedSegmentIndex == -1
+            {
+                self.showAlert(errorMessage: "You must pick a gender")
+                return
+            }
+        else{
+             gen = "M"
+            if genderPicker.selectedSegmentIndex == 1{
+                gen = "W"
+             }
         }
         
         lev.removeAll()
@@ -396,24 +406,45 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                        error = "Must include school initials"
                        badInput = true
                    }
-                   else if self.schoolKeys.contains("\(fullSchool) \(gender)"){
-                       error = "\(fullSchool) \(gender) is already in database"
-                       badInput = true
-                   }
-                   else if self.initials.contains(initSchool){
-                       error = "The initials \(initSchool) are already in use"
-                       badInput = true
-                   }
                    
-                   else{
+                for (key,value) in Data.schools{
+                    if (key == "\(fullSchool) \(gender)"){
+                        error = "\(fullSchool) \(gender) is already in database"
+                        badInput = true
+                        break;
+                    }
+                    else if value == initSchool && gender == key.suffix(3){
+                        error = "The initials \(initSchool)\(gender) are already in use"
+                        badInput = true
+                        break;
+                    }
+
+                }
+                   
+//                   else if self.schoolKeys.contains("\(fullSchool) \(gender)"){
+//                       error = "\(fullSchool) \(gender) is already in database"
+//                       badInput = true
+//                   }
+//                   else if self.initials.contains(initSchool){
+//                       error = "The initials \(initSchool)\(gender) are already in use"
+//                       badInput = true
+//                   }
+                   
+                if !badInput{
                        if csvURL != ""{
                            self.readCSVURL(csvURL: csvURL, fullSchool: "\(fullSchool) \(gender)", initSchool: initSchool)
                            
                        }
                                
            
-
+                    
                     Data.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
+                    
+                    
+                       
+                       //Save schools to firebase
+                    let ref = Database.database().reference().child("schools")
+                    ref.updateChildValues(Data.schools)
                        
                        // Save school to UserDefaults
                        let userDefaults = UserDefaults.standard
@@ -437,7 +468,8 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                        
                        self.schoolKeys.append("\(fullSchool) \(gender)")
                        self.tableView.reloadData()
-                   }
+                    }
+                   //}
                    if badInput{
                    let alert2 = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
                    let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
@@ -498,10 +530,13 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                      if let data = data, let dataString = String(data: data, encoding: .utf8) {
                          print("Response data string:\n \(dataString)")
                          let rows = dataString.components(separatedBy: "\r\n")
+                        print(rows.count)
                          for row in rows{
                             
                              var person = [String](row.components(separatedBy: ","))
+                            
                             if person[0] != "First"{
+                                print("\(person[0])  \(person[1])   \(person[2])")
                              var athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2])!, sf: fullSchool)
                             print(athlete)
                                 athlete.saveToFirebase()

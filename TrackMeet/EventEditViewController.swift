@@ -233,6 +233,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
            cell.schoolOutlet.text = athlete.school
            cell.timeOutlet.tag = indexPath.row
            cell.placeOutlet.tag = indexPath.row
+           cell.gradeOutlet.text = "\(athlete.grade)"
            return cell
        }
     

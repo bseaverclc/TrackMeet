@@ -19,6 +19,7 @@ public class TimeTableViewCell : UITableViewCell{
     
     @IBOutlet weak var pointsOutlet: UILabel!
     
+    @IBOutlet weak var gradeOutlet: UILabel!
     
     
     func configure(text: String, placeholder : String, placeText : String){

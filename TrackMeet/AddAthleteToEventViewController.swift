@@ -26,7 +26,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
             self.title = screenTitle
             lev = String(screenTitle.suffix(3))
             for a in Data.allAthletes{
-                if meet.schools.values.contains(a.school){
+                if meet.schools.keys.contains(a.schoolFull){
                     displayedAthletes.append(a)
                 }
             }
@@ -69,10 +69,12 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
 
         
        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath) as! AthleteTableViewCell
             let athlete = displayedAthletes[indexPath.row]
-            cell.textLabel?.text = "\(athlete.last), \(athlete.first)"
-            cell.detailTextLabel?.text = "\(athlete.school)"
+        cell.nameOutlet.text = "\(athlete.last), \(athlete.first)"
+        cell.schoolOutlet.text = "\(athlete.school)"
+        cell.yearOutlet.text = "\(athlete.grade)"
+        
             //print(athlete.grade)
             return cell
         }
@@ -94,6 +96,98 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
           
             }
         }
+    
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+            let alert = UIAlertController(title: "Are you sure?", message: "Deleting this athlete will also delete any results stored for this athlete", preferredStyle:    .alert)
+            let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
+                var selected = self.displayedAthletes[indexPath.row]
+                Data.allAthletes.removeAll { (athlete) -> Bool in
+                    athlete.equals(other: selected)
+               
+                }
+                selected.deleteFromFirebase()
+                     self.displayedAthletes.remove(at: indexPath.row)
+                            tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+            let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            
+            alert.addAction(cancel)
+            alert.addAction(ok)
+            self.present(alert, animated: true, completion: nil)
+        }
+            
+            let edit = UITableViewRowAction(style: .normal, title: "Edit") { (action, indexPath) in
+            let alert = UIAlertController(title: "", message: "Edit Athlete", preferredStyle: .alert)
+                alert.addTextField(configurationHandler: { (textField) in
+                    textField.autocapitalizationType = .allCharacters
+                    textField.text = self.displayedAthletes[indexPath.row].first
+                    
+                })
+            alert.addTextField(configurationHandler: { (textField) in
+                textField.autocapitalizationType = .allCharacters
+                textField.text = self.displayedAthletes[indexPath.row].last
+                
+            })
+            alert.addTextField(configurationHandler: { (textField) in
+                textField.autocapitalizationType = .allCharacters
+                textField.text = self.displayedAthletes[indexPath.row].school
+                
+            })
+            alert.addTextField(configurationHandler: { (textField) in
+                textField.keyboardType = UIKeyboardType.numberPad
+                textField.autocapitalizationType = .allCharacters
+                textField.text = "\(self.displayedAthletes[indexPath.row].grade)"
+                
+            })
+                alert.addAction(UIAlertAction(title: "Update", style: .default, handler: { (updateAction) in
+                  
+                    self.displayedAthletes[indexPath.row].first = alert.textFields![0].text!
+                    self.displayedAthletes[indexPath.row].last = alert.textFields![1].text!
+                    self.displayedAthletes[indexPath.row].school = alert.textFields![2].text!
+                    if let grade = Int(alert.textFields![3].text!){
+                        self.displayedAthletes[indexPath.row].grade = grade}
+                    self.tableView.reloadRows(at: [indexPath], with: .fade)
+                    for i in 0 ..< Data.allAthletes.count{
+                       if self.displayedAthletes[indexPath.row].equals(other: Data.allAthletes[i]){
+                        Data.allAthletes[i].first = alert.textFields![0].text!
+                         Data.allAthletes[i].last = alert.textFields![1].text!
+                         Data.allAthletes[i].school = alert.textFields![2].text!
+                          if let grade = Int(alert.textFields![3].text!){
+                                Data.allAthletes[i].grade = grade}
+                        
+                        // updateFirebase
+                        print(Data.allAthletes[i].first)
+                        Data.allAthletes[i].updateFirebase()
+                        // save changes to userDefaults
+                        let userDefaults = UserDefaults.standard
+                        do {
+
+                            try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+                               } catch {
+                                   print(error.localizedDescription)
+                               }
+                                              break
+                                          }
+                    }
+                  
+                    
+                }))
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                self.present(alert, animated: false)
+            }
+
+        
+
+        edit.backgroundColor = UIColor.blue
+
+        return [delete, edit]
+    }
     
     func selectAthletes(){
         if let selectedPaths = tableView.indexPathsForSelectedRows{
@@ -122,7 +216,9 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
             for a in Data.allAthletes{
             
                 if item.title == a.school{
+                    if a.schoolFull.suffix(3) == "(\(meet.gender))"{
                     displayedAthletes.append(a)
+                    }
                 }
             }
             //self.title = item.title

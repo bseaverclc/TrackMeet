@@ -13,6 +13,7 @@
 		D3258ECC24BD304B00895910 /* SchoolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3258ECB24BD304B00895910 /* SchoolsViewController.swift */; };
 		D3366838247B08B2008EA70C /* Meet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3366837247B08B2008EA70C /* Meet.swift */; };
 		D3481B4F24C0B0AD00963A0C /* AthleteResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3481B4E24C0B0AD00963A0C /* AthleteResultsTableViewCell.swift */; };
+		D3514F8525EC46C8005722BB /* AthleteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3514F8425EC46C8005722BB /* AthleteTableViewCell.swift */; };
 		D361DB0324731403005EF1A2 /* addAthleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D361DB0224731403005EF1A2 /* addAthleteViewController.swift */; };
 		D361DB0524735FA9005EF1A2 /* AthletesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D361DB0424735FA9005EF1A2 /* AthletesViewController.swift */; };
 		D361DB072475741E005EF1A2 /* AddAthleteToEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D361DB062475741E005EF1A2 /* AddAthleteToEventViewController.swift */; };
@@ -66,6 +67,7 @@
 		D3258ECB24BD304B00895910 /* SchoolsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchoolsViewController.swift; sourceTree = "<group>"; };
 		D3366837247B08B2008EA70C /* Meet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meet.swift; sourceTree = "<group>"; };
 		D3481B4E24C0B0AD00963A0C /* AthleteResultsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleteResultsTableViewCell.swift; sourceTree = "<group>"; };
+		D3514F8425EC46C8005722BB /* AthleteTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleteTableViewCell.swift; sourceTree = "<group>"; };
 		D361DB0224731403005EF1A2 /* addAthleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addAthleteViewController.swift; sourceTree = "<group>"; };
 		D361DB0424735FA9005EF1A2 /* AthletesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthletesViewController.swift; sourceTree = "<group>"; };
 		D361DB062475741E005EF1A2 /* AddAthleteToEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAthleteToEventViewController.swift; sourceTree = "<group>"; };
@@ -166,17 +168,18 @@
 				D3BF359624803BB9000736F8 /* MeetsViewController.swift */,
 				D36BAF83247ABEDF00D71D4A /* AddMeetViewController.swift */,
 				D3A0B9D52472EEF70088D664 /* HomeViewController.swift */,
-				D3647CCE2476EEAB000627C6 /* ScoresViewController.swift */,
-				D361DB0424735FA9005EF1A2 /* AthletesViewController.swift */,
-				D361DB0224731403005EF1A2 /* addAthleteViewController.swift */,
-				D3B15B16247818F8000BCFC8 /* AthleteResultsViewController.swift */,
 				D3A0B9D1247248500088D664 /* EventsTableViewController.swift */,
 				D3D2DEEC2471F5CB009C17DD /* EventEditViewController.swift */,
-				D3481B4E24C0B0AD00963A0C /* AthleteResultsTableViewCell.swift */,
+				D3A0B9CD24722B5B0088D664 /* TimeTableViewCell.swift */,
 				D361DB062475741E005EF1A2 /* AddAthleteToEventViewController.swift */,
+				D3514F8425EC46C8005722BB /* AthleteTableViewCell.swift */,
+				D361DB0224731403005EF1A2 /* addAthleteViewController.swift */,
+				D3647CCE2476EEAB000627C6 /* ScoresViewController.swift */,
+				D3B15B16247818F8000BCFC8 /* AthleteResultsViewController.swift */,
+				D3481B4E24C0B0AD00963A0C /* AthleteResultsTableViewCell.swift */,
 				D3366837247B08B2008EA70C /* Meet.swift */,
 				D3A0B9CF24723FDE0088D664 /* Athlete.swift */,
-				D3A0B9CD24722B5B0088D664 /* TimeTableViewCell.swift */,
+				D361DB0424735FA9005EF1A2 /* AthletesViewController.swift */,
 				D3D2DEEA2471F5CB009C17DD /* SceneDelegate.swift */,
 				D3D2DEE82471F5CB009C17DD /* AppDelegate.swift */,
 				D3D2DEF42471F5CC009C17DD /* Assets.xcassets */,
@@ -514,6 +517,7 @@
 				D3A0B9CE24722B5B0088D664 /* TimeTableViewCell.swift in Sources */,
 				D3647CCF2476EEAB000627C6 /* ScoresViewController.swift in Sources */,
 				D361DB0524735FA9005EF1A2 /* AthletesViewController.swift in Sources */,
+				D3514F8525EC46C8005722BB /* AthleteTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

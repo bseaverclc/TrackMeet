@@ -97,11 +97,13 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                     //Data.allAthletes.removeAll(where: {$0.schoolFull == selected})
                   
                     //attempt to delete from firebase and Data.allAthletes
-                    for (index, item) in Data.allAthletes.reversed().enumerated() {
+                    for (index, item) in Data.allAthletes.enumerated() {
                         
                         if item.schoolFull == selected{
-                            item.deleteFromFirebase()
+                            print(index)
                             Data.allAthletes.remove(at: index)
+                            item.deleteFromFirebase()
+                            
                         }
                     }
                     
