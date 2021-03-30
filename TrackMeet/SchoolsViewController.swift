@@ -85,14 +85,14 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
         }
         
         func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-            var blankText = false
+            //var blankText = false
             var blankAlert = UIAlertController()
             let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
                 
                 let alert = UIAlertController(title: "Are you sure?", message: "Deleting this school will delete all the school's athletes and results", preferredStyle: .alert)
                 let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
                 let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
-                    var selected = self.schoolNames[indexPath.row]
+                    let selected = self.schoolNames[indexPath.row]
                     // removing all athletes from app with this school name
                     //Data.allAthletes.removeAll(where: {$0.schoolFull == selected})
                   
@@ -111,7 +111,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                     
                     self.schoolNames.remove(at: indexPath.row) // remove from array
                     Data.schools.removeValue(forKey: selected) // remove from dictionary
-                    let ref = Database.database().reference().child("schools").child(selected).removeValue()
+                     Database.database().reference().child("schools").child(selected).removeValue()
                     
                     // Still need to remove all athletes from this school
                     tableView.deleteRows(at: [indexPath], with: .fade)
@@ -204,7 +204,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                       
                         }
                         else{
-                            blankText = true
+                            //blankText = true
                             print("textfields are blank")
                             blankAlert = UIAlertController(title: "Error!", message: "Can't have blank fields", preferredStyle: .alert)
                                 let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
@@ -268,9 +268,9 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { (updateAction) in
                    var badInput = false
                    var error = ""
-                   var fullSchool = alert.textFields![0].text!
-                   var initSchool = alert.textFields![1].text!
-                   var csvURL = alert.textFields![2].text!
+                let fullSchool = alert.textFields![0].text!
+                let initSchool = alert.textFields![1].text!
+                let csvURL = alert.textFields![2].text!
                    if fullSchool == ""{
                        error = "Must include school name"
                        badInput = true
@@ -347,9 +347,9 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                 let start = editRange.lowerBound
                 urlCut = String(csvURL[csvURL.startIndex..<start])
                 }
-                var urlcompleted = urlCut + "/pub?output=csv"
+                let urlcompleted = urlCut + "/pub?output=csv"
                 let url = URL(string: String(urlcompleted))
-                print(url)
+                print(url ?? "Error reading url")
                 
                      guard let requestUrl = url else {
                         //fatalError()
@@ -389,9 +389,9 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                              let rows = dataString.components(separatedBy: "\r\n")
                              for row in rows{
                                 
-                                 var person = [String](row.components(separatedBy: ","))
+                                let person = [String](row.components(separatedBy: ","))
                                 if person[0] != "First"{
-                                 var athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2])!, sf: fullSchool)
+                                    let athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2])!, sf: fullSchool)
                                 print(athlete)
                                     athlete.saveToFirebase()
                                     Data.allAthletes.append(athlete)
@@ -429,7 +429,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
     }
     
     @IBAction func unwindtoSchools( _ seg: UIStoryboardSegue) {
-      let pvc = seg.source as! AthletesViewController
+      //let pvc = seg.source as! AthletesViewController
       // allAthletes = pvc.allAthletes
         Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
        print("unwind to schools")

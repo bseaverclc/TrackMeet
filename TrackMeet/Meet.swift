@@ -128,7 +128,7 @@ public class Meet: Codable{
     
     func deleteFromFirebase(){
         if let ui = uid{
-        let ref = Database.database().reference().child("meets").child(ui).removeValue()
+        Database.database().reference().child("meets").child(ui).removeValue()
         print("Meet has been removed from Firebase")
         }
         else{
@@ -138,9 +138,16 @@ public class Meet: Codable{
     
     
     func updatebeenScoredFirebase(){
-        var ref = Database.database().reference().child("meets").child(uid!)
+       let ref = Database.database().reference().child("meets").child(uid!)
         
             ref.updateChildValues(["beenScored": beenScored])
+        
+    }
+    
+    func updateEventsFirebase(){
+        let ref = Database.database().reference().child("meets").child(uid!)
+        
+            ref.updateChildValues(["events": events])
         
     }
     

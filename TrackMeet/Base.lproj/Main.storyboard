@@ -266,8 +266,15 @@
                             <outlet property="delegate" destination="pxh-4H-TjP" id="Uzu-l4-d5K"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Events" id="xwr-KC-2ch"/>
+                    <navigationItem key="navigationItem" title="Events" id="xwr-KC-2ch">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="h6O-Nw-H9f">
+                            <connections>
+                                <action selector="addButtonAction:" destination="pxh-4H-TjP" id="JiM-Nq-ENT"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="addButtonOutlet" destination="h6O-Nw-H9f" id="6kJ-LL-yfJ"/>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="editEventSegue" id="bCK-kR-pFX"/>
                         <segue destination="oRT-5o-vrQ" kind="unwind" identifier="unwindToHomeSegue" unwindAction="unwind:" id="UfC-4o-dAR"/>
                     </connections>
@@ -478,7 +485,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6lG-pe-0tM">
-                                <rect key="frame" x="0.0" y="673" width="390" height="83"/>
+                                <rect key="frame" x="0.0" y="707" width="390" height="49"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <items>
                                     <tabBarItem title="" id="Dt9-6l-S2b"/>
@@ -491,7 +498,7 @@
                                 </connections>
                             </tabBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mKk-PU-ZTZ">
-                                <rect key="frame" x="0.0" y="0.0" width="390" height="673"/>
+                                <rect key="frame" x="0.0" y="0.0" width="390" height="707"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" textLabel="Ahs-lB-kkI" detailTextLabel="GXT-DK-QXF" style="IBUITableViewCellStyleValue1" id="IwU-a1-1Xj">

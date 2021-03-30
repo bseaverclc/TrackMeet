@@ -72,7 +72,7 @@ var window: UIWindow?
       // ...
       if let error = error {
         // ...
-        print("problems signining in")
+        print("\(error) problems signining in")
         return
       }
 

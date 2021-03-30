@@ -71,7 +71,7 @@ class ScoresViewController: UIViewController {
     func computeScores(){
         
         for a in Data.allAthletes{
-            var updated = false
+            //var updated = false
             
             for e in a.events{
                 if e.meetName == meet.name{
@@ -84,7 +84,7 @@ class ScoresViewController: UIViewController {
                     //var current = teamPoints[e.level]!
                     let currentPoints = teamPoints[e.level]![a.school]!
                         teamPoints[e.level]!.updateValue(currentPoints + e.points, forKey: a.school)
-                    print("points added to school \(a.school): \(teamPoints[e.level]![a.school])")
+                        print("points added to school \(a.school): \(teamPoints[e.level]![a.school] ?? 0.0)")
                      
                     
                     // if event was a relay
@@ -120,14 +120,14 @@ class ScoresViewController: UIViewController {
         // I think I should add the labels in view did load and update their text values here
         // I will need to build an array of uiLabels
             var i = 0
-        var sortedTeamPoints = teamPoints.sorted{ $0.key < $1.key }
+        let sortedTeamPoints = teamPoints.sorted{ $0.key < $1.key }
         for (level,scores) in sortedTeamPoints {
             if i < schoolsStackView.count{
             // add level text header
             levelsOutlet[i].text = "\(level) Scores"
         
                 
-               var sortedScores = scores.sorted{ $0.key < $1.key }
+                let sortedScores = scores.sorted{ $0.key < $1.key }
             for (initials,score) in sortedScores{
                 // print info to textview
                 var fullSchool = ""
@@ -139,13 +139,13 @@ class ScoresViewController: UIViewController {
             textViewOutlet.text += "S,\(meet.gender),\(level),,\(fullSchool),\(score)\n"
                 
                 // set up school labels
-                var label = UILabel()
+                let label = UILabel()
                 label.text = "\(initials)"
                 label.textAlignment = .center
                 schoolsStackView[i].addArrangedSubview(label)
                 
                 // set up score labels
-                var label2 = UILabel()
+                let label2 = UILabel()
                 label2.text = "\(score)"
                 label2.textAlignment = .center
                 scoresStackView[i].addArrangedSubview(label2)

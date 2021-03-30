@@ -53,7 +53,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         if pvcScreenTitle == ""{
         schools = [String](meet!.schools.values)
         }
-        var tabItems = tabBarOutlet.items!
+        let tabItems = tabBarOutlet.items!
              var i = 0
              for school in schools{
                  tabItems[i].title = school
@@ -117,7 +117,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
             let alert = UIAlertController(title: "Are you sure?", message: "Deleting this athlete will also delete any results stored for this athlete", preferredStyle:    .alert)
             let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
-                var selected = self.displayedAthletes[indexPath.row]
+                let selected = self.displayedAthletes[indexPath.row]
                 Data.allAthletes.removeAll { (athlete) -> Bool in
                     athlete.equals(other: selected)
                

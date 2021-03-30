@@ -100,7 +100,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
       
         let formatter1 = DateFormatter()
         formatter1.dateStyle = .short
-        var dateString = formatter1.string(from: Data.meets[indexPath.row].date)
+        let dateString = formatter1.string(from: Data.meets[indexPath.row].date)
         
         cell.textLabel?.text = dateString
         cell.detailTextLabel?.text = Data.meets[indexPath.row].name
@@ -171,8 +171,8 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedMeet = Data.meets[indexPath.row]
         
-        print(selectedMeet?.coachCode)
-        print(selectedMeet?.managerCode)
+        print(selectedMeet?.coachCode ?? "No coaches code")
+        print(selectedMeet?.managerCode ?? "No manager code")
         let errorAlert = UIAlertController(title: "Incorrect Code!", message: "", preferredStyle: .alert)
         errorAlert.addAction(UIAlertAction(title: "OK", style: .destructive, handler: nil))
         
@@ -186,7 +186,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         coachAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (updateAction) in
             
-            var coachCode = coachAlert.textFields![0].text!
+            let coachCode = coachAlert.textFields![0].text!
             if coachCode == self.selectedMeet?.coachCode{
                 Data.coach = coachCode
                 Meet.canCoach = true
@@ -207,7 +207,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         manageAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (updateAction) in
             
-            var manageCode = manageAlert.textFields![0].text!
+            let manageCode = manageAlert.textFields![0].text!
             if manageCode == self.selectedMeet?.managerCode{
                 Data.manager = manageCode
                 Meet.canManage = true
@@ -259,7 +259,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toAddMeetSegue"{
-            let nvc = segue.destination as! AddMeetViewController
+            //let nvc = segue.destination as! AddMeetViewController
            // nvc.allAthletes = allAthletes
            // nvc.schools = schools
             //nvc.meets = meets
@@ -284,7 +284,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     @IBAction func unwind2(_ seg: UIStoryboardSegue){
-        let pvc = seg.source as! HomeViewController
+        //let pvc = seg.source as! HomeViewController
        // allAthletes = pvc.allAthletes
         print("unwinding from Home VC")
     }

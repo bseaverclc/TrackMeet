@@ -70,7 +70,7 @@ class HomeViewController: UIViewController, DataBackDelegate {
         if segue.identifier == "eventsSegue"{
             let nvc = segue.destination as! EventsTableViewController
            // nvc.athletes = allAthletes
-            nvc.events = meet.events
+            //nvc.events = meet.events
             nvc.meet = meet
             
             
@@ -92,7 +92,7 @@ class HomeViewController: UIViewController, DataBackDelegate {
     }
     
    @IBAction func unwind( _ seg: UIStoryboardSegue) {
-   let pvc = seg.source as! EventsTableViewController
+   // let pvc = seg.source as! EventsTableViewController
    // allAthletes = pvc.athletes
     Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
     print("unwind to home screen")

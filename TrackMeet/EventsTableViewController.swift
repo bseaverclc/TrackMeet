@@ -10,13 +10,15 @@ import UIKit
 
 class EventsTableViewController: UITableViewController {
     
+    @IBOutlet weak var addButtonOutlet: UIBarButtonItem!
     var selectedEvent : String?
     var athletes = [Athlete]()
     var meet : Meet!
+    var error = ""
    
     var selectedRow : Int = 0
 
-    var events = [String]()
+    //var events = [String]()
     
     //var segues = ["relay4x800", "relay4x100","m100"]
  
@@ -25,6 +27,9 @@ class EventsTableViewController: UITableViewController {
         super.viewDidLoad()
         print("EventsVDL")
         self.title = "\(meet.name) Events"
+        if !Meet.canManage{
+            addButtonOutlet.isEnabled = false
+        }
         
       
         
@@ -52,14 +57,14 @@ class EventsTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return events.count
+        return meet.events.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
         cell.backgroundColor = UIColor.white
-        cell.textLabel?.text = events[indexPath.row]
+        cell.textLabel?.text = meet.events[indexPath.row]
         if indexPath.row % 2 != 0{
             cell.backgroundColor = UIColor.lightGray
         }
@@ -77,6 +82,45 @@ class EventsTableViewController: UITableViewController {
         performSegue(withIdentifier: "editEventSegue", sender: nil)
     }
     
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if Meet.canCoach{
+            return true
+        }
+        else{
+            return false
+        }
+    }
+    
+    func displayError()
+    {
+        let alert = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete{
+            for a in Data.allAthletes{
+                for e in a.events{
+                    if e.name == meet.events[indexPath.row] && e.meetName == meet.name{
+                        print(a.last)
+                        print(e.name)
+                        print(e.meetName)
+                        print(meet.name)
+                        error = "Can't delete event with entries"
+                        displayError()
+                        return
+                    }
+                }
+            }
+            meet.events.remove(at: indexPath.row)
+            meet.beenScored.remove(at: indexPath.row)
+            meet.updatebeenScoredFirebase()
+            meet.updateEventsFirebase()
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            //tableView.reloadData()
+        }
+    }
 
     /*
     // Override to support conditional editing of the table view.
@@ -115,6 +159,34 @@ class EventsTableViewController: UITableViewController {
     // MARK: - Navigation
 
  
+    @IBAction func addButtonAction(_ sender: UIBarButtonItem) {
+        if Meet.canManage{
+        let addAlert = UIAlertController(title: "Add an Event", message: "", preferredStyle: .alert)
+        
+        addAlert.addTextField(configurationHandler: { (textField) in
+            textField.autocapitalizationType = .allCharacters
+               textField.placeholder = "EVENT NAME"
+        })
+        
+        addAlert.addAction(UIAlertAction(title: "Add", style: .default, handler: { (updateAction) in
+            
+            let event = addAlert.textFields![0].text!
+            for lev in self.meet.levels{
+                self.meet.events.append("\(event) \(lev)")
+                self.meet.beenScored.append(false)
+            }
+            self.meet.updateEventsFirebase()
+            self.meet.updatebeenScoredFirebase()
+            self.tableView.reloadData()
+            
+        }))
+        addAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(addAlert, animated: true, completion: nil)
+        
+        }
+    }
+    
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         //var sentAthletes = [Athlete]()
         if segue.identifier != "unwindToHomeSegue"{

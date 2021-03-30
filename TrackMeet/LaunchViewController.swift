@@ -298,14 +298,14 @@ class LaunchViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toMeetsSegue"{
-            let nvc = segue.destination as! MeetsViewController
+           // letnvc = segue.destination as! MeetsViewController
             //nvc.allAthletes = allAthletes
             //nvc.meets = meets
            // nvc.schools = schools
             print("sent stuff to meets")
         }
         else{
-            let nvc = segue.destination as! SchoolsViewController
+          //  let nvc = segue.destination as! SchoolsViewController
             //nvc.allAthletes = allAthletes
            // nvc.schools = schools
            // nvc.meets = meets
@@ -313,7 +313,7 @@ class LaunchViewController: UIViewController {
     }
     
     @IBAction func unwind3(_ seg: UIStoryboardSegue){
-           let pvc = seg.source as! SchoolsViewController
+          // let pvc = seg.source as! SchoolsViewController
            //allAthletes = pvc.allAthletes
        // schools = pvc.schools
         //meets = pvc.meets
@@ -321,7 +321,7 @@ class LaunchViewController: UIViewController {
        }
     
     @IBAction func unwindFromMeets(_ seg: UIStoryboardSegue){
-              let pvc = seg.source as! MeetsViewController
+             // let pvc = seg.source as! MeetsViewController
              // allAthletes = pvc.allAthletes
               //schools = pvc.schools
              // meets = pvc.meets
@@ -537,9 +537,9 @@ class LaunchViewController: UIViewController {
                 let start = editRange.lowerBound
                 urlCut = String(csvURL[csvURL.startIndex..<start])
                 }
-                var urlcompleted = urlCut + "/pub?output=csv"
+                let urlcompleted = urlCut + "/pub?output=csv"
                 let url = URL(string: String(urlcompleted))
-                print(url)
+                print(url ?? "URL Reading Didn't work")
                 
                      guard let requestUrl = url else {
                         //fatalError()
@@ -579,9 +579,9 @@ class LaunchViewController: UIViewController {
                              let rows = dataString.components(separatedBy: "\r\n")
                              for row in rows{
                                 
-                                 var person = [String](row.components(separatedBy: ","))
+                                let person = [String](row.components(separatedBy: ","))
                                 if person[0] != "First"{
-                                 var athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2])!, sf: fullSchool)
+                                    let athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2])!, sf: fullSchool)
                                 print(athlete)
                                     Data.allAthletes.append(athlete)
                                 }

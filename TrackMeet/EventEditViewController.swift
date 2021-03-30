@@ -316,12 +316,12 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             processOutlet.backgroundColor = UIColor.lightGray
             processOutlet.setTitle("Process Event", for: .normal)
             if sections{
-            var sec = indexPath.section
+                let sec = indexPath.section
             
             switch sec{
             case 0:
                 heat1[indexPath.row].events.removeAll { (e) -> Bool in
-                    print(e.uid)
+                    print(e.uid ?? "No uid?")
                     if e.name == self.title && e.meetName == self.meet.name {
                         if let euid = e.uid{
                             print("calling deleteEventFromFirebase")
@@ -336,7 +336,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                 tableView.deleteRows(at: [indexPath], with: .fade)
             case 1:
                 heat2[indexPath.row].events.removeAll { (e) -> Bool in
-                    print(e.uid)
+                    print(e.uid ?? "No UID?")
                     if e.name == self.title && e.meetName == self.meet.name {
                         if let euid = e.uid{
                             print("calling deleteEventFromFirebase")
@@ -352,7 +352,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             default:
                 
                 eventAthletes[indexPath.row].events.removeAll { (e) -> Bool in
-                    print(e.uid)
+                    print(e.uid ?? "No UID?")
                     if e.name == self.title && e.meetName == self.meet.name {
                         if let euid = e.uid{
                             print("calling deleteEventFromFirebase")
@@ -369,7 +369,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             }
             else{
                 eventAthletes[indexPath.row].events.removeAll { (e) -> Bool in
-                    print(e.uid)
+                    print(e.uid ?? "No UID?")
                     if e.name == self.title && e.meetName == self.meet.name {
                         if let euid = e.uid{
                             print("calling deleteEventFromFirebase")
@@ -404,7 +404,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         processOutlet.backgroundColor = UIColor.lightGray
         processOutlet.setTitle("Process Event", for: .normal)
         
-         var editingArray : [Athlete]!
+        // var editingArray : [Athlete]!
          guard let cell2 = sender.findParentTableViewCell (),
              let indexPath2 = tableViewOutlet.indexPath(for: cell2) else {
                  print("This textfield is not in the tableview!")
@@ -472,7 +472,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         meet.updatebeenScoredFirebase()
         processOutlet.backgroundColor = UIColor.lightGray
         processOutlet.setTitle("Process Event", for: .normal)
-        var editingArray : [Athlete]!
+        //var editingArray : [Athlete]!
         print(sender.tag)
         guard let cell2 = sender.findParentTableViewCell (),
             let indexPath2 = tableViewOutlet.indexPath(for: cell2) else {
@@ -482,7 +482,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         //print("The indexPath is \(indexPath2)")
       
                 //var indexPath = IndexPath(row: sender.tag, section: 0)
-        var place = sender.text!
+            let place = sender.text!
             
         if sections{
             if indexPath2.section == 0{

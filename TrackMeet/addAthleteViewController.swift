@@ -27,7 +27,7 @@ class addAthleteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         schoolOutlet.removeAllSegments()
-        for (full,initials) in meet.schools{
+        for (_,initials) in meet.schools{
         schoolOutlet.insertSegment(withTitle: initials, at: 0, animated: true)
     }
     }

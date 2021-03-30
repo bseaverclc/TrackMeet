@@ -200,7 +200,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         if let selectedPaths = tableView.indexPathsForSelectedRows{
                           //print(selectedPaths)
                           for path in selectedPaths{
-                              var selectedSchoolKey = schoolKeys[path.row]
+                            let selectedSchoolKey = schoolKeys[path.row]
                             selectedSchools[selectedSchoolKey] = Data.schools[selectedSchoolKey]
                           }
                       }
@@ -395,9 +395,9 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { (updateAction) in
                    var badInput = false
                    var error = ""
-                   var fullSchool = alert.textFields![0].text!
-                   var initSchool = alert.textFields![1].text!
-                   var csvURL = alert.textFields![2].text!
+                let fullSchool = alert.textFields![0].text!
+                let initSchool = alert.textFields![1].text!
+                let csvURL = alert.textFields![2].text!
                    if fullSchool == ""{
                        error = "Must include school name"
                        badInput = true
@@ -490,9 +490,9 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
             let start = editRange.lowerBound
             urlCut = String(csvURL[csvURL.startIndex..<start])
             }
-            var urlcompleted = urlCut + "/pub?output=csv"
+            let urlcompleted = urlCut + "/pub?output=csv"
             let url = URL(string: String(urlcompleted))
-            print(url)
+            print(url ?? "Error reading URL")
             
                  guard let requestUrl = url else {
                     //fatalError()
@@ -533,11 +533,11 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                         print(rows.count)
                          for row in rows{
                             
-                             var person = [String](row.components(separatedBy: ","))
+                            let person = [String](row.components(separatedBy: ","))
                             
                             if person[0] != "First"{
                                 print("\(person[0])  \(person[1])   \(person[2])")
-                             var athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2])!, sf: fullSchool)
+                                let athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2])!, sf: fullSchool)
                             print(athlete)
                                 athlete.saveToFirebase()
                                 Data.allAthletes.append(athlete)

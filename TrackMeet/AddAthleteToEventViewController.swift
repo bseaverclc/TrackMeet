@@ -32,7 +32,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
             }
           
              schools = [String](meet.schools.values)
-            var tabItems = tabBarOutlet.items!
+            let tabItems = tabBarOutlet.items!
                  var i = 0
                  for school in schools{
                      tabItems[i].title = school
@@ -59,7 +59,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
         func numberOfSections(in tableView: UITableView) -> Int {
             // #warning Incomplete implementation, return the number of sections
             return 1
-            print("number of sections being called")
+            
         }
 
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -81,10 +81,10 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
         
          func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             print("Did select row at")
-            var selectedAthlete = displayedAthletes[indexPath.row]
+            let selectedAthlete = displayedAthletes[indexPath.row]
             if eventAthletes.contains(where: { $0.equals(other: selectedAthlete)}) {
-                var alert = UIAlertController(title: "Error!", message: "Athlete already in event", preferredStyle: .alert)
-                var action = UIAlertAction(title: "ok", style: .cancel) { (action) in
+                let alert = UIAlertController(title: "Error!", message: "Athlete already in event", preferredStyle: .alert)
+                let action = UIAlertAction(title: "ok", style: .cancel) { (action) in
                     self.tableView.deselectRow(at: indexPath, animated: true)
                 }
                 alert.addAction(action)
@@ -106,7 +106,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
             let alert = UIAlertController(title: "Are you sure?", message: "Deleting this athlete will also delete any results stored for this athlete", preferredStyle:    .alert)
             let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
-                var selected = self.displayedAthletes[indexPath.row]
+                let selected = self.displayedAthletes[indexPath.row]
                 Data.allAthletes.removeAll { (athlete) -> Bool in
                     athlete.equals(other: selected)
                
@@ -193,7 +193,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
         if let selectedPaths = tableView.indexPathsForSelectedRows{
                  print(selectedPaths)
                  for path in selectedPaths{
-                     var selectedAthlete = displayedAthletes[path.row]
+                    let selectedAthlete = displayedAthletes[path.row]
                     
                      print("level of selected athletes: \(lev)")
                     selectedAthlete.addEvent(e: Event(name: self.title!, level: lev, meetName: meet.name))
