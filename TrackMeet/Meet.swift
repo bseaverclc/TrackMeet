@@ -106,7 +106,9 @@ public class Meet: Codable{
         coachCode = coach
         managerCode = manager
         userId = Data.userID
+        if n != "Blank"{
         saveMeetToFirebase()
+        }
     }
     
     func saveMeetToFirebase(){

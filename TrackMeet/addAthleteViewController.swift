@@ -59,7 +59,9 @@ class addAthleteViewController: UIViewController {
                 }
             }
         
-        
+            if schoolFull == ""{
+                schoolFull = schools[0]
+            }
            
             athlete = Athlete(f: first!, l: last!, s: school!, g: Int(year!)!, sf: schoolFull)
             
@@ -74,6 +76,7 @@ class addAthleteViewController: UIViewController {
             if addAthlete{
             print("Created Athlete")
             Data.allAthletes.insert(athlete, at: 0)
+            
                 // Save
                 let userDefaults = UserDefaults.standard
                 do {

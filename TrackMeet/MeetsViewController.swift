@@ -65,10 +65,10 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "All Meets"
-        if(Data.userID == "")
-        {
-            addMeetOutlet.isEnabled = false
-        }
+//        if(Data.userID == "")
+//        {
+//            addMeetOutlet.isEnabled = false
+//        }
         
     }
     
@@ -77,6 +77,12 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         Meet.canCoach = false
         Meet.canManage = false
         Data.meets.sort(by: { $0.date > $1.date })
+        
+        if(Data.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3"){
+            Meet.canCoach = true
+            Meet.canManage = true
+        }
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -86,6 +92,17 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         storeToUserDefaults()
     }
     
+    @IBAction func addMeetAction(_ sender: UIBarButtonItem) {
+        if(Data.userID == "")
+        {
+            let denyAlert = UIAlertController(title: "Error", message: "Must login on main page to add a Meet", preferredStyle: .alert)
+            denyAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(denyAlert, animated: true, completion: nil)
+        }
+        else{
+            performSegue(withIdentifier: "toAddMeetSegue", sender: self)
+        }
+    }
     
     func sortByName(){
         Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
@@ -238,7 +255,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         chooseAlert.addAction(coach)
         chooseAlert.addAction(manager)
         chooseAlert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: nil))
-        if(selectedMeet!.userId == Data.userID)
+        if(selectedMeet!.userId == Data.userID  || Data.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3")
         {
             Meet.canCoach = true
             Meet.canManage = true

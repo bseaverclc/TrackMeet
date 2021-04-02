@@ -24,6 +24,7 @@
 		D3A0B9D024723FDE0088D664 /* Athlete.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A0B9CF24723FDE0088D664 /* Athlete.swift */; };
 		D3A0B9D2247248500088D664 /* EventsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A0B9D1247248500088D664 /* EventsTableViewController.swift */; };
 		D3A0B9D62472EEF70088D664 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A0B9D52472EEF70088D664 /* HomeViewController.swift */; };
+		D3A97ADB261772EC00698FF0 /* School.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A97ADA261772EC00698FF0 /* School.swift */; };
 		D3B15B17247818F8000BCFC8 /* AthleteResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B15B16247818F8000BCFC8 /* AthleteResultsViewController.swift */; };
 		D3BF359724803BB9000736F8 /* MeetsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BF359624803BB9000736F8 /* MeetsViewController.swift */; };
 		D3D2DEE92471F5CB009C17DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D2DEE82471F5CB009C17DD /* AppDelegate.swift */; };
@@ -78,6 +79,7 @@
 		D3A0B9CF24723FDE0088D664 /* Athlete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Athlete.swift; sourceTree = "<group>"; };
 		D3A0B9D1247248500088D664 /* EventsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsTableViewController.swift; sourceTree = "<group>"; };
 		D3A0B9D52472EEF70088D664 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		D3A97ADA261772EC00698FF0 /* School.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = School.swift; sourceTree = "<group>"; };
 		D3B15B16247818F8000BCFC8 /* AthleteResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleteResultsViewController.swift; sourceTree = "<group>"; };
 		D3BF359624803BB9000736F8 /* MeetsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetsViewController.swift; sourceTree = "<group>"; };
 		D3D2DEE52471F5CB009C17DD /* TrackMeet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrackMeet.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,6 +176,7 @@
 				D361DB062475741E005EF1A2 /* AddAthleteToEventViewController.swift */,
 				D3514F8425EC46C8005722BB /* AthleteTableViewCell.swift */,
 				D361DB0224731403005EF1A2 /* addAthleteViewController.swift */,
+				D3A97ADA261772EC00698FF0 /* School.swift */,
 				D3647CCE2476EEAB000627C6 /* ScoresViewController.swift */,
 				D3B15B16247818F8000BCFC8 /* AthleteResultsViewController.swift */,
 				D3481B4E24C0B0AD00963A0C /* AthleteResultsTableViewCell.swift */,
@@ -505,6 +508,7 @@
 				D3A0B9D2247248500088D664 /* EventsTableViewController.swift in Sources */,
 				D3A0B9D024723FDE0088D664 /* Athlete.swift in Sources */,
 				D3D2DEE92471F5CB009C17DD /* AppDelegate.swift in Sources */,
+				D3A97ADB261772EC00698FF0 /* School.swift in Sources */,
 				D3258ECC24BD304B00895910 /* SchoolsViewController.swift in Sources */,
 				D361DB0324731403005EF1A2 /* addAthleteViewController.swift in Sources */,
 				D3B15B17247818F8000BCFC8 /* AthleteResultsViewController.swift in Sources */,
@@ -622,7 +626,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -676,7 +680,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -699,7 +703,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = clc.TrackMeet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -721,7 +725,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = clc.TrackMeet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

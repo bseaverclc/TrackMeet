@@ -17,6 +17,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     
      weak var delegate: DataBackDelegate?
    
+    var canEditAthletes = false
     var header = ""
     var screenTitle = "Rosters"
     //var allAthletes = [Athlete]()
@@ -51,16 +52,16 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
        
         
         if pvcScreenTitle == ""{
-        schools = [String](meet!.schools.values)
+        schools = [String](meet!.schools.keys)
         }
         let tabItems = tabBarOutlet.items!
              var i = 0
              for school in schools{
-                 tabItems[i].title = school
+                tabItems[i].title = Data.schools[school]
                  i+=1
              }
         tabBar(tabBarOutlet, didSelect: tabBarOutlet.items![0])
-        
+        checkEditAthletes()
         print("ViewDidLoad")
        
     }
@@ -85,8 +86,71 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-
-    // MARK: - Table view data source
+    func checkEditAthletes(){
+        if(Data.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3")
+        {
+            canEditAthletes = true
+            return
+        }
+        
+        if let m = meet{
+            
+            if Meet.canManage || Meet.canCoach{
+                canEditAthletes = true
+                return
+            }
+            
+        }
+        for s in Data.schoolsNew{
+            if s.full == schools[0]{
+            for e in s.coaches{
+                if Auth.auth().currentUser?.email == e{
+                    canEditAthletes = true
+                    return
+                }
+            }
+            }
+        }
+        canEditAthletes = false
+        print("You are not a valid coach for this team or a Meet Manager")
+    }
+    
+    @IBAction func addAthleteAction(_ sender: UIBarButtonItem) {
+        
+        if canEditAthletes{
+            performSegue(withIdentifier: "toAddAthleteSegue", sender: self)
+        }
+        else{
+            let denyAlert = UIAlertController(title: "Error", message: "You don't have permission to add athletes", preferredStyle: .alert)
+            denyAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(denyAlert, animated: true, completion: nil)
+            
+        }
+        
+//        if let m = meet{
+//
+//            if Meet.canManage || Meet.canCoach{
+//                performSegue(withIdentifier: "toAddAthleteSegue", sender: self)
+//                return
+//            }
+//
+//        }
+//        for s in Data.schoolsNew{
+//            if s.full == schools[0]{
+//            for e in s.coaches{
+//                if Auth.auth().currentUser?.email == e{
+//                    performSegue(withIdentifier: "toAddAthleteSegue", sender: self)
+//                    return
+//                }
+//            }
+//            }
+//        }
+//        print("You are not a valid coach for this team or a Meet Manager")
+        
+        
+    }
+    
+   
 
      func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
@@ -115,6 +179,19 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+            
+            if !self.canEditAthletes{
+                let denyAlert = UIAlertController(title: "Error", message: "You don't have permission to delete athletes", preferredStyle: .alert)
+                denyAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(denyAlert, animated: true, completion: nil)
+                
+            }
+            if !self.canEditAthletes{
+                return
+            }
+            
+            
+            
             let alert = UIAlertController(title: "Are you sure?", message: "Deleting this athlete will also delete any results stored for this athlete", preferredStyle:    .alert)
             let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
                 let selected = self.displayedAthletes[indexPath.row]
@@ -134,6 +211,17 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         }
             
             let edit = UITableViewRowAction(style: .normal, title: "Edit") { (action, indexPath) in
+                
+                if !self.canEditAthletes{
+                    let denyAlert = UIAlertController(title: "Error", message: "You don't have permission to edit athletes", preferredStyle: .alert)
+                    denyAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(denyAlert, animated: true, completion: nil)
+                    
+                }
+                if !self.canEditAthletes{
+                    return
+                }
+                
             let alert = UIAlertController(title: "", message: "Edit Athlete", preferredStyle: .alert)
                 alert.addTextField(configurationHandler: { (textField) in
                     textField.autocapitalizationType = .allCharacters
@@ -158,6 +246,13 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
             })
                 alert.addAction(UIAlertAction(title: "Update", style: .default, handler: { (updateAction) in
                   
+                    if !self.canEditAthletes{
+                        let denyAlert = UIAlertController(title: "Error", message: "You don't have permission to edit athletes", preferredStyle: .alert)
+                        denyAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        self.present(denyAlert, animated: true, completion: nil)
+                        return
+                    }
+                    
                     self.displayedAthletes[indexPath.row].first = alert.textFields![0].text!
                     self.displayedAthletes[indexPath.row].last = alert.textFields![1].text!
                     self.displayedAthletes[indexPath.row].school = alert.textFields![2].text!
@@ -239,6 +334,9 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
        // nvc.allAthletes = allAthletes
         }
         else if segue.identifier == "toAddAthleteSegue"{
+       
+            
+            
             let nvc = segue.destination as! addAthleteViewController
             nvc.displayedAthletes = displayedAthletes
            // nvc.allAthletes = allAthletes
@@ -246,7 +344,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
                 nvc.meet = aMeet
             }
             else{
-                nvc.meet = Meet(name: "Blank", date: Date(), schools: ["Full School":schools[0]], gender: "M", levels: ["VAR"], events: ["none"], indPoints: [Int](), relpoints: [Int](), beenScored: [false], coach: "", manager: "")
+                nvc.meet = Meet(name: "Blank", date: Date(), schools: [schools[0]:Data.schools[schools[0]]!], gender: "M", levels: ["VAR"], events: ["none"], indPoints: [Int](), relpoints: [Int](), beenScored: [false], coach: "", manager: "")
             }
             nvc.from = "AthletesVC"
         }
@@ -261,8 +359,8 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         displayedAthletes = [Athlete]()
         for a in Data.allAthletes{
-        
-            if item.title == a.school{
+
+            if item.title == a.school && schools.contains(a.schoolFull){
                 displayedAthletes.append(a)
             }
         }

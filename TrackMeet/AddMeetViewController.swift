@@ -432,12 +432,15 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                    
                 if !badInput{
                        if csvURL != ""{
-                           self.readCSVURL(csvURL: csvURL, fullSchool: "\(fullSchool) \(gender)", initSchool: initSchool)
-                           
+                          error =  self.readCSVURL(csvURL: csvURL, fullSchool: "\(fullSchool) \(gender)", initSchool: initSchool)
+                        if error != ""{
+                            //self.displayRosterAlert(error: e)
+                            badInput = true
+                        }
                        }
                                
            
-                    
+                    if !badInput{
                     Data.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
                     
                     
@@ -466,15 +469,17 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                         
                        
                        
-                       self.schoolKeys.append("\(fullSchool) \(gender)")
+                       self.schoolKeys.insert("\(fullSchool) \(gender)", at: 0)
                        self.tableView.reloadData()
                     }
+                }
                    //}
                    if badInput{
-                   let alert2 = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
-                   let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                   alert2.addAction(okAction)
-                   self.present(alert2, animated: true, completion: nil)
+                    self.displayRosterAlert(error: error)
+//                   let alert2 = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
+//                   let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+//                   alert2.addAction(okAction)
+//                   self.present(alert2, animated: true, completion: nil)
                    }
                }))
            
@@ -482,13 +487,27 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         present(genderAlert, animated: true, completion: nil)
     }
     
+    func displayRosterAlert(error: String){
+        let rosterAlert = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        rosterAlert.addAction(okAction)
+        self.present(rosterAlert, animated: true, completion: nil)
+        }
     
-    func readCSVURL(csvURL: String, fullSchool: String, initSchool: String){
+    
+    
+    func readCSVURL(csvURL: String, fullSchool: String, initSchool: String) -> String{
+       var err = ""
+        
         var urlCut = csvURL
         if csvURL != ""{
             if let editRange = csvURL.range(of: "/edit"){
             let start = editRange.lowerBound
             urlCut = String(csvURL[csvURL.startIndex..<start])
+            }
+            else{
+                
+                return "Must have /edit in URL"
             }
             let urlcompleted = urlCut + "/pub?output=csv"
             let url = URL(string: String(urlcompleted))
@@ -497,7 +516,8 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                  guard let requestUrl = url else {
                     //fatalError()
                     print("fatal error")
-                    return
+                    
+                    return "Error reading URL"
             }
                  // Create URL Request
                  var request = URLRequest(url: requestUrl)
@@ -510,6 +530,11 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                      // Check if Error took place
                      if let error = error {
                          print("Error took place \(error)")
+                        err = "\(error)"
+                        
+                        
+                        
+                        
 //                        let alert = UIAlertController(title: "Error!", message: "Could not load athletes", preferredStyle: .alert)
 //                        let ok = UIAlertAction(title: "ok", style: .default)
 //                        alert.addAction(ok)
@@ -521,9 +546,13 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                      // Read HTTP Response Status code
                      if let response = response as? HTTPURLResponse {
                          print("Response HTTP Status code: \(response.statusCode)")
-                       
-                        //return
+                        if response.statusCode == 400{
+                            err = "can't read roster"
+                        }
                      }
+                    
+                     
+                     
                      
                      
                      // Convert HTTP Response Data to a simple String
@@ -531,20 +560,37 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                          print("Response data string:\n \(dataString)")
                          let rows = dataString.components(separatedBy: "\r\n")
                         print(rows.count)
+                        if rows.count == 1{
+                            err = "can't read roster"
+                            print(err)
+                            
+                        }
+                        else{
                          for row in rows{
                             
-                            let person = [String](row.components(separatedBy: ","))
-                            
-                            if person[0] != "First"{
+                            var person = [String](row.components(separatedBy: ","))
+                            if person.count != 3{
+                                
+                                continue
+                            }
+                            for i in 0..<person.count{
+                                person[i] = person[i].uppercased()
+                            }
+                            if person[0] != "FIRST"{
                                 print("\(person[0])  \(person[1])   \(person[2])")
-                                let athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2])!, sf: fullSchool)
+                                
+                                let athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2]) ?? 0, sf: fullSchool)
                             print(athlete)
                                 athlete.saveToFirebase()
                                 Data.allAthletes.append(athlete)
                             }
-                             
+                         }
                          }
                      }
+                     else{
+                        err = "error with url"
+                     }
+                     
                      
                         
                      
@@ -552,9 +598,11 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                     
                  }
                  task.resume()
+            
         
     }
-    
+        
+    return err
     
 }
     

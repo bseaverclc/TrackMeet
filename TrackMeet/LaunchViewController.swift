@@ -19,6 +19,7 @@ class Data{
     static var userID = ""
     static var coach = ""
     static var manager = ""
+    static var schoolsNew = [School]()
 }
 
 
@@ -151,6 +152,9 @@ class LaunchViewController: UIViewController {
         athleteChangedInFirebase2()
         athleteDeletedInFirebase()
         beenScoredChangedInFirebase()
+     
+       //getAthletesFromFirebase()
+    
         
         Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
         
@@ -363,9 +367,23 @@ class LaunchViewController: UIViewController {
         var ref: DatabaseReference!
 
         ref = Database.database().reference()
+//        ref.child("schools").observe(.childAdded, with: { (snapshot) in
+//            Data.schools = snapshot.value as! [String:String]
+//        })
+        
+        // works if a school is there already
         ref.child("schools").observeSingleEvent(of: .value, with: { (snapshot) in
             Data.schools = snapshot.value as! [String:String]
         })
+        
+        ref.child("schoolsNew").observe(.childAdded, with: { (snapshot) in
+            
+            let dict = snapshot.value as! [String:Any]
+            Data.schoolsNew.append(School(key: snapshot.key, dict: dict))
+        })
+       
+        
+        
        
     }
     
