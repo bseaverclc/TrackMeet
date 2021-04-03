@@ -37,6 +37,24 @@ public class School{
     
     func addCoach(email: String){
         coaches.append(email)
+        
+    }
+    
+    func deleteFromFirebase(){
+        if let ui = uid{
+        Database.database().reference().child("schoolsNew").child(ui).removeValue()
+        print("schoolnew has been removed from Firebase")
+        }
+        else{
+            print("Error Deleting schoolnew")
+        }
+    }
+    
+    func updateFirebase(){
+        let ref = Database.database().reference().child("schoolsNew").child(uid!)
+        let dict = ["full": self.full, "inits":self.inits, "coaches": coaches] as [String : Any]
+            ref.updateChildValues(dict)
+        
     }
     
     func saveToFirebase(){
@@ -46,9 +64,10 @@ public class School{
        
         
         let thisUserRef = ref.child("schoolsNew").childByAutoId()
-        //var uid = thisUserRef.key
+        uid = thisUserRef.key
         thisUserRef.setValue(dict)
-        
+    
+        // Don't need, bercause above dict works
 //        for c in coaches{
 //            let emails = ["email": c] as [String : Any]
 //            let coachID = thisUserRef.child("coaches").childByAutoId()

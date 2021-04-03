@@ -451,7 +451,15 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
            
                     if !badInput{
                     Data.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
-                    
+                        let newSchool = School(full: "\(fullSchool) \(gender)", inits: alert.textFields![1].text!)
+                        
+                        Data.schoolsNew.append(newSchool)
+                        if let user = Auth.auth().currentUser{
+                            newSchool.addCoach(email: user.email ?? "bseaver@d155.org")
+                        }
+                        
+                        // Save schoolsNew to firebase
+                        newSchool.saveToFirebase()
                     
                        
                        //Save schools to firebase

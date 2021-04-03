@@ -132,12 +132,12 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         print(Data.meets[indexPath.row].name)
         print(Data.meets[indexPath.row].userId)
         print(Data.userID)
-        if Data.meets[indexPath.row].userId != Data.userID
+        if Data.meets[indexPath.row].userId == Data.userID || Data.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3"
         {
             
-            return false
+            return true
         }
-        return true
+        return false
         
     }
     

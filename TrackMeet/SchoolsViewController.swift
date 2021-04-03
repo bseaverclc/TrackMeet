@@ -103,7 +103,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                     }
                 }
                 
-                //right now, only I can edit schools
+                //right now, only I can delte schools
                 if(Data.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3") // || self.canEditSchools
                 {
                 
@@ -116,6 +116,12 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                     
                     //attempt to delete from firebase and Data.allAthletes
                     // crashes sometimes.  I think it is when it tries to remove the last athlete
+                    
+                    for s in Data.schoolsNew{
+                        if s.full == self.schoolNames[indexPath.row]{
+                            s.deleteFromFirebase()
+                        }
+                    }
                     
                     for i in (0...(Data.allAthletes.count - 1)).reversed() {
                         if Data.allAthletes[i].schoolFull == selected{
@@ -217,19 +223,37 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                                 
                             
                             }
-                              
+                            
+                            // update schoolsNew on Firebase and in Data.schoolsNew
+                            for s in Data.schoolsNew{
+                                if s.full == self.schoolNames[indexPath.row]{
+                                    s.full = alert.textFields![0].text!
+                                    s.inits = alert.textFields![1].text!
+                                    s.updateFirebase()
+                                    break
+                                }
+                            }
+                            
                            
                             
-                            Data.schools.removeValue(forKey: self.schoolNames[indexPath.row]) // remove old from Dict
-                            Data.schools[alert.textFields![0].text!] = alert.textFields![1].text! // add new to dict
-                        self.schoolNames[indexPath.row] = alert.textFields![0].text! // change Array of schools
+                              
+                           
+                            // remove old from Dict
+                            Data.schools.removeValue(forKey: self.schoolNames[indexPath.row])
+                            // add new to dict
+                            Data.schools[alert.textFields![0].text!] = alert.textFields![1].text!
+                            // update Array of Schools
+                        self.schoolNames[indexPath.row] = alert.textFields![0].text!
                             
-                            // updateFirebase?
+                            // updateFirebase for schools dictionary
                             let ref = Database.database().reference().child("schools")
-                            //self.schoolNames.remove(at: indexPath.row) // remove from array
-                           // Data.schools.removeValue(forKey: selected) // remove from dictionary
+                            
+                            // remove entire dictionary from firebase
                              Database.database().reference().child("schools").removeValue()
+                            // write new values to firebase
                             ref.updateChildValues(Data.schools)
+                            
+                            
                             
                         self.tableView.reloadRows(at: [indexPath], with: .fade)
                             
