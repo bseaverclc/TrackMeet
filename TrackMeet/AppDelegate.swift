@@ -30,6 +30,7 @@ var window: UIWindow?
         
         
         FirebaseApp.configure()
+        Database.database().isPersistenceEnabled = true
 
         GIDSignIn.sharedInstance().clientID = "277683121299-ppqm8tlvngt5ddn2g3ka402bvpnaodoe.apps.googleusercontent.com"
             GIDSignIn.sharedInstance().delegate = self  // If AppDelegate conforms to GIDSignInDelegate
