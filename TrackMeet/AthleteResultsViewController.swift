@@ -68,6 +68,12 @@ class AthleteResultsViewController: UIViewController, UITableViewDataSource, UIT
             cell.eventOutlet.text =  athlete.events[indexPath.row].name
             cell.markOutlet.text = athlete.events[indexPath.row].markString
             cell.meetOutlet.text = athlete.events[indexPath.row].meetName
+            if let place = athlete.events[indexPath.row].place{
+            cell.placeOutlet.text = "place: \(place)"
+            }
+            else{
+                cell.placeOutlet.text = ""
+            }
             for m in Data.meets{
             if m.name == athlete.events[indexPath.row].meetName{
                 let formatter = DateFormatter()

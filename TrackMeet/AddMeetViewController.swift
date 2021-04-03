@@ -21,7 +21,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     var schoolKeys = [String]()
     var selectedSchools = [String:String]()
     var lev = [String]()
-    var eve = ["4x800", "4x100M", "3200M", "110HH", "100M", "800M", "4x200", "400M", "300IM", "1600", "200", "4x400", "Long Jump", "Triple Jump", "High Jump", "Pole Vault", "Shot Put", "Discus"]
+    var eve = ["4x800", "4x100", "3200", "110HH", "100M", "800", "4x200", "400M", "300IM", "1600", "200M", "4x400", "Long Jump", "Triple Jump", "High Jump", "Pole Vault", "Shot Put", "Discus"]
     var indP = [Int]()
     var relP = [Int]()
     var selectedAthletes = [Athlete]()
@@ -253,6 +253,14 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
              gen = "M"
             if genderPicker.selectedSegmentIndex == 1{
                 gen = "W"
+                for i in 0 ..< eve.count{
+                    if eve[i] == "110HH"{
+                        eve[i] = "100HH"
+                    }
+                    if eve[i] == "300IM"{
+                        eve[i] = "300LH"
+                    }
+                }
              }
         }
         
@@ -260,6 +268,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         for b in levelButtonsOutlet{
             if b.isSelected{
                 lev.append(b.titleLabel?.text! ?? "")
+                
             }
         }
         if lev.count == 0{

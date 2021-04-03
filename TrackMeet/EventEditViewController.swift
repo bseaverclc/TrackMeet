@@ -59,7 +59,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     @objc func keyboardWillShow(notification: Notification){
         if let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height {
                print("Notification: Keyboard will show")
-               tableViewOutlet.setBottomInset(to: keyboardHeight)
+            tableViewOutlet.setBottomInset(to: keyboardHeight + tabBarOutlet.frame.height)
             
             tabBarOutlet.frame.origin.y = tabBarY - keyboardHeight
     }
@@ -68,7 +68,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     @objc func keyboardWillHide(notification: Notification){
         print("Notification: Keyboard will hide")
         tabBarOutlet.frame.origin.y = tabBarY
-        tableViewOutlet.setBottomInset(to: 0.0)
+        tableViewOutlet.setBottomInset(to: tabBarOutlet.frame.height)
         
         
     }
@@ -77,10 +77,11 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
              NotificationCenter.default.addObserver(self, selector: #selector(EventEditViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
            
                     NotificationCenter.default.addObserver(self, selector: #selector(EventEditViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        if (self.title!.contains("100M")  || (self.title!.contains("200") && !(self.title!.contains("3200M"))) || self.title!.contains("400M")) {
+        if (self.title!.contains("100M")  || (self.title!.contains("200M") && !(self.title!.contains("3200M"))) || self.title!.contains("400M")) {
                 tableViewOutlet.isEditing = true
                sections = true
            }
+        tableViewOutlet.setBottomInset(to: tabBarOutlet.frame.height)
        }
        
        override func viewWillDisappear(_ animated: Bool) {
