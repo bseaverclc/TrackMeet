@@ -85,7 +85,7 @@ public class Athlete : Codable{
     }
     
     func equals(other: Athlete) -> Bool{
-        if (self.first == other.first && self.last == other.last && self.school == other.school){
+        if (self.first == other.first && self.last == other.last && self.schoolFull == other.schoolFull && self.grade == other.grade){
             return true
         }
         else{return false}
