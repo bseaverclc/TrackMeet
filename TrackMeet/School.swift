@@ -9,7 +9,7 @@
 import Foundation
 import Firebase
 
-public class School{
+public class School: Codable{
     var full: String
     var inits: String
     var coaches = [String]()

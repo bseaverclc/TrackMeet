@@ -9,13 +9,13 @@
 import Foundation
 import Firebase
 
-public class Meet: Codable{
+public class Meet: Codable {
     
     static var canManage = false
     static var canCoach = false
     var name : String
     var date : Date
-     var schools: [String : String]
+    var schools: [String:String]
     var gender : String
     var levels: [String]
     var events: [String]
@@ -43,6 +43,9 @@ public class Meet: Codable{
         
         
         schools = dict["schools"] as! [String:String]
+        
+        
+        
         
         levels = [String]()
         if let levelsArray = dict["levels"] as? NSArray{
@@ -129,6 +132,7 @@ public class Meet: Codable{
     }
     
     func deleteFromFirebase(){
+      
         if let ui = uid{
         Database.database().reference().child("meets").child(ui).removeValue()
         print("Meet has been removed from Firebase")

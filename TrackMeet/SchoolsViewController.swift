@@ -23,9 +23,9 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
         //var allAthletes = [Athlete]()
         var eventAthletes = [Athlete]()
         var displayedAthletes = [Athlete]()
-        var selectedSchool : String!
+        var selectedSchool : School!
        // var schools = [String:String]()
-        var schoolNames = [String]()
+        //var schoolNames = [String]()
         var initials = [String]()
         //var meets : [Meet]!
    
@@ -37,15 +37,23 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
             tableView.dataSource = self
             
             self.title = screenTitle
-            for (key,_) in Data.schools{
-                schoolNames.append(key)
+//            for sch in Data.schoolsNew{
+//                schoolNames.append(sch.full)
+//
+//            }
+//            schoolNames.sort()
+            
+            Data.schoolsNew.sort(by: {$0.full < $1.full})
+            
+    
+            
+            
+            if(Data.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3"){
+                canEditSchools = true
             }
-            schoolNames.sort()
             
             
-            
-            
-            print("ViewDidLoad")
+            print("ViewDidLoad in SchoolsViewController")
            
         }
         
@@ -58,7 +66,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
         if isMovingFromParent{
             performSegue(withIdentifier: "unwindFromSchoolsSegue", sender: nil)
         }
-        storeToUserDefaults()
+        //storeToUserDefaults()
     }
     
     
@@ -70,15 +78,15 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
 
          func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             // #warning Incomplete implementation, return the number of rows
-            return schoolNames.count
+            return Data.schoolsNew.count
         }
 
         
          func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
-            let school = schoolNames[indexPath.row]
-            cell.textLabel?.text = school
-            cell.detailTextLabel?.text = Data.schools[school]
+            let school = Data.schoolsNew[indexPath.row]
+            cell.textLabel?.text = school.full
+            cell.detailTextLabel?.text = school.inits
             //print(athlete.grade)
             return cell
         }
@@ -92,44 +100,55 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
             var blankAlert = UIAlertController()
             let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
                 
-                for s in Data.schoolsNew{
-                    if s.full == self.schoolNames[indexPath.row]{
-                    for e in s.coaches{
-                        if Auth.auth().currentUser?.email == e{
-                            self.canEditSchools = true
-                            
-                        }
-                    }
+                let theSchool = Data.schoolsNew[indexPath.row]
+                for e in theSchool.coaches{
+                    if Auth.auth().currentUser?.email == e{
+                     self.canEditSchools = true
+                        break
+                
                     }
                 }
+//                for s in Data.schoolsNew{
+//                    if s.full == self.schoolNames[indexPath.row]{
+//                    for e in s.coaches{
+//                        if Auth.auth().currentUser?.email == e{
+//                            self.canEditSchools = true
+//
+//                        }
+//                    }
+//                    }
+//                }
                 
-                //right now, only I can delte schools
+                //right now, only I can delete schools
                 if(Data.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3") // || self.canEditSchools
                 {
                 
                 let alert = UIAlertController(title: "Are you sure?", message: "Deleting this school will delete all the school's athletes and results", preferredStyle: .alert)
                 let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
                 let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
-                    let selected = self.schoolNames[indexPath.row]
+                   // let selected = self.schoolNames[indexPath.row]
                     // removing all athletes from app with this school name
                    // Data.allAthletes.removeAll(where: {$0.schoolFull == selected})
                     
                     //attempt to delete from firebase and Data.allAthletes
                     // crashes sometimes.  I think it is when it tries to remove the last athlete
                     
-                    for s in Data.schoolsNew{
-                        if s.full == self.schoolNames[indexPath.row]{
-                            s.deleteFromFirebase()
-                        }
-                    }
+                    theSchool.deleteFromFirebase()
                     
+//                    for s in Data.schoolsNew{
+//                        if s.full == self.schoolNames[indexPath.row]{
+//                            s.deleteFromFirebase()
+//                        }
+//                    }
+                    if Data.allAthletes.count > 0{
                     for i in (0...(Data.allAthletes.count - 1)).reversed() {
-                        if Data.allAthletes[i].schoolFull == selected{
+                        if Data.allAthletes[i].schoolFull == theSchool.full{
                             Data.allAthletes[i].deleteFromFirebase()
                             Data.allAthletes.remove(at: i)
                             
                             
                         }
+                    }
                     }
                     
                    // Skipped some to delete
@@ -147,21 +166,23 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                     
                     
                     
-                    self.schoolNames.remove(at: indexPath.row) // remove from array
-                    Data.schools.removeValue(forKey: selected) // remove from dictionary
-                     Database.database().reference().child("schools").child(selected).removeValue()
+                   // self.schoolNames.remove(at: indexPath.row) // remove from array
+                   // Data.schools.removeValue(forKey: selected) // remove from dictionary
+                    // Database.database().reference().child("schools").child(selected).removeValue()
                     
                     // Still need to remove all athletes from this school
-                    tableView.deleteRows(at: [indexPath], with: .fade)
+                   // tableView.deleteRows(at: [indexPath], with: .fade)
+                    Data.schoolsNew.remove(at: indexPath.row)
+                    self.tableView.reloadData()
                     
-                    let userDefaults = UserDefaults.standard
-                    do {
-                        try userDefaults.setObjects(Data.schools, forKey: "schools")
-                       print("Saving Schools")
-                    }
-                    catch{
-                          print("error saving schools")
-                    }
+//                    let userDefaults = UserDefaults.standard
+//                    do {
+//                        try userDefaults.setObjects(Data.schools, forKey: "schools")
+//                       print("Saving Schools")
+//                    }
+//                    catch{
+//                          print("error saving schools")
+//                    }
                 }
                     
                     alert.addAction(ok)
@@ -191,12 +212,12 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                 let alert = UIAlertController(title: "", message: "Edit School", preferredStyle: .alert)
                     alert.addTextField(configurationHandler: { (textField) in
                          textField.autocapitalizationType = .allCharacters
-                        textField.text = self.schoolNames[indexPath.row]
+                        textField.text = Data.schoolsNew[indexPath.row].full
                         
                     })
                 alert.addTextField(configurationHandler: { (textField) in
                      textField.autocapitalizationType = .allCharacters
-                    textField.text = Data.schools[self.schoolNames[indexPath.row]]
+                    textField.text = Data.schoolsNew[indexPath.row].inits
                     
                 })
               
@@ -207,8 +228,8 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                             
                             for a in Data.allAthletes{
                                         print(a.schoolFull)
-                                        print(self.schoolNames[indexPath.row])
-                                        if a.schoolFull == self.schoolNames[indexPath.row]{
+                                        
+                                        if a.schoolFull == Data.schoolsNew[indexPath.row].full{
                                             a.schoolFull = alert.textFields![0].text!
                                             a.school = alert.textFields![1].text!
                                             print("changed athletes school")
@@ -218,7 +239,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                             
                             // changing all meets to new school names
                             for m in Data.meets{
-                                m.schools.removeValue(forKey: self.schoolNames[indexPath.row])
+                                m.schools.removeValue(forKey: Data.schoolsNew[indexPath.row].full)
                                 m.schools[alert.textFields![0].text!] = alert.textFields![1].text!
                                 
                             
@@ -226,7 +247,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                             
                             // update schoolsNew on Firebase and in Data.schoolsNew
                             for s in Data.schoolsNew{
-                                if s.full == self.schoolNames[indexPath.row]{
+                                if s.full == Data.schoolsNew[indexPath.row].full{
                                     s.full = alert.textFields![0].text!
                                     s.inits = alert.textFields![1].text!
                                     s.updateFirebase()
@@ -239,19 +260,19 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                               
                            
                             // remove old from Dict
-                            Data.schools.removeValue(forKey: self.schoolNames[indexPath.row])
-                            // add new to dict
-                            Data.schools[alert.textFields![0].text!] = alert.textFields![1].text!
-                            // update Array of Schools
-                        self.schoolNames[indexPath.row] = alert.textFields![0].text!
-                            
-                            // updateFirebase for schools dictionary
-                            let ref = Database.database().reference().child("schools")
-                            
-                            // remove entire dictionary from firebase
-                             Database.database().reference().child("schools").removeValue()
-                            // write new values to firebase
-                            ref.updateChildValues(Data.schools)
+//                            Data.schools.removeValue(forKey: Data.schoolsNew[indexPath.row].full)
+//                            // add new to dict
+//                            Data.schools[alert.textFields![0].text!] = alert.textFields![1].text!
+//                            // update Array of Schools
+//                        self.schoolNames[indexPath.row] = alert.textFields![0].text!
+//
+//                            // updateFirebase for schools dictionary
+//                            let ref = Database.database().reference().child("schools")
+//
+//                            // remove entire dictionary from firebase
+//                             Database.database().reference().child("schools").removeValue()
+//                            // write new values to firebase
+//                            ref.updateChildValues(Data.schools)
                             
                             
                             
@@ -259,31 +280,31 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                             
                             
                             
-                             let userDefaults = UserDefaults.standard
-                         
-                            
-                            
-                                          do {
-                                            try userDefaults.setObjects(Data.meets, forKey: "meets")
-                                           
-                                                 } catch {
-                                                     print(error.localizedDescription)
-                                                 }
-                                       do {
-                                        try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
-                                           print("Saving Athletes")
-                                       }
-                                       catch{
-                                           print("error saving athletes")
-                                       }
-                                       
-                                       do {
-                                        try userDefaults.setObjects(Data.schools, forKey: "schools")
-                                                      print("Saving Schools")
-                                                  }
-                                                  catch{
-                                                      print("error saving schools")
-                                                  }
+//                             let userDefaults = UserDefaults.standard
+//
+//
+//
+//                                          do {
+//                                            try userDefaults.setObjects(Data.meets, forKey: "meets")
+//
+//                                                 } catch {
+//                                                     print(error.localizedDescription)
+//                                                 }
+//                                       do {
+//                                        try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+//                                           print("Saving Athletes")
+//                                       }
+//                                       catch{
+//                                           print("error saving athletes")
+//                                       }
+//
+//                                       do {
+//                                        try userDefaults.setObjects(Data.schools, forKey: "schools")
+//                                                      print("Saving Schools")
+//                                                  }
+//                                                  catch{
+//                                                      print("error saving schools")
+//                                                  }
                                    
                       
                         }
@@ -379,13 +400,13 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                        badInput = true
                    }
                    
-                for (key,value) in Data.schools{
-                    if (key == "\(fullSchool) \(gender)"){
+                for school in Data.schoolsNew{
+                    if (school.full == "\(fullSchool) \(gender)"){
                         error = "\(fullSchool) \(gender) is already in database"
                         badInput = true
                         break;
                     }
-                    else if value == initSchool && gender == key.suffix(3){
+                    else if school.inits == initSchool && gender == school.full.suffix(3){
                         error = "The initials \(initSchool)\(gender) are already in use"
                         badInput = true
                         break;
@@ -413,12 +434,13 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                                
            
                     if !badInput{
-                    Data.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
+                    //Data.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
                         let newSchool = School(full: "\(fullSchool) \(gender)", inits: alert.textFields![1].text!)
                         
                         Data.schoolsNew.append(newSchool)
+                        print("added school to schoolsNew in !badInput")
                         if let user = Auth.auth().currentUser{
-                            newSchool.addCoach(email: user.email ?? "bseaver@d155.org")
+                            newSchool.addCoach(email: user.email!)
                         }
                         
                         // Save schoolsNew to firebase
@@ -427,30 +449,30 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                     
                        
                        //Save schools to firebase
-                    let ref = Database.database().reference().child("schools")
-                    ref.updateChildValues(Data.schools)
-                       
-                       // Save school to UserDefaults
-                       let userDefaults = UserDefaults.standard
-                       do {
-                           try userDefaults.setObjects(Data.schools, forKey: "schools")
-                           print("Saved Schools in Add Meet VC")
-                              } catch {
-                                  print(error.localizedDescription)
-                               print("Error saving schools in AddMeet")
-                              }
-                    
-                       do {
-                        try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
-                                   print("Saving Athletes")
-                               }
-                               catch{
-                                   print("error saving athletes")
-                               }
+//                    let ref = Database.database().reference().child("schools")
+//                    ref.updateChildValues(Data.schools)
+//
+//                       // Save school to UserDefaults
+//                       let userDefaults = UserDefaults.standard
+//                       do {
+//                           try userDefaults.setObjects(Data.schools, forKey: "schools")
+//                           print("Saved Schools in Add Meet VC")
+//                              } catch {
+//                                  print(error.localizedDescription)
+//                               print("Error saving schools in AddMeet")
+//                              }
+//
+//                       do {
+//                        try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+//                                   print("Saving Athletes")
+//                               }
+//                               catch{
+//                                   print("error saving athletes")
+//                               }
                         
                        
                        
-                       self.schoolNames.insert("\(fullSchool) \(gender)", at: 0)
+                       //self.schoolNames.insert("\(fullSchool) \(gender)", at: 0)
                        self.tableView.reloadData()
                     }
                 }
@@ -469,132 +491,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
         }
     }
     
-    @IBAction func addSchoolActionNew(_ sender: UIButton) {
-        var gender = ""
-        let alert = UIAlertController(title: "Add School", message: "", preferredStyle: .alert)
-        let genderAlert = UIAlertController(title: "Gender", message: "Men or Women?", preferredStyle: .alert)
-        genderAlert.addAction(UIAlertAction(title: "Men", style: .default, handler: { (action) in
-            gender = "(M)"
-            self.present(alert, animated: true, completion: nil)
-        }))
-        genderAlert.addAction(UIAlertAction(title: "Women", style: .default, handler: { (action) in
-            gender = "(W)"
-            self.present(alert, animated: true, completion: nil)
-        }))
-        genderAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-               
-               alert.addTextField(configurationHandler: { (textField) in
-                   textField.autocapitalizationType = .allCharacters
-                   textField.placeholder = "Full School Name"
-                   
-               })
-               
-               alert.addTextField(configurationHandler: { (textField) in
-                   textField.autocapitalizationType = .allCharacters
-                          textField.placeholder = "School Initials"
-                          
-                      })
-        
-        
-               alert.addTextField(configurationHandler: { (textField) in
-             
-                      textField.placeholder = "Roster csv url"
-               })
-               
-               alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { (updateAction) in
-                   var badInput = false
-                   var error = ""
-                let fullSchool = alert.textFields![0].text!
-                let initSchool = alert.textFields![1].text!
-                let csvURL = alert.textFields![2].text!
-                   if fullSchool == ""{
-                       error = "Must include school name"
-                       badInput = true
-                   }
-                   else if initSchool == ""{
-                       error = "Must include school initials"
-                       badInput = true
-                   }
-                   
-                for (key,value) in Data.schools{
-                    if (key == "\(fullSchool) \(gender)"){
-                        error = "\(fullSchool) \(gender) is already in database"
-                        badInput = true
-                        break;
-                    }
-                    else if value == initSchool && gender == key.suffix(3){
-                        error = "The initials \(initSchool)\(gender) are already in use"
-                        badInput = true
-                        break;
-                    }
-
-                }
-                   
-//                   else if self.schoolKeys.contains("\(fullSchool) \(gender)"){
-//                       error = "\(fullSchool) \(gender) is already in database"
-//                       badInput = true
-//                   }
-//                   else if self.initials.contains(initSchool){
-//                       error = "The initials \(initSchool)\(gender) are already in use"
-//                       badInput = true
-//                   }
-                   
-                if !badInput{
-                       if csvURL != ""{
-                          error =  self.readCSVURLNew(csvURL: csvURL, fullSchool: "\(fullSchool) \(gender)", initSchool: initSchool)
-                        if error != ""{
-                            //self.displayRosterAlert(error: e)
-                            badInput = true
-                        }
-                       }
-                               
-           
-                    if !badInput{
-                    Data.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
-                    
-                    
-                       
-                       //Save schools to firebase
-                    let ref = Database.database().reference().child("schools")
-                    ref.updateChildValues(Data.schools)
-                       
-                       // Save school to UserDefaults
-                       let userDefaults = UserDefaults.standard
-                       do {
-                           try userDefaults.setObjects(Data.schools, forKey: "schools")
-                           print("Saved Schools in Add Meet VC")
-                              } catch {
-                                  print(error.localizedDescription)
-                               print("Error saving schools in AddMeet")
-                              }
-                    
-                       do {
-                        try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
-                                   print("Saving Athletes")
-                               }
-                               catch{
-                                   print("error saving athletes")
-                               }
-                        
-                       
-                       
-                       self.schoolNames.insert("\(fullSchool) \(gender)", at: 0)
-                       self.tableView.reloadData()
-                    }
-                }
-                   //}
-                   if badInput{
-                    self.displayRosterAlert(error: error)
-//                   let alert2 = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
-//                   let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-//                   alert2.addAction(okAction)
-//                   self.present(alert2, animated: true, completion: nil)
-                   }
-               }))
-           
-               alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        present(genderAlert, animated: true, completion: nil)
-    }
+   
     
     
     func readCSVURLNew(csvURL: String, fullSchool: String, initSchool: String) -> String{
@@ -707,110 +604,125 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
     
 }
     
-    @IBAction func addSchoolAction(_ sender: UIBarButtonItem) {
-        var gender = ""
-        let alert = UIAlertController(title: "Add School", message: "", preferredStyle: .alert)
-        let genderAlert = UIAlertController(title: "Gender", message: "Men or Women?", preferredStyle: .alert)
-        genderAlert.addAction(UIAlertAction(title: "Men", style: .default, handler: { (action) in
-            gender = "(M)"
-            self.present(alert, animated: true, completion: nil)
-        }))
-        genderAlert.addAction(UIAlertAction(title: "Women", style: .default, handler: { (action) in
-            gender = "(W)"
-            self.present(alert, animated: true, completion: nil)
-        }))
-        genderAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-               
-               alert.addTextField(configurationHandler: { (textField) in
-                   textField.autocapitalizationType = .allCharacters
-                   textField.placeholder = "Full School Name"
-                   
-               })
-               
-               alert.addTextField(configurationHandler: { (textField) in
-                   textField.autocapitalizationType = .allCharacters
-                          textField.placeholder = "School Initials"
-                          
-                      })
-        
-        
-               alert.addTextField(configurationHandler: { (textField) in
-             
-                      textField.placeholder = "Roster csv url"
-               })
-               
-               alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { (updateAction) in
-                   var badInput = false
-                   var error = ""
-                let fullSchool = alert.textFields![0].text!
-                let initSchool = alert.textFields![1].text!
-                let csvURL = alert.textFields![2].text!
-                   if fullSchool == ""{
-                       error = "Must include school name"
-                       badInput = true
-                   }
-                   else if initSchool == ""{
-                       error = "Must include school initials"
-                       badInput = true
-                   }
-                   else if self.schoolNames.contains("\(fullSchool) \(gender)"){
-                       error = "\(fullSchool) \(gender) is already in database"
-                       badInput = true
-                   }
-                   else if self.initials.contains(initSchool){
-                       error = "The initials \(initSchool) are already in use"
-                       badInput = true
-                   }
-                   
-                   else{
-                       if csvURL != ""{
-                           self.readCSVURL(csvURL: csvURL, fullSchool: "\(fullSchool) \(gender)", initSchool: initSchool)
-                           
-                       }
-                               
-           
-
-                    Data.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
-                       
-                       //Save schools to firebase
-                    let ref = Database.database().reference().child("schools")
-                    ref.updateChildValues(Data.schools)
-                    
-                       // Save school to UserDefaults
-                       let userDefaults = UserDefaults.standard
-                       do {
-                        try userDefaults.setObjects(Data.schools, forKey: "schools")
-                           print("Saved Schools in Add Meet VC")
-                              } catch {
-                                  print(error.localizedDescription)
-                               print("Error saving schools in AddMeet")
-                              }
-                    
-                       do {
-                        try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
-                                   print("Saving Athletes")
-                               }
-                               catch{
-                                   print("error saving athletes")
-                               }
-                        
-                       
-                       
-                       self.schoolNames.append("\(fullSchool) \(gender)")
-                       self.tableView.reloadData()
-                   }
-                   if badInput{
-                   let alert2 = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
-                   let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                   alert2.addAction(okAction)
-                   self.present(alert2, animated: true, completion: nil)
-                   }
-               }))
-           
-               alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        present(genderAlert, animated: true, completion: nil)
-               
-    }
+//    @IBAction func addSchoolAction(_ sender: UIBarButtonItem) {
+//        var gender = ""
+//        let alert = UIAlertController(title: "Add School", message: "", preferredStyle: .alert)
+//        let genderAlert = UIAlertController(title: "Gender", message: "Men or Women?", preferredStyle: .alert)
+//        genderAlert.addAction(UIAlertAction(title: "Men", style: .default, handler: { (action) in
+//            gender = "(M)"
+//            self.present(alert, animated: true, completion: nil)
+//        }))
+//        genderAlert.addAction(UIAlertAction(title: "Women", style: .default, handler: { (action) in
+//            gender = "(W)"
+//            self.present(alert, animated: true, completion: nil)
+//        }))
+//        genderAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+//
+//               alert.addTextField(configurationHandler: { (textField) in
+//                   textField.autocapitalizationType = .allCharacters
+//                   textField.placeholder = "Full School Name"
+//
+//               })
+//
+//               alert.addTextField(configurationHandler: { (textField) in
+//                   textField.autocapitalizationType = .allCharacters
+//                          textField.placeholder = "School Initials"
+//
+//                      })
+//
+//
+//               alert.addTextField(configurationHandler: { (textField) in
+//
+//                      textField.placeholder = "Roster csv url"
+//               })
+//
+//               alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { (updateAction) in
+//                   var badInput = false
+//                   var error = ""
+//                let fullSchool = alert.textFields![0].text!
+//                let initSchool = alert.textFields![1].text!
+//                let csvURL = alert.textFields![2].text!
+//                   if fullSchool == ""{
+//                       error = "Must include school name"
+//                       badInput = true
+//                   }
+//                   else if initSchool == ""{
+//                       error = "Must include school initials"
+//                       badInput = true
+//                   }
+//                   else if Data.schoolsNew.contains(where: { $0.full == "\(fullSchool) \(gender)" }) {
+//                    error = "\(fullSchool) \(gender) is already in database"
+//                    badInput = true
+//                     }
+//
+////                   else if self.schoolNames.contains("\(fullSchool) \(gender)"){
+////                       error = "\(fullSchool) \(gender) is already in database"
+////                       badInput = true
+////                   }
+//
+//                   else if Data.schoolsNew.contains(where: { $0.inits == initSchool }) {
+//                    error = "The initials \(initSchool) are already in use"
+//                    badInput = true
+//                     }
+//
+////                   else if self.initials.contains(initSchool){
+////                       error = "The initials \(initSchool) are already in use"
+////                       badInput = true
+////                   }
+//
+//                   else{
+//                       if csvURL != ""{
+//                           self.readCSVURL(csvURL: csvURL, fullSchool: "\(fullSchool) \(gender)", initSchool: initSchool)
+//
+//                       }
+//
+//
+//
+//                    //Data.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
+//                    let newSchool = School(full: "\(fullSchool) \(gender)", inits: alert.textFields![1].text!)
+//                    Data.schoolsNew.append(newSchool)
+//                    print("add to schoolsNew in addSchool")
+//                    newSchool.saveToFirebase()
+//
+//                       //Save schools to firebase
+////                    let ref = Database.database().reference().child("schools")
+////                    ref.updateChildValues(Data.schools)
+//
+//                       // Save school to UserDefaults
+////                       let userDefaults = UserDefaults.standard
+////                       do {
+////                        try userDefaults.setObjects(Data.schools, forKey: "schools")
+////                           print("Saved Schools in Add Meet VC")
+////                              } catch {
+////                                  print(error.localizedDescription)
+////                               print("Error saving schools in AddMeet")
+////                              }
+////
+////                       do {
+////                        try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+////                                   print("Saving Athletes")
+////                               }
+////                               catch{
+////                                   print("error saving athletes")
+////                               }
+////
+////
+////
+////                       self.schoolNames.append("\(fullSchool) \(gender)")
+//                       self.tableView.reloadData()
+//                   }
+//                   if badInput{
+//                   let alert2 = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
+//                   let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+//                   alert2.addAction(okAction)
+//                   self.present(alert2, animated: true, completion: nil)
+//                   }
+//               }))
+//
+//               alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+//        present(genderAlert, animated: true, completion: nil)
+//
+//    }
     
     
     
@@ -887,7 +799,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
     }
         
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedSchool = schoolNames[indexPath.row]
+        selectedSchool = Data.schoolsNew[indexPath.row]
         performSegue(withIdentifier: "toAthletesSegue", sender: self)
     }
     
@@ -911,30 +823,30 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
        
        }
     
-    func storeToUserDefaults(){
-        let userDefaults = UserDefaults.standard
-           do {
-            try userDefaults.setObjects(Data.meets, forKey: "meets")
-            
-                  } catch {
-                      print(error.localizedDescription)
-                  }
-        do {
-            try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
-            print("Saving Athletes")
-        }
-        catch{
-            print("error saving athletes")
-        }
-        
-        do {
-            try userDefaults.setObjects(Data.schools, forKey: "schools")
-                       print("Saving Schools")
-                   }
-                   catch{
-                       print("error saving schools")
-                   }
-    }
+//    func storeToUserDefaults(){
+//        let userDefaults = UserDefaults.standard
+//           do {
+//            try userDefaults.setObjects(Data.meets, forKey: "meets")
+//            
+//                  } catch {
+//                      print(error.localizedDescription)
+//                  }
+//        do {
+//            try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+//            print("Saving Athletes")
+//        }
+//        catch{
+//            print("error saving athletes")
+//        }
+//        
+//        do {
+//            try userDefaults.setObjects(Data.schools, forKey: "schools")
+//                       print("Saving Schools")
+//                   }
+//                   catch{
+//                       print("error saving schools")
+//                   }
+//    }
       
         
     }

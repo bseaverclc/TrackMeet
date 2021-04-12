@@ -167,10 +167,10 @@
                         <viewLayoutGuide key="safeArea" id="f38-SK-Ln7"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="NdD-wk-pe7" firstAttribute="top" secondItem="f38-SK-Ln7" secondAttribute="top" id="Ay2-VJ-vHJ"/>
-                            <constraint firstItem="f38-SK-Ln7" firstAttribute="bottom" secondItem="NdD-wk-pe7" secondAttribute="bottom" id="SGv-eP-r20"/>
-                            <constraint firstItem="f38-SK-Ln7" firstAttribute="trailing" secondItem="NdD-wk-pe7" secondAttribute="trailing" id="UHX-IM-Pby"/>
-                            <constraint firstItem="NdD-wk-pe7" firstAttribute="leading" secondItem="f38-SK-Ln7" secondAttribute="leading" id="p15-yW-0Ch"/>
+                            <constraint firstItem="NdD-wk-pe7" firstAttribute="bottom" secondItem="f38-SK-Ln7" secondAttribute="bottom" id="J7G-gv-2Cc"/>
+                            <constraint firstItem="NdD-wk-pe7" firstAttribute="leading" secondItem="f38-SK-Ln7" secondAttribute="leading" id="ddU-j4-xbo"/>
+                            <constraint firstItem="NdD-wk-pe7" firstAttribute="trailing" secondItem="f38-SK-Ln7" secondAttribute="trailing" id="nuP-HU-W3O"/>
+                            <constraint firstItem="NdD-wk-pe7" firstAttribute="top" secondItem="f38-SK-Ln7" secondAttribute="top" id="tBM-Fu-dDm"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="1Pg-7I-JIG">
@@ -189,7 +189,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mWB-l4-xD2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="F2J-Ik-Hl4" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="795.6521739130435" y="699.77678571428567"/>
+            <point key="canvasLocation" x="795.38461538461536" y="699.52606635071083"/>
         </scene>
         <!--Home-->
         <scene sceneID="ykN-K0-0Fr">
@@ -349,7 +349,7 @@
                                 </subviews>
                             </stackView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Du-Ii-22I">
-                                <rect key="frame" x="0.0" y="134" width="390" height="679"/>
+                                <rect key="frame" x="0.0" y="134" width="390" height="627"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="myCell" id="z40-dg-eAy" customClass="TimeTableViewCell" customModule="TrackMeet" customModuleProvider="target">
@@ -435,7 +435,7 @@
                                 </connections>
                             </tableView>
                             <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iHn-JU-QV0">
-                                <rect key="frame" x="0.0" y="764" width="390" height="49"/>
+                                <rect key="frame" x="0.0" y="715" width="390" height="46"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <items>
                                     <tabBarItem title="Name" id="hX2-b8-tR5"/>
@@ -521,7 +521,7 @@
                                 </connections>
                             </tabBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mKk-PU-ZTZ">
-                                <rect key="frame" x="0.0" y="88" width="390" height="639"/>
+                                <rect key="frame" x="0.0" y="124" width="390" height="603"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" textLabel="Ahs-lB-kkI" detailTextLabel="GXT-DK-QXF" style="IBUITableViewCellStyleValue1" id="IwU-a1-1Xj">
@@ -554,17 +554,44 @@
                                     <outlet property="delegate" destination="aqN-4C-D8X" id="lvN-Ah-861"/>
                                 </connections>
                             </tableView>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="3by-rt-WUZ">
+                                <rect key="frame" x="0.0" y="88" width="390" height="36"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JiP-C3-ClV">
+                                        <rect key="frame" x="0.0" y="0.0" width="190" height="36"/>
+                                        <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
+                                        <state key="normal" title="Upload"/>
+                                        <connections>
+                                            <action selector="uploadAction:" destination="aqN-4C-D8X" eventType="touchUpInside" id="4Ag-JJ-osX"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NW8-Px-Uuf">
+                                        <rect key="frame" x="200" y="0.0" width="190" height="36"/>
+                                        <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
+                                        <state key="normal" title="Coaches"/>
+                                        <connections>
+                                            <segue destination="BQU-et-3BV" kind="show" identifier="toCoachesSegue" id="84E-0R-Iay"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="TJj-uW-JNr"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="6lG-pe-0tM" firstAttribute="trailing" secondItem="TJj-uW-JNr" secondAttribute="trailing" id="BmB-no-6fT"/>
-                            <constraint firstItem="mKk-PU-ZTZ" firstAttribute="leading" secondItem="TJj-uW-JNr" secondAttribute="leading" id="F5O-Fm-i8D"/>
-                            <constraint firstItem="TJj-uW-JNr" firstAttribute="trailing" secondItem="mKk-PU-ZTZ" secondAttribute="trailing" id="NWI-dN-zxa"/>
-                            <constraint firstItem="mKk-PU-ZTZ" firstAttribute="top" secondItem="TJj-uW-JNr" secondAttribute="top" id="SOj-Hk-HBV"/>
-                            <constraint firstItem="6lG-pe-0tM" firstAttribute="top" secondItem="mKk-PU-ZTZ" secondAttribute="bottom" id="bov-oe-NsF"/>
+                            <constraint firstItem="3by-rt-WUZ" firstAttribute="height" secondItem="TMq-Q5-Ep8" secondAttribute="height" multiplier="0.042654" id="G6M-Gj-9dF"/>
+                            <constraint firstItem="TJj-uW-JNr" firstAttribute="trailing" secondItem="3by-rt-WUZ" secondAttribute="trailing" id="Nrk-fa-7JZ"/>
+                            <constraint firstItem="3by-rt-WUZ" firstAttribute="leading" secondItem="TJj-uW-JNr" secondAttribute="leading" id="Xug-lr-KkQ"/>
+                            <constraint firstItem="mKk-PU-ZTZ" firstAttribute="leading" secondItem="TJj-uW-JNr" secondAttribute="leading" id="Yg7-7c-SGl"/>
+                            <constraint firstItem="6lG-pe-0tM" firstAttribute="top" secondItem="mKk-PU-ZTZ" secondAttribute="bottom" id="dlz-HI-nXM"/>
                             <constraint firstItem="6lG-pe-0tM" firstAttribute="bottom" secondItem="TJj-uW-JNr" secondAttribute="bottom" id="je8-dU-Ioi"/>
+                            <constraint firstItem="mKk-PU-ZTZ" firstAttribute="top" secondItem="3by-rt-WUZ" secondAttribute="bottom" id="ndT-dk-bk9"/>
+                            <constraint firstItem="mKk-PU-ZTZ" firstAttribute="trailing" secondItem="TJj-uW-JNr" secondAttribute="trailing" id="qgJ-pa-QEH"/>
                             <constraint firstItem="6lG-pe-0tM" firstAttribute="leading" secondItem="TJj-uW-JNr" secondAttribute="leading" id="vBV-2Y-VTW"/>
+                            <constraint firstItem="3by-rt-WUZ" firstAttribute="top" secondItem="TJj-uW-JNr" secondAttribute="top" id="vdO-8i-HBp"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="M0u-pB-pSB">
@@ -575,8 +602,11 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="coachesButtonOutlet" destination="NW8-Px-Uuf" id="3XV-8i-zzR"/>
+                        <outlet property="stackView" destination="3by-rt-WUZ" id="hrt-i6-nhm"/>
                         <outlet property="tabBarOutlet" destination="6lG-pe-0tM" id="MlO-jd-wgw"/>
                         <outlet property="tableView" destination="mKk-PU-ZTZ" id="HrK-Qq-Glt"/>
+                        <outlet property="uploadButtonOutlet" destination="JiP-C3-ClV" id="yQK-q5-9Rg"/>
                         <segue destination="IXV-UC-9YT" kind="show" identifier="toAthleteResultsSegue" id="dP9-9K-9zG"/>
                         <segue destination="vpy-Es-6M3" kind="unwind" identifier="unwindtoSchoolsSegue" unwindAction="unwindtoSchools:" id="Npb-cl-wOn"/>
                         <segue destination="hT1-Dv-o5h" kind="show" identifier="toAddAthleteSegue" id="93V-8F-ffg"/>
@@ -585,7 +615,51 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hz4-HC-T55" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="vpy-Es-6M3" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1312" y="1600"/>
+            <point key="canvasLocation" x="1310.7692307692307" y="1599.5260663507108"/>
+        </scene>
+        <!--CoachesVC-->
+        <scene sceneID="mt4-oI-aNJ">
+            <objects>
+                <tableViewController id="BQU-et-3BV" customClass="CoachesVC" customModule="TrackMeet" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="PkW-1P-bVM">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" textLabel="zDB-wV-bap" style="IBUITableViewCellStyleDefault" id="mxX-tf-JIj">
+                                <rect key="frame" x="0.0" y="28" width="390" height="43.666667938232422"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mxX-tf-JIj" id="wQy-fc-YJZ">
+                                    <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="zDB-wV-bap">
+                                            <rect key="frame" x="20" y="0.0" width="350" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="BQU-et-3BV" id="DuB-jI-kcp"/>
+                            <outlet property="delegate" destination="BQU-et-3BV" id="uF8-uh-e8R"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="Qjf-iE-NUF">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="bYY-LR-mxJ">
+                            <connections>
+                                <action selector="addAction:" destination="BQU-et-3BV" id="XUt-Pe-S6f"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MkB-qV-aaT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1858" y="2327"/>
         </scene>
         <!--Add Athlete To Event View Controller-->
         <scene sceneID="hfj-rj-04P">

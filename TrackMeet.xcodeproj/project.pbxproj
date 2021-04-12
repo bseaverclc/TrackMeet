@@ -36,6 +36,8 @@
 		D3D2DEF82471F5CC009C17DD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3D2DEF62471F5CC009C17DD /* LaunchScreen.storyboard */; };
 		D3D2DF032471F5CD009C17DD /* TrackMeetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D2DF022471F5CD009C17DD /* TrackMeetTests.swift */; };
 		D3D2DF0E2471F5CD009C17DD /* TrackMeetUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D2DF0D2471F5CD009C17DD /* TrackMeetUITests.swift */; };
+		D3EF6D5426228310005B22FF /* CoachesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EF6D5326228310005B22FF /* CoachesViewController.swift */; };
+		D3EF6D5C2622857D005B22FF /* CoachesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EF6D5B2622857D005B22FF /* CoachesVC.swift */; };
 		D7BCEC935680614C55620B2A /* Pods_TrackMeetTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D2DB8E7D69C8D93636E095 /* Pods_TrackMeetTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -97,6 +99,8 @@
 		D3D2DF092471F5CD009C17DD /* TrackMeetUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackMeetUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3D2DF0D2471F5CD009C17DD /* TrackMeetUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackMeetUITests.swift; sourceTree = "<group>"; };
 		D3D2DF0F2471F5CD009C17DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D3EF6D5326228310005B22FF /* CoachesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachesViewController.swift; sourceTree = "<group>"; };
+		D3EF6D5B2622857D005B22FF /* CoachesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachesVC.swift; sourceTree = "<group>"; };
 		D9D2DB8E7D69C8D93636E095 /* Pods_TrackMeetTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TrackMeetTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8774B062F0D38EFA7C1904A /* Pods_TrackMeet_TrackMeetUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TrackMeet_TrackMeetUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -183,6 +187,8 @@
 				D3366837247B08B2008EA70C /* Meet.swift */,
 				D3A0B9CF24723FDE0088D664 /* Athlete.swift */,
 				D361DB0424735FA9005EF1A2 /* AthletesViewController.swift */,
+				D3EF6D5B2622857D005B22FF /* CoachesVC.swift */,
+				D3EF6D5326228310005B22FF /* CoachesViewController.swift */,
 				D3D2DEEA2471F5CB009C17DD /* SceneDelegate.swift */,
 				D3D2DEE82471F5CB009C17DD /* AppDelegate.swift */,
 				D3D2DEF42471F5CC009C17DD /* Assets.xcassets */,
@@ -504,6 +510,7 @@
 				D3481B4F24C0B0AD00963A0C /* AthleteResultsTableViewCell.swift in Sources */,
 				D3366838247B08B2008EA70C /* Meet.swift in Sources */,
 				D3258ECA24BD239E00895910 /* LaunchViewController.swift in Sources */,
+				D3EF6D5C2622857D005B22FF /* CoachesVC.swift in Sources */,
 				D3D2DEED2471F5CB009C17DD /* EventEditViewController.swift in Sources */,
 				D3A0B9D2247248500088D664 /* EventsTableViewController.swift in Sources */,
 				D3A0B9D024723FDE0088D664 /* Athlete.swift in Sources */,
@@ -516,6 +523,7 @@
 				D3A0B9D62472EEF70088D664 /* HomeViewController.swift in Sources */,
 				D3D2DEEB2471F5CB009C17DD /* SceneDelegate.swift in Sources */,
 				D36BAF84247ABEDF00D71D4A /* AddMeetViewController.swift in Sources */,
+				D3EF6D5426228310005B22FF /* CoachesViewController.swift in Sources */,
 				D361DB072475741E005EF1A2 /* AddAthleteToEventViewController.swift in Sources */,
 				D3BF359724803BB9000736F8 /* MeetsViewController.swift in Sources */,
 				D3A0B9CE24722B5B0088D664 /* TimeTableViewCell.swift in Sources */,
@@ -703,7 +711,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = clc.TrackMeet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -725,7 +733,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = clc.TrackMeet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

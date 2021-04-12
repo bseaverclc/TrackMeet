@@ -89,7 +89,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         if isMovingFromParent{
             performSegue(withIdentifier: "unwindFromMeetsSegue", sender: nil)
         }
-        storeToUserDefaults()
+        //storeToUserDefaults()
     }
     
     @IBAction func addMeetAction(_ sender: UIBarButtonItem) {
@@ -318,34 +318,34 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.reloadData()
             
         // store meets to UserDefaults
-        storeToUserDefaults()
+        //storeToUserDefaults()
                
        // }
     }
     
-    func storeToUserDefaults(){
-        let userDefaults = UserDefaults.standard
-           do {
-            try userDefaults.setObjects(Data.meets, forKey: "meets")
-            
-                  } catch {
-                      print(error.localizedDescription)
-                  }
-        do {
-            try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
-            print("Saving Athletes")
-        }
-        catch{
-            print("error saving athletes")
-        }
-        
-        do {
-            try userDefaults.setObjects(Data.schools, forKey: "schools")
-                       print("Saving Schools")
-                   }
-                   catch{
-                       print("error saving schools")
-                   }
-    }
+//    func storeToUserDefaults(){
+//        let userDefaults = UserDefaults.standard
+//           do {
+//            try userDefaults.setObjects(Data.meets, forKey: "meets")
+//
+//                  } catch {
+//                      print(error.localizedDescription)
+//                  }
+//        do {
+//            try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+//            print("Saving Athletes")
+//        }
+//        catch{
+//            print("error saving athletes")
+//        }
+//
+//        do {
+//            try userDefaults.setObjects(Data.schools, forKey: "schools")
+//                       print("Saving Schools")
+//                   }
+//                   catch{
+//                       print("error saving schools")
+//                   }
+//    }
     
 }

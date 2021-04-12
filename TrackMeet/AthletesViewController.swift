@@ -12,11 +12,15 @@ import Firebase
 class AthletesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarDelegate {
 
    
+    @IBOutlet weak var stackView: UIStackView!
+    @IBOutlet weak var coachesButtonOutlet: UIButton!
+    @IBOutlet weak var uploadButtonOutlet: UIButton!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tabBarOutlet: UITabBar!
     
      weak var delegate: DataBackDelegate?
    
+    
     var canEditAthletes = false
     var header = ""
     var screenTitle = "Rosters"
@@ -24,7 +28,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     var eventAthletes = [Athlete]()
     var displayedAthletes = [Athlete]()
     var selectedAthlete : Athlete!
-    var schools = [String]()
+    var schools = [School]()
     var meet : Meet?
     var pvcScreenTitle = ""
    // var meets : [Meet]!
@@ -50,19 +54,41 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         self.title = screenTitle
         displayedAthletes = Data.allAthletes
        
+        checkEditAthletes()
         
-        if pvcScreenTitle == ""{
-        schools = [String](meet!.schools.keys)
+        
+        if pvcScreenTitle == "" {
+        var schoolNames = [String](meet!.schools.keys)
+            for name in schoolNames{
+                for s in Data.schoolsNew{
+                    if s.full == name{
+                        schools.append(s)
+                        break
+                    }
+                }
+            }
+            
+            stackView.isHidden = true
+            //uploadButtonOutlet.isHidden = true
+            
+        }
+        else{
+            stackView.isHidden = false
+        }
+        
+        if !canEditAthletes{
+            stackView.isHidden = true
         }
         let tabItems = tabBarOutlet.items!
              var i = 0
              for school in schools{
-                tabItems[i].title = Data.schools[school]
+                tabItems[i].title = school.inits
                  i+=1
              }
         tabBar(tabBarOutlet, didSelect: tabBarOutlet.items![0])
-        checkEditAthletes()
-        print("ViewDidLoad")
+        
+        print(Data.schoolsNew)
+        print("ViewDidLoad in AthletesViewController")
        
     }
     
@@ -94,23 +120,24 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         if let m = meet{
-            
+            print("In a meeet checking management")
             if Meet.canManage || Meet.canCoach{
                 canEditAthletes = true
                 return
             }
             
         }
-        for s in Data.schoolsNew{
-            if s.full == schools[0]{
-            for e in s.coaches{
+        
+            for e in schools[0].coaches{
+                print("printing coaches email \(e)")
                 if Auth.auth().currentUser?.email == e{
+                    
                     canEditAthletes = true
                     return
                 }
             }
-            }
-        }
+            
+        
         canEditAthletes = false
         print("You are not a valid coach for this team or a Meet Manager")
     }
@@ -174,7 +201,21 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
+        if Meet.canManage{return true}
+        if let user = Auth.auth().currentUser{
+        let sf = displayedAthletes[indexPath.row].schoolFull
+        for s in Data.schoolsNew{
+            if s.full == sf{
+                for coach in s.coaches{
+                    
+                    if user.email == coach{
+                        return true
+                    }
+                }
+            }
+        }
+        }
+        return false
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -344,7 +385,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
                 nvc.meet = aMeet
             }
             else{
-                nvc.meet = Meet(name: "Blank", date: Date(), schools: [schools[0]:Data.schools[schools[0]]!], gender: "M", levels: ["VAR"], events: ["none"], indPoints: [Int](), relpoints: [Int](), beenScored: [false], coach: "", manager: "")
+                nvc.meet = Meet(name: "Blank", date: Date(), schools: [schools[0].full:schools[0].inits], gender: "M", levels: ["VAR"], events: ["none"], indPoints: [Int](), relpoints: [Int](), beenScored: [false], coach: "", manager: "")
             }
             nvc.from = "AthletesVC"
         }
@@ -354,13 +395,18 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
            // nvc.meets = meets
             nvc.meet = meet
         }
+        else if segue.identifier == "toCoachesSegue"{
+            let nvc = segue.destination as! CoachesVC
+            nvc.school = schools[0]
+     
+        }
     }
     
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         displayedAthletes = [Athlete]()
         for a in Data.allAthletes{
 
-            if item.title == a.school && schools.contains(a.schoolFull){
+            if item.title == a.school && schools.contains(where: {($0.full == a.schoolFull)}){
                 displayedAthletes.append(a)
             }
         }
@@ -382,5 +428,197 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return header
     }
+    
+    func displayRosterAlert(error: String){
+        let rosterAlert = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        rosterAlert.addAction(okAction)
+        self.present(rosterAlert, animated: true, completion: nil)
+        }
 
+    
+    func readCSVURLNew(csvURL: String, fullSchool: String, initSchool: String) -> String{
+       var err = ""
+        
+        var urlCut = csvURL
+        if csvURL != ""{
+            if let editRange = csvURL.range(of: "/edit"){
+            let start = editRange.lowerBound
+            urlCut = String(csvURL[csvURL.startIndex..<start])
+            }
+            else{
+                
+                return "Must have /edit in URL"
+            }
+            let urlcompleted = urlCut + "/pub?output=csv"
+            let url = URL(string: String(urlcompleted))
+            print(url ?? "Error reading URL")
+            
+                 guard let requestUrl = url else {
+                    //fatalError()
+                    print("fatal error")
+                    
+                    return "Error reading URL"
+            }
+                 // Create URL Request
+                 var request = URLRequest(url: requestUrl)
+                 // Specify HTTP Method to use
+                 request.httpMethod = "GET"
+            
+                 // Send HTTP Request
+                 let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                   
+                     // Check if Error took place
+                     if let error = error {
+                         print("Error took place \(error)")
+                        err = "\(error)"
+                        
+                        
+                        
+                        
+//                        let alert = UIAlertController(title: "Error!", message: "Could not load athletes", preferredStyle: .alert)
+//                        let ok = UIAlertAction(title: "ok", style: .default)
+//                        alert.addAction(ok)
+//                        self.present(alert, animated: true, completion: nil)
+                        //self.showAlert(errorMessage: "Error loading Athletes from file")
+                         
+                     }
+                     
+                     // Read HTTP Response Status code
+                     if let response = response as? HTTPURLResponse {
+                         print("Response HTTP Status code: \(response.statusCode)")
+                        if response.statusCode == 400{
+                            err = "can't read roster"
+                        }
+                     }
+                    
+                     
+                     
+                     
+                     
+                     // Convert HTTP Response Data to a simple String
+                     if let data = data, let dataString = String(data: data, encoding: .utf8) {
+                         print("Response data string:\n \(dataString)")
+                         let rows = dataString.components(separatedBy: "\r\n")
+                        print(rows.count)
+                        if rows.count == 1{
+                            err = "can't read roster"
+                            print(err)
+                            
+                        }
+                        else{
+                         for row in rows{
+                            
+                            var person = [String](row.components(separatedBy: ","))
+                            if person.count != 3{
+                                
+                                continue
+                            }
+                            for i in 0..<person.count{
+                                person[i] = person[i].uppercased()
+                            }
+                            if person[0] != "FIRST"{
+                                print("\(person[0])  \(person[1])   \(person[2])")
+                                
+                                let athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2]) ?? 0, sf: fullSchool)
+                            print(athlete)
+                                var found = false
+                                for a in self.displayedAthletes{
+                                    if athlete.equals(other: a){
+                                        found = true
+                                        break
+                                    }
+                                }
+                                if !found{
+                                    athlete.saveToFirebase()
+                                    Data.allAthletes.append(athlete)
+                                    self.displayedAthletes.append(athlete)
+                                    
+                                }
+                                
+                            }
+                         }
+                            
+                         }
+                        
+                     }
+                     else{
+                        err = "error with url"
+                     }
+                     
+                     
+                        
+                     
+
+                    
+                 }
+                 task.resume()
+            
+        
+    }
+        self.tableView.reloadData()
+    return err
+    
+}
+    
+    
+    @IBAction func uploadAction(_ sender: UIButton) {
+        
+            
+                if(!canEditAthletes)
+                {
+                    let denyAlert = UIAlertController(title: "Error", message: "You are not authorized to upload a roster", preferredStyle: .alert)
+                    denyAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    present(denyAlert, animated: true, completion: nil)
+                }
+                else{
+                
+                let alert = UIAlertController(title: "upload Roster", message: "copy and paste url", preferredStyle: .alert)
+                
+                alert.addTextField(configurationHandler: { (textField) in
+                     
+                              textField.placeholder = "Roster csv url"
+                       })
+                       
+                       alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { (updateAction) in
+                           var badInput = false
+                           var error = ""
+                       
+                        let csvURL = alert.textFields![0].text!
+                           
+                           
+                        if !badInput{
+                               if csvURL != ""{
+                                
+                                    error =  self.readCSVURLNew(csvURL: csvURL, fullSchool: self.schools[0].full, initSchool: self.schools[0].inits)
+                                if error != ""{
+                                    //self.displayRosterAlert(error: e)
+                                    badInput = true
+                                }
+                              
+                               }
+                               else{badInput = true
+                                error = "can't leave url blank"
+                               }
+                                       
+                   
+                            
+                        }
+                           //}
+                           if badInput{
+                            self.displayRosterAlert(error: error)
+        //                   let alert2 = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
+        //                   let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        //                   alert2.addAction(okAction)
+        //                   self.present(alert2, animated: true, completion: nil)
+                           }
+                       }))
+                   
+                       alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                      present(alert, animated: true, completion: nil)
+                }
+            }
+    
+    
+    
 }

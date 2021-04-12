@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarDelegate {
 
@@ -99,28 +100,42 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
     
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
+        if Meet.canManage{return true}
+        if let user = Auth.auth().currentUser{
+        let sf = displayedAthletes[indexPath.row].schoolFull
+        for s in Data.schoolsNew{
+            if s.full == sf{
+                for coach in s.coaches{
+                    
+                    if user.email == coach{
+                        return true
+                    }
+                }
+            }
+        }
+        }
+        return false
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
-            let alert = UIAlertController(title: "Are you sure?", message: "Deleting this athlete will also delete any results stored for this athlete", preferredStyle:    .alert)
-            let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
-                let selected = self.displayedAthletes[indexPath.row]
-                Data.allAthletes.removeAll { (athlete) -> Bool in
-                    athlete.equals(other: selected)
-               
-                }
-                selected.deleteFromFirebase()
-                     self.displayedAthletes.remove(at: indexPath.row)
-                            tableView.deleteRows(at: [indexPath], with: .fade)
-            }
-            let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-            
-            alert.addAction(cancel)
-            alert.addAction(ok)
-            self.present(alert, animated: true, completion: nil)
-        }
+//        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+//            let alert = UIAlertController(title: "Are you sure?", message: "Deleting this athlete will also delete any results stored for this athlete", preferredStyle:    .alert)
+//            let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
+//                let selected = self.displayedAthletes[indexPath.row]
+//                Data.allAthletes.removeAll { (athlete) -> Bool in
+//                    athlete.equals(other: selected)
+//
+//                }
+//                selected.deleteFromFirebase()
+//                     self.displayedAthletes.remove(at: indexPath.row)
+//                            tableView.deleteRows(at: [indexPath], with: .fade)
+//            }
+//            let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+//
+//            alert.addAction(cancel)
+//            alert.addAction(ok)
+//            self.present(alert, animated: true, completion: nil)
+//        }
             
             let edit = UITableViewRowAction(style: .normal, title: "Edit") { (action, indexPath) in
             let alert = UIAlertController(title: "", message: "Edit Athlete", preferredStyle: .alert)
@@ -186,7 +201,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
 
         edit.backgroundColor = UIColor.blue
 
-        return [delete, edit]
+        return [edit]
     }
     
     func selectAthletes(){
