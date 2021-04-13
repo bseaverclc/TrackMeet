@@ -54,7 +54,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         self.title = screenTitle
         displayedAthletes = Data.allAthletes
        
-        checkEditAthletes()
+        
         
         
         if pvcScreenTitle == "" {
@@ -75,6 +75,8 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         else{
             stackView.isHidden = false
         }
+        
+        checkEditAthletes()
         
         if !canEditAthletes{
             stackView.isHidden = true
@@ -128,14 +130,17 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
+        if let cu = Auth.auth().currentUser?.email{
             for e in schools[0].coaches{
                 print("printing coaches email \(e)")
-                if Auth.auth().currentUser?.email == e{
+   
+                if cu == e{
                     
                     canEditAthletes = true
                     return
                 }
             }
+        }
             
         
         canEditAthletes = false
