@@ -100,6 +100,11 @@ class EventsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
+            if !Meet.canManage{
+                error = "You don't have access to delete an event"
+                displayError()
+                return
+            }
             for a in Data.allAthletes{
                 for e in a.events{
                     if e.name == meet.events[indexPath.row] && e.meetName == meet.name{

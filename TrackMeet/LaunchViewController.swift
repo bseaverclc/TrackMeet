@@ -226,9 +226,9 @@ class LaunchViewController: UIViewController {
     
     
     func getSchoolsFromFirebase(){
-        var ref: DatabaseReference!
-
-        ref = Database.database().reference()
+//        var ref: DatabaseReference!
+//
+//        ref = Database.database().reference()
 //        ref.child("schools").observe(.childAdded, with: { (snapshot) in
 //            Data.schools = snapshot.value as! [String:String]
 //        })
@@ -244,23 +244,35 @@ class LaunchViewController: UIViewController {
 
             let dict = snapshot.value as! [String:Any]
             let s = School(key: snapshot.key, dict: dict)
+            if Data.schoolsNew.contains(where: {$0.uid == s.uid}){
+                print("school already in Data.schoolsNew")
+            }
+            else{
             Data.schoolsNew.append(s)
+            }
             print("added a schoolsNew \(s.full)")
         })
         
-//        ref.child("schoolsNew").observe(.childChanged, with: { (snapshot) in
-//            let uid = snapshot.key
-//            let dict = snapshot.value as! [String:Any]
-//            let school = School(key: snapshot.key, dict: dict)
-//
-//          for i in 0..<Data.schoolsNew.count{
-//                if(Data.schoolsNew[i].uid == uid){
-//                   Data.schoolsNew[i] = school
-//                    print("SchoolNew \(i)Changed \(Data.schoolsNew[i].full)")
-//                }
-//                }
-//
-//        })
+        ref2.child("schoolsNew").observe(.childChanged, with: { (snapshot) in
+            let uid = snapshot.key
+            let dict = snapshot.value as! [String:Any]
+            let school = School(key: snapshot.key, dict: dict)
+
+          for i in 0..<Data.schoolsNew.count{
+                if(Data.schoolsNew[i].uid == uid){
+                   Data.schoolsNew[i] = school
+                    print("SchoolNew \(i)Changed \(Data.schoolsNew[i].full)")
+                }
+                }
+
+        })
+        
+        ref2.child("schoolsNew").observe(.childRemoved) { (snapshot) in
+            print("a school has been removed from firebase")
+            let key = snapshot.key
+            Data.schoolsNew.removeAll(where: {$0.uid == key})
+            
+        }
         
         
        

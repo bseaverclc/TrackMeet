@@ -444,8 +444,9 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                         }
                         
                         // Save schoolsNew to firebase
+                        // This also adds the school to Data.schoolsNew
                         newSchool.saveToFirebase()
-                    
+                        self.tableView.reloadData()
                     
                        
                        //Save schools to firebase
@@ -473,7 +474,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                        
                        
                        //self.schoolNames.insert("\(fullSchool) \(gender)", at: 0)
-                       self.tableView.reloadData()
+                       
                     }
                 }
                    //}

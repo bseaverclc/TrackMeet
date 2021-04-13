@@ -32,6 +32,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     var coachCode = ""
     var managerCode = ""
     
+    @IBOutlet weak var addSchoolButton: UIButton!
     @IBOutlet weak var verticalStackViewOutlet: UIStackView!
    
     @IBOutlet weak var coachesCodeOutlet: UITextField!
@@ -84,6 +85,8 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        addSchoolButton.isHidden = true
+        
         
         // sort the scoring textfields
         individualScoringOutlet.sort(by: {$0.tag < $1.tag})

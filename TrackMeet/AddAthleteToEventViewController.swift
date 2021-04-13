@@ -138,6 +138,9 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
 //        }
             
             let edit = UITableViewRowAction(style: .normal, title: "Edit") { (action, indexPath) in
+               
+                
+                
             let alert = UIAlertController(title: "", message: "Edit Athlete", preferredStyle: .alert)
                 alert.addTextField(configurationHandler: { (textField) in
                     textField.autocapitalizationType = .allCharacters
@@ -149,11 +152,11 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
                 textField.text = self.displayedAthletes[indexPath.row].last
                 
             })
-            alert.addTextField(configurationHandler: { (textField) in
-                textField.autocapitalizationType = .allCharacters
-                textField.text = self.displayedAthletes[indexPath.row].school
-                
-            })
+//            alert.addTextField(configurationHandler: { (textField) in
+//                textField.autocapitalizationType = .allCharacters
+//                textField.text = self.displayedAthletes[indexPath.row].school
+//
+//            })
             alert.addTextField(configurationHandler: { (textField) in
                 textField.keyboardType = UIKeyboardType.numberPad
                 textField.autocapitalizationType = .allCharacters
@@ -164,16 +167,16 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
                   
                     self.displayedAthletes[indexPath.row].first = alert.textFields![0].text!
                     self.displayedAthletes[indexPath.row].last = alert.textFields![1].text!
-                    self.displayedAthletes[indexPath.row].school = alert.textFields![2].text!
-                    if let grade = Int(alert.textFields![3].text!){
+                   // self.displayedAthletes[indexPath.row].school = alert.textFields![2].text!
+                    if let grade = Int(alert.textFields![2].text!){
                         self.displayedAthletes[indexPath.row].grade = grade}
                     self.tableView.reloadRows(at: [indexPath], with: .fade)
                     for i in 0 ..< Data.allAthletes.count{
                        if self.displayedAthletes[indexPath.row].equals(other: Data.allAthletes[i]){
                         Data.allAthletes[i].first = alert.textFields![0].text!
                          Data.allAthletes[i].last = alert.textFields![1].text!
-                         Data.allAthletes[i].school = alert.textFields![2].text!
-                          if let grade = Int(alert.textFields![3].text!){
+                         //Data.allAthletes[i].school = alert.textFields![2].text!
+                          if let grade = Int(alert.textFields![2].text!){
                                 Data.allAthletes[i].grade = grade}
                         
                         // updateFirebase

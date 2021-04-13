@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 extension UIResponder {
     func findParentTableViewCell () -> UITableViewCell? {
@@ -312,6 +313,9 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if Meet.canCoach{
         if editingStyle == .delete{
+            
+            
+            
             meet.beenScored[selectedRow] = false
             meet.updatebeenScoredFirebase()
             processOutlet.backgroundColor = UIColor.lightGray
@@ -321,6 +325,18 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             
             switch sec{
             case 0:
+                var canDelete = true
+                for e in heat1[indexPath.row].events{
+                    if e.name == self.title && e.meetName == self.meet.name{
+                        if e.markString != "" || e.place != nil{
+                            canDelete = false
+                        }
+                    }
+                    
+                }
+                
+                if canDelete{
+                
                 heat1[indexPath.row].events.removeAll { (e) -> Bool in
                     print(e.uid ?? "No uid?")
                     if e.name == self.title && e.meetName == self.meet.name {
@@ -335,7 +351,22 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                 }
                 heat1.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
+                    
+                }
+                
             case 1:
+                var canDelete = true
+                for e in heat2[indexPath.row].events{
+                    if e.name == self.title && e.meetName == self.meet.name{
+                        if e.markString != "" || e.place != nil{
+                            canDelete = false
+                        }
+                    }
+                    
+                }
+                
+                if canDelete{
+                
                 heat2[indexPath.row].events.removeAll { (e) -> Bool in
                     print(e.uid ?? "No UID?")
                     if e.name == self.title && e.meetName == self.meet.name {
@@ -350,7 +381,20 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                 }
                 heat2.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
+                }
+                
             default:
+                var canDelete = true
+                for e in eventAthletes[indexPath.row].events{
+                    if e.name == self.title && e.meetName == self.meet.name{
+                        if e.markString != "" || e.place != nil{
+                            canDelete = false
+                        }
+                    }
+                    
+                }
+                
+                if canDelete{
                 
                 eventAthletes[indexPath.row].events.removeAll { (e) -> Bool in
                     print(e.uid ?? "No UID?")
@@ -366,9 +410,22 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                 }
                 eventAthletes.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
+                }
             }
             }
             else{
+                var canDelete = true
+                for e in eventAthletes[indexPath.row].events{
+                    if e.name == self.title && e.meetName == self.meet.name{
+                        if e.markString != "" || e.place != nil{
+                            canDelete = false
+                        }
+                    }
+                    
+                }
+                
+                if canDelete{
+                
                 eventAthletes[indexPath.row].events.removeAll { (e) -> Bool in
                     print(e.uid ?? "No UID?")
                     if e.name == self.title && e.meetName == self.meet.name {
@@ -383,7 +440,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                 }
                                eventAthletes.remove(at: indexPath.row)
                                tableView.deleteRows(at: [indexPath], with: .fade)
-                
+                }
             }
 
             
