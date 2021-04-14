@@ -17,6 +17,8 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
         var screenTitle = ""
        // var allAthletes = [Athlete]()
         var eventAthletes = [Athlete]()
+    var heat1 = [Athlete]()
+    var heat2 = [Athlete]()
         var displayedAthletes = [Athlete]()
     var meet : Meet!
     var schools = [String]()
@@ -83,7 +85,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
          func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             print("Did select row at")
             let selectedAthlete = displayedAthletes[indexPath.row]
-            if eventAthletes.contains(where: { $0.equals(other: selectedAthlete)}) {
+            if eventAthletes.contains(where: { $0.equals(other: selectedAthlete)}) || heat1.contains(where: { $0.equals(other: selectedAthlete)}) || heat2.contains(where: { $0.equals(other: selectedAthlete)}) {
                 let alert = UIAlertController(title: "Error!", message: "Athlete already in event", preferredStyle: .alert)
                 let action = UIAlertAction(title: "ok", style: .cancel) { (action) in
                     self.tableView.deselectRow(at: indexPath, animated: true)

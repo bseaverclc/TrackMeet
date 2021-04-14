@@ -132,6 +132,8 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
            super.viewDidLoad()
         scaleStuff()
         eventAthletes = [Athlete]()
+        heat1 = [Athlete]()
+        heat2 = [Athlete]()
            if meet.beenScored[selectedRow]{
                 processOutlet.setTitle("Processed", for: .normal)
                processOutlet.backgroundColor = UIColor.green
@@ -927,6 +929,8 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
            let nvc = segue.destination as! AddAthleteToEventViewController
           // nvc.allAthletes = allAthletes
            nvc.eventAthletes = eventAthletes
+            nvc.heat1 = heat1
+            nvc.heat2 = heat2
            nvc.screenTitle = screenTitle
                nvc.meet = meet
            }
