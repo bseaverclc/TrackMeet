@@ -25,6 +25,7 @@ class Data{
 
 class LaunchViewController: UIViewController {
     
+    @IBOutlet weak var QuickMeetLabel: UILabel!
     @IBOutlet weak var nameOutlet: UILabel!
     
     @IBOutlet weak var logOutOutlet: UIButton!
@@ -62,7 +63,7 @@ class LaunchViewController: UIViewController {
         if let user = Auth.auth().currentUser{
             Data.userID = user.uid
            
-            nameOutlet.text = "Welcome \(user.displayName!)"
+            nameOutlet.text = "\(user.email!)"
             logInOutlet.isHidden = true
             logOutOutlet.isHidden = false
         }
@@ -82,7 +83,7 @@ class LaunchViewController: UIViewController {
         print("view is loading")
        
                     
-        
+        //QuickMeetLabel.text = QuickMeetLabel.text! + "\n1.9.2"
         self.title = "Home"
         self.navigationController?.toolbar.isHidden = true
        
