@@ -335,16 +335,16 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         }
         
         // Take out the old meet
-        if let oldMeet = selectedMeet{
-            for i in 0 ... Data.meets.count - 1{
-                if oldMeet.name == Data.meets[i].name{
-                    Data.meets[i].deleteFromFirebase()
-                    Data.meets.remove(at: i)
-                    print("removed meet")
-                    break;
-                }
-            }
-        }
+//        if let oldMeet = selectedMeet{
+//            for i in 0 ... Data.meets.count - 1{
+//                if oldMeet.name == Data.meets[i].name{
+//                    Data.meets[i].deleteFromFirebase()
+//                    Data.meets.remove(at: i)
+//                    print("removed meet")
+//                    break;
+//                }
+//            }
+//        }
         
         // create String dict of schools
         var schoolsDict = [String:String]()
@@ -358,14 +358,21 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         //Data.meets.append(meet)
       
         if changeMeet{
+            if let sm = selectedMeet{
+            sm.updateFirebase(m: meet)
+            
+            
             let alert = UIAlertController(title: "Meet has been changed!", message: "Be sure to reprocess all events that you have already processed", preferredStyle: .alert)
             let ok = UIAlertAction(title: "OK", style: .default) { (action) in
                 self.performSegue(withIdentifier: "unwindToMeetsSegue", sender: self)
+            
             }
             alert.addAction(ok)
             present(alert, animated: true, completion: nil)
+            }
         }
         else{
+            meet.saveMeetToFirebase()
             let alert = UIAlertController(title: "Success!", message: "Meet Created", preferredStyle: .alert)
             let ok = UIAlertAction(title: "OK", style: .default) { (action) in
                 self.performSegue(withIdentifier: "unwindToMeetsSegue", sender: self)

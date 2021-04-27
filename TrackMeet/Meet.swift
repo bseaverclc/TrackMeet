@@ -30,7 +30,14 @@ public class Meet: Codable {
     // build objects from firebase
     init(key: String, dict: [String:Any]  ){
         uid = key
-        name = dict["name"] as! String
+        print(uid)
+        if let n = dict["name"] as? String{
+            name = n
+        }
+        else{
+            name = "Blank"
+        }
+        
         
         let formatter1 = DateFormatter()
         formatter1.dateFormat = "MM/dd/yy"
@@ -39,10 +46,16 @@ public class Meet: Codable {
         }
         else{ date = Date()}
         
-        gender = dict["gender"] as! String
+        if let g = dict["gender"] as? String{
+            gender = g
+        }
+        else{gender = "M"}
         
         
-        schools = dict["schools"] as! [String:String]
+        if let s = dict["schools"] as? [String:String]{
+        schools = s
+        }
+        else{schools = [:]}
         
         
         
@@ -109,9 +122,9 @@ public class Meet: Codable {
         coachCode = coach
         managerCode = manager
         userId = Data.userID
-        if n != "Blank"{
-        saveMeetToFirebase()
-        }
+//        if n != "Blank"{
+//        saveMeetToFirebase()
+//        }
     }
     
     func saveMeetToFirebase(){
@@ -138,8 +151,26 @@ public class Meet: Codable {
         print("Meet has been removed from Firebase")
         }
         else{
-            print("Error Deleting Athlete! Athlete not in Firebase")
+            print("Error Deleting Meet! Meet not in Firebase")
         }
+    }
+    
+    func updateFirebase(m: Meet){
+        var ref = Database.database().reference().child("meets").child(uid!)
+        
+        let formatter1 = DateFormatter()
+        formatter1.dateStyle = .short
+        let dateString = formatter1.string(from: m.date)
+        
+        let dict = ["name": m.name, "date": dateString, "schools": m.schools, "gender":m.gender, "levels":m.levels, "events": m.events, "indPoints":m.indPoints, "relPoints": m.relPoints, "beenScored": m.beenScored, "coachCode": m.coachCode, "managerCode": m.managerCode, "userId": m.userId] as [String : Any]
+        
+        ref.updateChildValues(dict)
+        ref = ref.child("events")
+        
+        
+        
+        
+        
     }
     
     
@@ -156,6 +187,8 @@ public class Meet: Codable {
             ref.updateChildValues(["events": events])
         
     }
+    
+    
     
     
 }

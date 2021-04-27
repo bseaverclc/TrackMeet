@@ -95,6 +95,7 @@ class LaunchViewController: UIViewController {
         athleteChangedInFirebase2()
         athleteDeletedInFirebase()
         beenScoredChangedInFirebase()
+        updateMeetFromFirebase()
      
       
     
@@ -289,6 +290,8 @@ class LaunchViewController: UIViewController {
             Data.meets.append(Meet(key: snapshot.key, dict: dict))
         })
         
+        
+        
 //        ref.child("meets").observe(.childRemoved, with: { (snapshot) in
 //            let dict = snapshot.value as! [String:Any]
 //            for i in 0..<Data.meets.count{
@@ -302,6 +305,23 @@ class LaunchViewController: UIViewController {
 //            }
 //        })
        
+    }
+    
+    func updateMeetFromFirebase(){
+        var ref: DatabaseReference!
+
+        ref = Database.database().reference()
+        ref.child("meets").observe(.childChanged, with: { (snapshot) in
+            print("A meet has changed on firebase!")
+            let dict = snapshot.value as! [String:Any]
+            for i in 0..<Data.meets.count{
+                if Data.meets[i].uid == snapshot.key{
+                    Data.meets[i] = Meet(key: snapshot.key, dict: dict)
+                    print("Changed the meet in Data.meets")
+                }
+            }
+           // Data.meets.append(Meet(key: snapshot.key, dict: dict))
+        })
     }
     
     func getAthletesFromFirebase(){
