@@ -229,7 +229,11 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
     }
         
 
-        
+    @IBAction func addSelectedAction(_ sender: UIButton) {
+        //selectAthletes()
+        performSegue(withIdentifier: "unwindToEventEdit", sender: self)
+    }
+    
         func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
             selectAthletes()
             displayedAthletes = [Athlete]()
@@ -249,7 +253,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
        
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier != "unwindToEventEdit"{
-            selectAthletes()
+           // selectAthletes()
         let nvc = segue.destination as! addAthleteViewController
        // nvc.allAthletes = allAthletes
         nvc.eventAthletes = eventAthletes

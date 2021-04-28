@@ -82,9 +82,12 @@ class ScoresViewController: UIViewController {
                             units = "m"
                         }
                     //var current = teamPoints[e.level]!
-                    let currentPoints = teamPoints[e.level]![a.school]!
+                        
+                        if let currentPoints = teamPoints[e.level]?[a.school]{
                         teamPoints[e.level]!.updateValue(currentPoints + e.points, forKey: a.school)
                         print("points added to school \(a.school): \(teamPoints[e.level]![a.school] ?? 0.0)")
+                        }
+                        
                      
                     
                     // if event was a relay

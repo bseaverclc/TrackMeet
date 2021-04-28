@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Quick Meet 1.9.2" textAlignment="center" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="fw7-8E-3hK">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Quick Meet 1.9.3" textAlignment="center" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="fw7-8E-3hK">
                                 <rect key="frame" x="0.0" y="88" width="390" height="71.666666666666686"/>
                                 <color key="backgroundColor" red="0.9881371927" green="0.43642098419999997" blue="0.0073013339010000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
@@ -509,7 +509,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6lG-pe-0tM">
-                                <rect key="frame" x="0.0" y="761" width="390" height="49"/>
+                                <rect key="frame" x="0.0" y="727" width="390" height="83"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <items>
                                     <tabBarItem title="" id="Dt9-6l-S2b"/>
@@ -522,7 +522,7 @@
                                 </connections>
                             </tabBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mKk-PU-ZTZ">
-                                <rect key="frame" x="0.0" y="124" width="390" height="637"/>
+                                <rect key="frame" x="0.0" y="124" width="390" height="603"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" textLabel="Ahs-lB-kkI" detailTextLabel="GXT-DK-QXF" style="IBUITableViewCellStyleValue1" id="IwU-a1-1Xj">
@@ -688,7 +688,7 @@
                                 </connections>
                             </tabBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="e3c-ut-YWu">
-                                <rect key="frame" x="0.0" y="88" width="390" height="624"/>
+                                <rect key="frame" x="0.0" y="134" width="390" height="578"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" id="OdB-7b-r0I" customClass="AthleteTableViewCell" customModule="TrackMeet" customModuleProvider="target">
@@ -738,20 +738,33 @@
                                     <outlet property="delegate" destination="QLV-iN-ohV" id="TXR-si-EOH"/>
                                 </connections>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sq0-Ng-5vl">
+                                <rect key="frame" x="114" y="88" width="162" height="46"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
+                                <state key="normal" title="Add Selected"/>
+                                <connections>
+                                    <action selector="addSelectedAction:" destination="QLV-iN-ohV" eventType="touchUpInside" id="QNU-nP-8NV"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="TCU-hM-gyl"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="2IX-MT-Koz" firstAttribute="trailing" secondItem="TCU-hM-gyl" secondAttribute="trailing" id="5AV-Ux-tvL"/>
-                            <constraint firstItem="e3c-ut-YWu" firstAttribute="trailing" secondItem="TCU-hM-gyl" secondAttribute="trailing" id="6nl-hh-Efz"/>
+                            <constraint firstItem="e3c-ut-YWu" firstAttribute="top" secondItem="sq0-Ng-5vl" secondAttribute="bottom" id="8KF-UF-dLf"/>
                             <constraint firstItem="TCU-hM-gyl" firstAttribute="bottom" secondItem="2IX-MT-Koz" secondAttribute="bottom" id="93o-RK-9Yz"/>
+                            <constraint firstItem="sq0-Ng-5vl" firstAttribute="centerX" secondItem="TzD-n9-lCq" secondAttribute="centerX" id="BTq-Cr-u7K"/>
                             <constraint firstItem="2IX-MT-Koz" firstAttribute="trailing" secondItem="TCU-hM-gyl" secondAttribute="trailing" id="CXg-37-01Y"/>
+                            <constraint firstItem="sq0-Ng-5vl" firstAttribute="top" secondItem="TCU-hM-gyl" secondAttribute="top" id="FVC-Gy-x7S"/>
+                            <constraint firstItem="e3c-ut-YWu" firstAttribute="leading" secondItem="TCU-hM-gyl" secondAttribute="leading" id="GjQ-fz-HwP"/>
                             <constraint firstItem="2IX-MT-Koz" firstAttribute="leading" secondItem="TCU-hM-gyl" secondAttribute="leading" id="IdS-B3-VDb"/>
+                            <constraint firstItem="e3c-ut-YWu" firstAttribute="trailing" secondItem="TCU-hM-gyl" secondAttribute="trailing" id="Wu5-as-HSt"/>
+                            <constraint firstItem="sq0-Ng-5vl" firstAttribute="height" secondItem="TzD-n9-lCq" secondAttribute="height" multiplier="0.0604468" id="bwX-A7-Qcf"/>
                             <constraint firstItem="2IX-MT-Koz" firstAttribute="leading" secondItem="TCU-hM-gyl" secondAttribute="leading" id="kdI-cN-kkf"/>
-                            <constraint firstItem="2IX-MT-Koz" firstAttribute="top" secondItem="e3c-ut-YWu" secondAttribute="bottom" id="mJo-ro-Ge5"/>
-                            <constraint firstItem="e3c-ut-YWu" firstAttribute="leading" secondItem="TCU-hM-gyl" secondAttribute="leading" id="mhL-pT-mp9"/>
-                            <constraint firstItem="e3c-ut-YWu" firstAttribute="top" secondItem="TCU-hM-gyl" secondAttribute="top" id="uoY-cW-Gnq"/>
+                            <constraint firstItem="2IX-MT-Koz" firstAttribute="top" secondItem="e3c-ut-YWu" secondAttribute="bottom" id="qJk-tj-1JE"/>
                             <constraint firstItem="2IX-MT-Koz" firstAttribute="bottom" secondItem="TCU-hM-gyl" secondAttribute="bottom" id="vLR-Ik-l89"/>
+                            <constraint firstItem="sq0-Ng-5vl" firstAttribute="width" secondItem="TzD-n9-lCq" secondAttribute="width" multiplier="0.415385" id="wfE-hT-yqS"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="p3G-Lu-kQi">
@@ -1381,30 +1394,30 @@
             <objects>
                 <viewController id="hT1-Dv-o5h" customClass="addAthleteViewController" customModule="TrackMeet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Kkd-jO-ZZa">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="761"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="elU-0x-IZL">
-                                <rect key="frame" x="0.0" y="88" width="390" height="361"/>
+                                <rect key="frame" x="0.0" y="88.000000000000028" width="390" height="336.66666666666674"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First Name" textAlignment="natural" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KbY-Ie-WPm">
-                                        <rect key="frame" x="97.666666666666686" y="0.0" width="195" height="49.333333333333336"/>
+                                        <rect key="frame" x="97.666666666666686" y="0.0" width="195" height="46"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" keyboardType="alphabet"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last Name" textAlignment="natural" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="W7u-6V-xmo">
-                                        <rect key="frame" x="97.666666666666686" y="63.333333333333343" width="195" height="49.333333333333343"/>
+                                        <rect key="frame" x="97.666666666666686" y="60" width="195" height="46"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Year" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P30-uv-63q">
-                                        <rect key="frame" x="175.66666666666666" y="126.66666666666664" width="38.666666666666657" height="27.333333333333329"/>
+                                        <rect key="frame" x="175.66666666666666" y="120.00000000000001" width="38.666666666666657" height="25.666666666666671"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="DZ5-VE-tVe">
-                                        <rect key="frame" x="132" y="168" width="126" height="36.666666666666657"/>
+                                        <rect key="frame" x="136.33333333333334" y="159.66666666666666" width="117.33333333333334" height="34"/>
                                         <segments>
                                             <segment title="9"/>
                                             <segment title="10"/>
@@ -1414,13 +1427,13 @@
                                         <color key="selectedSegmentTintColor" systemColor="systemBlueColor"/>
                                     </segmentedControl>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="School" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZIX-wf-Edz">
-                                        <rect key="frame" x="165" y="217.66666666666669" width="60.333333333333343" height="27.333333333333343"/>
+                                        <rect key="frame" x="165" y="206.66666666666669" width="60.333333333333343" height="25.333333333333343"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" translatesAutoresizingMaskIntoConstraints="NO" id="kCi-ZG-kax">
-                                        <rect key="frame" x="111.66666666666667" y="259" width="166.66666666666663" height="36.333333333333314"/>
+                                        <rect key="frame" x="117.33333333333333" y="246" width="155.33333333333337" height="34"/>
                                         <segments>
                                             <segment title="CLC"/>
                                             <segment title="CLS"/>
@@ -1430,7 +1443,7 @@
                                         <color key="selectedSegmentTintColor" systemColor="systemBlueColor"/>
                                     </segmentedControl>
                                     <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nhr-uH-G1t">
-                                        <rect key="frame" x="156" y="308.33333333333331" width="78" height="52.666666666666686"/>
+                                        <rect key="frame" x="156" y="293" width="78" height="43.666666666666686"/>
                                         <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                         <state key="normal" title="Add">
@@ -1686,7 +1699,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="93V-8F-ffg"/>
+        <segue reference="VUW-hb-QhF"/>
         <segue reference="A4F-CX-glK"/>
         <segue reference="WjZ-Z8-AfY"/>
     </inferredMetricsTieBreakers>

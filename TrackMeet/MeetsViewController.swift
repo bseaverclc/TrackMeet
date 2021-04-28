@@ -153,14 +153,14 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
                         Data.meets.remove(at: indexPath.row)
                         tableView.deleteRows(at: [indexPath], with: .fade)
                         
-                        let userDefaults = UserDefaults.standard
-                        do {
-                           try userDefaults.setObjects(Data.meets, forKey: "meets")
-                           print("Saving meets")
-                        }
-                        catch{
-                              print("error saving meets")
-                        }
+//                        let userDefaults = UserDefaults.standard
+//                        do {
+//                           try userDefaults.setObjects(Data.meets, forKey: "meets")
+//                           print("Saving meets")
+//                        }
+//                        catch{
+//                              print("error saving meets")
+//                        }
                     }
                     let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
                     blankAlert.addAction(ok)

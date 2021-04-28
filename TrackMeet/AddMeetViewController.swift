@@ -174,7 +174,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         
         // highlighting previous selected schools
         if selectedMeet?.schools[school] != nil{
-            tableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableView.ScrollPosition(rawValue: 0)!)
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableView.ScrollPosition(rawValue: 0) ?? .top)
            
         }
         return cell
