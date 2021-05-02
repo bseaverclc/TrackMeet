@@ -74,7 +74,7 @@ class AthleteResultsViewController: UIViewController, UITableViewDataSource, UIT
             else{
                 cell.placeOutlet.text = ""
             }
-            for m in Data.meets{
+            for m in AppData.meets{
             if m.name == athlete.events[indexPath.row].meetName{
                 let formatter = DateFormatter()
                 formatter.dateStyle = .short

@@ -24,16 +24,16 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="40" translatesAutoresizingMaskIntoConstraints="NO" id="o4V-O6-Qo8">
-                                <rect key="frame" x="0.0" y="179.66666666666669" width="390" height="610.33333333333326"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="37" translatesAutoresizingMaskIntoConstraints="NO" id="o4V-O6-Qo8">
+                                <rect key="frame" x="0.0" y="179.66666666666663" width="390" height="464"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dhs-Ye-dax">
-                                        <rect key="frame" x="0.0" y="0.0" width="390" height="90"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="390" height="106"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
                                         <color key="textColor" red="0.9881371927" green="0.43642098419999997" blue="0.0073013339010000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SM8-4x-2i2">
-                                        <rect key="frame" x="0.0" y="130.00000000000003" width="390" height="90"/>
+                                        <rect key="frame" x="157" y="179.33333333333334" width="76" height="46"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                         <state key="normal" title="Meets">
@@ -44,7 +44,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fG1-zL-BzZ">
-                                        <rect key="frame" x="0.0" y="260" width="390" height="90.333333333333314"/>
+                                        <rect key="frame" x="146.66666666666666" y="298.66666666666663" width="97" height="46"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                         <state key="normal" title="Schools">
                                             <color key="titleColor" red="0.9881371927" green="0.43642098419999997" blue="0.0073013339010000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -54,7 +54,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fBa-ho-XkR">
-                                        <rect key="frame" x="0.0" y="390.33333333333337" width="390" height="90"/>
+                                        <rect key="frame" x="126" y="418" width="138" height="46"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                         <state key="normal" title="Athletic.net">
@@ -64,45 +64,50 @@
                                             <action selector="athleticNetAction:" destination="iXb-bg-nrS" eventType="touchUpInside" id="1R0-7A-1qR"/>
                                         </connections>
                                     </button>
-                                    <stackView opaque="NO" contentMode="center" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="vVe-fd-cao">
-                                        <rect key="frame" x="0.0" y="520.33333333333337" width="390" height="90"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xs7-wk-5XH" customClass="GIDSignInButton">
-                                                <rect key="frame" x="0.0" y="30" width="100" height="30"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="100" id="bhf-hF-OTm"/>
-                                                </constraints>
-                                                <state key="normal" title="Button"/>
-                                                <connections>
-                                                    <action selector="logInAction:" destination="iXb-bg-nrS" eventType="touchUpInside" id="H7E-uT-qex"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xM7-aR-lSv">
-                                                <rect key="frame" x="338" y="30" width="52" height="30"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                <state key="normal" title="Log out">
-                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="logOutAction:" destination="iXb-bg-nrS" eventType="touchUpInside" id="DvX-9q-6CS"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                    </stackView>
                                 </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="center" axis="vertical" distribution="equalSpacing" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="vVe-fd-cao">
+                                <rect key="frame" x="0.0" y="670" width="390" height="120"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xs7-wk-5XH" customClass="GIDSignInButton">
+                                        <rect key="frame" x="97.666666666666686" y="0.0" width="195" height="46"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                        <state key="normal" title="Button"/>
+                                        <connections>
+                                            <action selector="logInAction:" destination="iXb-bg-nrS" eventType="touchUpInside" id="H7E-uT-qex"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xM7-aR-lSv">
+                                        <rect key="frame" x="169" y="90" width="52" height="30"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                        <state key="normal" title="Log out">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="logOutAction:" destination="iXb-bg-nrS" eventType="touchUpInside" id="DvX-9q-6CS"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="xs7-wk-5XH" firstAttribute="width" secondItem="vVe-fd-cao" secondAttribute="width" multiplier="0.5" id="Two-wE-eS6"/>
+                                </constraints>
                             </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="xpC-MI-Lap"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="o4V-O6-Qo8" firstAttribute="top" secondItem="fw7-8E-3hK" secondAttribute="bottom" constant="20" id="7pb-zg-J6Z"/>
+                            <constraint firstItem="o4V-O6-Qo8" firstAttribute="height" secondItem="eP3-B0-ZiA" secondAttribute="height" multiplier="0.55" id="Bsc-Td-T2N"/>
+                            <constraint firstItem="o4V-O6-Qo8" firstAttribute="trailing" secondItem="xpC-MI-Lap" secondAttribute="trailing" id="DE9-Wj-9aE"/>
+                            <constraint firstItem="xpC-MI-Lap" firstAttribute="bottom" secondItem="vVe-fd-cao" secondAttribute="bottom" constant="20" id="HjT-zs-ad9"/>
+                            <constraint firstItem="xpC-MI-Lap" firstAttribute="trailing" secondItem="vVe-fd-cao" secondAttribute="trailing" id="Nrw-uD-kML"/>
                             <constraint firstItem="fw7-8E-3hK" firstAttribute="height" secondItem="eP3-B0-ZiA" secondAttribute="height" multiplier="0.0848214" id="Yme-dh-95l"/>
-                            <constraint firstItem="xpC-MI-Lap" firstAttribute="bottom" secondItem="o4V-O6-Qo8" secondAttribute="bottom" constant="20" id="bXb-gf-XNQ"/>
+                            <constraint firstItem="vVe-fd-cao" firstAttribute="height" secondItem="eP3-B0-ZiA" secondAttribute="height" multiplier="0.14218" id="ZGJ-kW-HFT"/>
+                            <constraint firstItem="vVe-fd-cao" firstAttribute="leading" secondItem="xpC-MI-Lap" secondAttribute="leading" id="Zqg-WY-eXN"/>
+                            <constraint firstItem="o4V-O6-Qo8" firstAttribute="leading" secondItem="xpC-MI-Lap" secondAttribute="leading" id="c59-Sa-RPO"/>
                             <constraint firstItem="fw7-8E-3hK" firstAttribute="leading" secondItem="xpC-MI-Lap" secondAttribute="leading" id="gb5-Hz-oNQ"/>
                             <constraint firstItem="fw7-8E-3hK" firstAttribute="top" secondItem="xpC-MI-Lap" secondAttribute="top" id="hPU-ph-tGr"/>
                             <constraint firstItem="xpC-MI-Lap" firstAttribute="trailing" secondItem="fw7-8E-3hK" secondAttribute="trailing" id="iSM-Wi-oWB"/>
-                            <constraint firstItem="xpC-MI-Lap" firstAttribute="trailing" secondItem="o4V-O6-Qo8" secondAttribute="trailing" id="kT7-YU-kUJ"/>
-                            <constraint firstItem="o4V-O6-Qo8" firstAttribute="top" secondItem="fw7-8E-3hK" secondAttribute="bottom" constant="20" id="myt-nh-V2N"/>
-                            <constraint firstItem="o4V-O6-Qo8" firstAttribute="leading" secondItem="xpC-MI-Lap" secondAttribute="leading" id="wwK-G0-Ff4"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Jdb-IJ-dUh"/>
@@ -110,6 +115,7 @@
                         <outlet property="QuickMeetLabel" destination="fw7-8E-3hK" id="wza-kj-mcL"/>
                         <outlet property="logInOutlet" destination="xs7-wk-5XH" id="tmk-mt-ZhO"/>
                         <outlet property="logOutOutlet" destination="xM7-aR-lSv" id="ZPu-2a-wnR"/>
+                        <outlet property="loginStackView" destination="vVe-fd-cao" id="Ab4-GI-S9U"/>
                         <outlet property="nameOutlet" destination="Dhs-Ye-dax" id="LIn-5v-wYU"/>
                     </connections>
                 </viewController>
@@ -124,7 +130,7 @@
                     </state>
                 </button>
             </objects>
-            <point key="canvasLocation" x="392.75362318840581" y="-3.3482142857142856"/>
+            <point key="canvasLocation" x="392.30769230769232" y="-3.5545023696682461"/>
         </scene>
         <!--Schools View Controller-->
         <scene sceneID="YaC-XU-ozM">
@@ -509,7 +515,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6lG-pe-0tM">
-                                <rect key="frame" x="0.0" y="727" width="390" height="83"/>
+                                <rect key="frame" x="0.0" y="761" width="390" height="49"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <items>
                                     <tabBarItem title="" id="Dt9-6l-S2b"/>
@@ -522,7 +528,7 @@
                                 </connections>
                             </tabBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mKk-PU-ZTZ">
-                                <rect key="frame" x="0.0" y="124" width="390" height="603"/>
+                                <rect key="frame" x="0.0" y="124" width="390" height="637"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" textLabel="Ahs-lB-kkI" detailTextLabel="GXT-DK-QXF" style="IBUITableViewCellStyleValue1" id="IwU-a1-1Xj">

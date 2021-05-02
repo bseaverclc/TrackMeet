@@ -39,7 +39,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         let ref = Database.database().reference().child("athletes")
          ref.observe(.childChanged, with: { (snapshot) in
             print(snapshot)
-            Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
+            AppData.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
             
      })
          
@@ -52,7 +52,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
            
         
         self.title = screenTitle
-        displayedAthletes = Data.allAthletes
+        displayedAthletes = AppData.allAthletes
        
         
         
@@ -60,7 +60,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         if pvcScreenTitle == "" {
         var schoolNames = [String](meet!.schools.keys)
             for name in schoolNames{
-                for s in Data.schoolsNew{
+                for s in AppData.schoolsNew{
                     if s.full == name{
                         schools.append(s)
                         break
@@ -89,7 +89,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
              }
         tabBar(tabBarOutlet, didSelect: tabBarOutlet.items![0])
         
-        print(Data.schoolsNew)
+        print(AppData.schoolsNew)
         print("ViewDidLoad in AthletesViewController")
        
     }
@@ -105,7 +105,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         print("view disappearing")
         if isMovingFromParent{
             if let del = self.delegate{
-        del.savePreferences(athletes: Data.allAthletes)
+        del.savePreferences(athletes: AppData.allAthletes)
             }
             else{
                 performSegue(withIdentifier: "unwindtoSchoolsSegue", sender: nil)
@@ -115,7 +115,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func checkEditAthletes(){
-        if(Data.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3")
+        if(AppData.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3")
         {
             canEditAthletes = true
             return
@@ -167,7 +167,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
 //            }
 //
 //        }
-//        for s in Data.schoolsNew{
+//        for s in AppData.schoolsNew{
 //            if s.full == schools[0]{
 //            for e in s.coaches{
 //                if Auth.auth().currentUser?.email == e{
@@ -209,7 +209,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
         if Meet.canManage{return true}
         if let user = Auth.auth().currentUser{
         let sf = displayedAthletes[indexPath.row].schoolFull
-        for s in Data.schoolsNew{
+        for s in AppData.schoolsNew{
             if s.full == sf{
                 for coach in s.coaches{
                     
@@ -241,7 +241,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
             let alert = UIAlertController(title: "Are you sure?", message: "Deleting this athlete will also delete any results stored for this athlete", preferredStyle:    .alert)
             let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
                 let selected = self.displayedAthletes[indexPath.row]
-                Data.allAthletes.removeAll { (athlete) -> Bool in
+                AppData.allAthletes.removeAll { (athlete) -> Bool in
                     athlete.equals(other: selected)
                
                 }
@@ -305,22 +305,22 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
                     if let grade = Int(alert.textFields![2].text!){
                         self.displayedAthletes[indexPath.row].grade = grade}
                     self.tableView.reloadRows(at: [indexPath], with: .fade)
-                    for i in 0 ..< Data.allAthletes.count{
-                       if self.displayedAthletes[indexPath.row].equals(other: Data.allAthletes[i]){
-                        Data.allAthletes[i].first = alert.textFields![0].text!
-                         Data.allAthletes[i].last = alert.textFields![1].text!
-                        // Data.allAthletes[i].school = alert.textFields![2].text!
+                    for i in 0 ..< AppData.allAthletes.count{
+                       if self.displayedAthletes[indexPath.row].equals(other: AppData.allAthletes[i]){
+                        AppData.allAthletes[i].first = alert.textFields![0].text!
+                         AppData.allAthletes[i].last = alert.textFields![1].text!
+                        // AppData.allAthletes[i].school = alert.textFields![2].text!
                           if let grade = Int(alert.textFields![2].text!){
-                                Data.allAthletes[i].grade = grade}
+                                AppData.allAthletes[i].grade = grade}
                         
                         // updateFirebase
-                        print(Data.allAthletes[i].first)
-                        Data.allAthletes[i].updateFirebase()
+                        print(AppData.allAthletes[i].first)
+                        AppData.allAthletes[i].updateFirebase()
                         // save changes to userDefaults
                         let userDefaults = UserDefaults.standard
                         do {
 
-                            try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+                            try userDefaults.setObjects(AppData.allAthletes, forKey: "allAthletes")
                                } catch {
                                    print(error.localizedDescription)
                                }
@@ -409,7 +409,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         displayedAthletes = [Athlete]()
-        for a in Data.allAthletes{
+        for a in AppData.allAthletes{
 
             if item.title == a.school && schools.contains(where: {($0.full == a.schoolFull)}){
                 displayedAthletes.append(a)
@@ -536,7 +536,7 @@ class AthletesViewController: UIViewController, UITableViewDelegate, UITableView
                                 }
                                 if !found{
                                     athlete.saveToFirebase()
-                                    Data.allAthletes.append(athlete)
+                                    AppData.allAthletes.append(athlete)
                                     self.displayedAthletes.append(athlete)
                                     
                                 }

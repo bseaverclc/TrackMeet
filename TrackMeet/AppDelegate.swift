@@ -91,7 +91,7 @@ var window: UIWindow?
                    else{
                     print("signed in successfully")
                     if let user = Auth.auth().currentUser{
-                        Data.userID = user.uid
+                        AppData.userID = user.uid
                     }
                     NotificationCenter.default.post(
                             name: Notification.Name("SuccessfulSignInNotification"), object: nil, userInfo: nil)

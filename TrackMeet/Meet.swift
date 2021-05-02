@@ -121,7 +121,7 @@ public class Meet: Codable {
         beenScored = se
         coachCode = coach
         managerCode = manager
-        userId = Data.userID
+        userId = AppData.userID
 //        if n != "Blank"{
 //        saveMeetToFirebase()
 //        }

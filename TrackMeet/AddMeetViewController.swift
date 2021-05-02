@@ -154,8 +154,8 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         //ScoreTableView.layer.borderWidth = 2
         
         // make an array of the school keys and values
-//        schoolKeys = Array(Data.schools.keys)
-//        initials = Array(Data.schools.values)
+//        schoolKeys = Array(AppData.schools.keys)
+//        initials = Array(AppData.schools.values)
         
         // You may want to sort it
        // schoolKeys.sort(by: {$0 < $1})
@@ -163,14 +163,14 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Data.schoolsNew.count
+        return AppData.schoolsNew.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
-        let school = Data.schoolsNew[indexPath.row].full
+        let school = AppData.schoolsNew[indexPath.row].full
         cell.textLabel?.text = school
-        cell.detailTextLabel?.text = Data.schoolsNew[indexPath.row].inits
+        cell.detailTextLabel?.text = AppData.schoolsNew[indexPath.row].inits
         
         // highlighting previous selected schools
         if selectedMeet?.schools[school] != nil{
@@ -203,10 +203,10 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         if let selectedPaths = tableView.indexPathsForSelectedRows{
                           //print(selectedPaths)
                           for path in selectedPaths{
-                            selectedSchools.append(Data.schoolsNew[path.row])
+                            selectedSchools.append(AppData.schoolsNew[path.row])
                             
 //                            let selectedSchoolKey = schoolKeys[path.row]
-//                            selectedSchools[selectedSchoolKey] = Data.schools[selectedSchoolKey]
+//                            selectedSchools[selectedSchoolKey] = AppData.schools[selectedSchoolKey]
                           }
                       }
     }
@@ -231,7 +231,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         
         
         if !changeMeet{
-        for meet in Data.meets{
+        for meet in AppData.meets{
             if meet.name == meetNameOutlet.text{
                 showAlert(errorMessage: "Meet name already in use")
                 return
@@ -336,10 +336,10 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         
         // Take out the old meet
 //        if let oldMeet = selectedMeet{
-//            for i in 0 ... Data.meets.count - 1{
-//                if oldMeet.name == Data.meets[i].name{
-//                    Data.meets[i].deleteFromFirebase()
-//                    Data.meets.remove(at: i)
+//            for i in 0 ... AppData.meets.count - 1{
+//                if oldMeet.name == AppData.meets[i].name{
+//                    AppData.meets[i].deleteFromFirebase()
+//                    AppData.meets.remove(at: i)
 //                    print("removed meet")
 //                    break;
 //                }
@@ -355,7 +355,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
         
         // Create a new meet and add to meets array
         meet = Meet(name: meetNameOutlet.text!, date: datePickerOutlet.date, schools: schoolsDict, gender: gen, levels: lev , events: eventLeveled, indPoints: indP, relpoints: relP,  beenScored: beenScored, coach: coachCode, manager: managerCode)
-        //Data.meets.append(meet)
+        //AppData.meets.append(meet)
       
         if changeMeet{
             if let sm = selectedMeet{
@@ -433,7 +433,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                        badInput = true
                    }
                    
-                for school in Data.schoolsNew{
+                for school in AppData.schoolsNew{
                     if (school.full == "\(fullSchool) \(gender)"){
                         error = "\(fullSchool) \(gender) is already in database"
                         badInput = true
@@ -467,10 +467,10 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                                
            
                     if !badInput{
-                    //Data.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
+                    //AppData.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
                         let newSchool = School(full: "\(fullSchool) \(gender)", inits: alert.textFields![1].text!)
                         
-                        Data.schoolsNew.append(newSchool)
+                        AppData.schoolsNew.append(newSchool)
                         if let user = Auth.auth().currentUser{
                             newSchool.addCoach(email: user.email ?? "bseaver@d155.org")
                         }
@@ -481,12 +481,12 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                        
                        //Save schools to firebase
 //                    let ref = Database.database().reference().child("schools")
-//                    ref.updateChildValues(Data.schools)
+//                    ref.updateChildValues(AppData.schools)
                        
                        // Save school to UserDefaults
 //                       let userDefaults = UserDefaults.standard
 //                       do {
-//                           try userDefaults.setObjects(Data.schools, forKey: "schools")
+//                           try userDefaults.setObjects(AppData.schools, forKey: "schools")
 //                           print("Saved Schools in Add Meet VC")
 //                              } catch {
 //                                  print(error.localizedDescription)
@@ -494,7 +494,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
 //                              }
 //
 //                       do {
-//                        try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+//                        try userDefaults.setObjects(AppData.allAthletes, forKey: "allAthletes")
 //                                   print("Saving Athletes")
 //                               }
 //                               catch{
@@ -616,7 +616,7 @@ class AddMeetViewController: UIViewController, UITableViewDelegate,UITableViewDa
                                 let athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2]) ?? 0, sf: fullSchool)
                             print(athlete)
                                 athlete.saveToFirebase()
-                                Data.allAthletes.append(athlete)
+                                AppData.allAthletes.append(athlete)
                             }
                          }
                          }

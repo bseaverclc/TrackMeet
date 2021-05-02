@@ -105,7 +105,7 @@ class EventsTableViewController: UITableViewController {
                 displayError()
                 return
             }
-            for a in Data.allAthletes{
+            for a in AppData.allAthletes{
                 for e in a.events{
                     if e.name == meet.events[indexPath.row] && e.meetName == meet.name{
                         print(a.last)

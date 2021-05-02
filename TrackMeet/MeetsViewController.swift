@@ -65,7 +65,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "All Meets"
-//        if(Data.userID == "")
+//        if(AppData.userID == "")
 //        {
 //            addMeetOutlet.isEnabled = false
 //        }
@@ -76,9 +76,9 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         self.navigationController?.toolbar.isHidden = false
         Meet.canCoach = false
         Meet.canManage = false
-        Data.meets.sort(by: { $0.date > $1.date })
+        AppData.meets.sort(by: { $0.date > $1.date })
         
-        if(Data.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3"){
+        if(AppData.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3"){
             Meet.canCoach = true
             Meet.canManage = true
         }
@@ -93,7 +93,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     @IBAction func addMeetAction(_ sender: UIBarButtonItem) {
-        if(Data.userID == "")
+        if(AppData.userID == "")
         {
             let denyAlert = UIAlertController(title: "Error", message: "Must login on main page to add a Meet", preferredStyle: .alert)
             denyAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -105,11 +105,11 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func sortByName(){
-        Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
+        AppData.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
     }
      
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        Data.meets.count
+        AppData.meets.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -117,10 +117,10 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
       
         let formatter1 = DateFormatter()
         formatter1.dateStyle = .short
-        let dateString = formatter1.string(from: Data.meets[indexPath.row].date)
+        let dateString = formatter1.string(from: AppData.meets[indexPath.row].date)
         
         cell.textLabel?.text = dateString
-        cell.detailTextLabel?.text = Data.meets[indexPath.row].name
+        cell.detailTextLabel?.text = AppData.meets[indexPath.row].name
         return cell
         
         
@@ -129,10 +129,10 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        print(Data.meets[indexPath.row].name)
-        print(Data.meets[indexPath.row].userId)
-        print(Data.userID)
-        if Data.meets[indexPath.row].userId == Data.userID || Data.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3"
+        print(AppData.meets[indexPath.row].name)
+        print(AppData.meets[indexPath.row].userId)
+        print(AppData.userID)
+        if AppData.meets[indexPath.row].userId == AppData.userID || AppData.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3"
         {
             
             return true
@@ -147,15 +147,15 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
                     let blankAlert = UIAlertController(title: "Are you sure?", message: "Deleting this meet will also delete all results", preferredStyle: .alert)
                     let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
-                        //var selected = Data.meets[indexPath.row]
-                        Data.meets[indexPath.row].deleteFromFirebase()
+                        //var selected = AppData.meets[indexPath.row]
+                        AppData.meets[indexPath.row].deleteFromFirebase()
                          
-                        Data.meets.remove(at: indexPath.row)
+                        AppData.meets.remove(at: indexPath.row)
                         tableView.deleteRows(at: [indexPath], with: .fade)
                         
 //                        let userDefaults = UserDefaults.standard
 //                        do {
-//                           try userDefaults.setObjects(Data.meets, forKey: "meets")
+//                           try userDefaults.setObjects(AppData.meets, forKey: "meets")
 //                           print("Saving meets")
 //                        }
 //                        catch{
@@ -174,7 +174,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
                 let edit = UITableViewRowAction(style: .normal, title: "Edit") { (action, indexPath) in
                   
-                    self.selectedMeet = Data.meets[indexPath.row]
+                    self.selectedMeet = AppData.meets[indexPath.row]
                     self.performSegue(withIdentifier: "changeMeetSegue", sender: nil)
                       
 
@@ -186,7 +186,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedMeet = Data.meets[indexPath.row]
+        selectedMeet = AppData.meets[indexPath.row]
         
         print(selectedMeet?.coachCode ?? "No coaches code")
         print(selectedMeet?.managerCode ?? "No manager code")
@@ -205,7 +205,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
             
             let coachCode = coachAlert.textFields![0].text!
             if coachCode == self.selectedMeet?.coachCode{
-                Data.coach = coachCode
+                AppData.coach = coachCode
                 Meet.canCoach = true
                 self.performSegue(withIdentifier: "toHomeSegue", sender: nil)
             }
@@ -226,7 +226,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
             
             let manageCode = manageAlert.textFields![0].text!
             if manageCode == self.selectedMeet?.managerCode{
-                Data.manager = manageCode
+                AppData.manager = manageCode
                 Meet.canManage = true
                 Meet.canCoach = true
                 self.performSegue(withIdentifier: "toHomeSegue", sender: nil)
@@ -255,7 +255,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         chooseAlert.addAction(coach)
         chooseAlert.addAction(manager)
         chooseAlert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: nil))
-        if(selectedMeet!.userId == Data.userID  || Data.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3")
+        if(selectedMeet!.userId == AppData.userID  || AppData.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3")
         {
             Meet.canCoach = true
             Meet.canManage = true
@@ -326,13 +326,13 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
 //    func storeToUserDefaults(){
 //        let userDefaults = UserDefaults.standard
 //           do {
-//            try userDefaults.setObjects(Data.meets, forKey: "meets")
+//            try userDefaults.setObjects(AppData.meets, forKey: "meets")
 //
 //                  } catch {
 //                      print(error.localizedDescription)
 //                  }
 //        do {
-//            try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+//            try userDefaults.setObjects(AppData.allAthletes, forKey: "allAthletes")
 //            print("Saving Athletes")
 //        }
 //        catch{
@@ -340,7 +340,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
 //        }
 //
 //        do {
-//            try userDefaults.setObjects(Data.schools, forKey: "schools")
+//            try userDefaults.setObjects(AppData.schools, forKey: "schools")
 //                       print("Saving Schools")
 //                   }
 //                   catch{

@@ -23,8 +23,8 @@ class HomeViewController: UIViewController, DataBackDelegate {
     
     
     func savePreferences(athletes: [Athlete]) {
-        Data.allAthletes = athletes
-        Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
+        AppData.allAthletes = athletes
+        AppData.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
         print("delegate function called")
     }
     
@@ -49,12 +49,12 @@ class HomeViewController: UIViewController, DataBackDelegate {
         
         
         
-        if(meet.userId == Data.userID)
+        if(meet.userId == AppData.userID)
         {
             Meet.canCoach = true
             Meet.canManage = true
         }
-        Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
+        AppData.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
         
         
         
@@ -94,7 +94,7 @@ class HomeViewController: UIViewController, DataBackDelegate {
    @IBAction func unwind( _ seg: UIStoryboardSegue) {
    // let pvc = seg.source as! EventsTableViewController
    // allAthletes = pvc.athletes
-    Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
+    AppData.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
     print("unwind to home screen")
     
     

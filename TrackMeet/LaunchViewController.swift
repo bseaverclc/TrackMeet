@@ -11,8 +11,10 @@ import SafariServices
 import FirebaseDatabase
 import GoogleSignIn
 import Firebase
+import AuthenticationServices
+import CryptoKit
 
-class Data{
+class AppData{
     static var meets = [Meet]()
     static var allAthletes = [Athlete]()
     //static var schools = [String:String]()
@@ -23,24 +25,33 @@ class Data{
 }
 
 
-class LaunchViewController: UIViewController {
+@available(iOS 13.0, *)
+class LaunchViewController: UIViewController, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     
+    @IBOutlet weak var loginStackView: UIStackView!
+    @IBOutlet weak var appleButton: UIButton!
+    @IBOutlet weak var SignInOutlet: UIButton!
     @IBOutlet weak var QuickMeetLabel: UILabel!
     @IBOutlet weak var nameOutlet: UILabel!
     
     @IBOutlet weak var logOutOutlet: UIButton!
     @IBOutlet weak var logInOutlet: GIDSignInButton!
+    let authorizationButton = ASAuthorizationAppleIDButton()
     //var meets = [Meet]()
     //var allAthletes = [Athlete]()
    // var schools = [String:String]()
+    
+    fileprivate var currentNonce: String?
+    
     var initials = [String]()
+    
+    var errorMessage = ""
  
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
         self.navigationController?.toolbar.isHidden = true
-        
-     
+    
     }
     override func viewDidAppear(_ animated: Bool) {
         print("View Did appear")
@@ -53,7 +64,7 @@ class LaunchViewController: UIViewController {
         //storeToUserDefaults()
     }
     
-
+    
     
 
     
@@ -61,25 +72,39 @@ class LaunchViewController: UIViewController {
         
         //if let blah = GID
         if let user = Auth.auth().currentUser{
-            Data.userID = user.uid
+            AppData.userID = user.uid
            
             nameOutlet.text = "\(user.email!)"
             logInOutlet.isHidden = true
             logOutOutlet.isHidden = false
+            authorizationButton.isHidden = true
         }
        else{
             nameOutlet.text = "Not Logged in"
         logInOutlet.isHidden = false
         logOutOutlet.isHidden = true
+        authorizationButton.isHidden = false
        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        logInOutlet.layer.cornerRadius = 20
         NotificationCenter.default.addObserver(self, selector: #selector(didSignIn), name: NSNotification.Name("SuccessfulSignInNotification"), object: nil)
         GIDSignIn.sharedInstance().presentingViewController = self
         GIDSignIn.sharedInstance()?.restorePreviousSignIn()
+        
         didSignIn()
+        
+        //Creating login with apple button
+        
+          authorizationButton.addTarget(self, action: #selector(handleLogInWithAppleIDButtonPress), for: .touchUpInside)
+          authorizationButton.cornerRadius = 10
+        loginStackView.addArrangedSubview(authorizationButton)
+        
+    
+        
+        
         print("view is loading")
        
                     
@@ -100,12 +125,148 @@ class LaunchViewController: UIViewController {
       
     
         
-        Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
-        
-        
+        AppData.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
 
     }
     
+    @objc private func handleLogInWithAppleIDButtonPress() {
+        startSignInWithAppleFlow()
+        
+//        let appleIDProvider = ASAuthorizationAppleIDProvider()
+//        let request = appleIDProvider.createRequest()
+//        request.requestedScopes = [.fullName, .email]
+//        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+//        authorizationController.delegate = self
+//        authorizationController.performRequests()
+//        print("Done handling log in")
+    }
+    
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        print("presentationAnchor function")
+        return self.view.window!
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+          guard let nonce = currentNonce else {
+            fatalError("Invalid state: A login callback was received, but no login request was sent.")
+          }
+          guard let appleIDToken = appleIDCredential.identityToken else {
+            print("Unable to fetch identity token")
+            return
+          }
+          guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
+            print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+            return
+          }
+          // Initialize a Firebase credential.
+          let credential = OAuthProvider.credential(withProviderID: "apple.com",
+                                                    idToken: idTokenString,
+                                                    rawNonce: nonce)
+          // Sign in with Firebase.
+          Auth.auth().signIn(with: credential) { (authResult, error) in
+            if (error != nil) {
+              // Error. If error.code == .MissingOrInvalidNonce, make sure
+              // you're sending the SHA256-hashed nonce as a hex string with
+              // your request to Apple.
+              print(error!.localizedDescription)
+              return
+            }
+            // User is signed in to Firebase with Apple.
+            print(Auth.auth().currentUser?.email)
+            print(Auth.auth().currentUser?.uid)
+            
+            if let user = Auth.auth().currentUser{
+                AppData.userID = user.uid
+               
+                self.nameOutlet.text = "\(user.email!)"
+                self.logInOutlet.isHidden = true
+                self.logOutOutlet.isHidden = false
+                self.authorizationButton.isHidden = true
+            }
+           else{
+            self.nameOutlet.text = "Not Logged in"
+            self.logInOutlet.isHidden = false
+            self.logOutOutlet.isHidden = true
+            self.authorizationButton.isHidden = false
+           }
+          }
+        }
+      }
+
+      func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        // Handle error.
+        print("Sign in with Apple errored: \(error)")
+      }
+    
+  
+    // Adapted from https://auth0.com/docs/api-auth/tutorials/nonce#generate-a-cryptographically-random-nonce
+    private func randomNonceString(length: Int = 32) -> String {
+      precondition(length > 0)
+      let charset: Array<Character> =
+          Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+      var result = ""
+      var remainingLength = length
+
+      while remainingLength > 0 {
+        let randoms: [UInt8] = (0 ..< 16).map { _ in
+          var random: UInt8 = 0
+          let errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random)
+          if errorCode != errSecSuccess {
+            fatalError("Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)")
+          }
+          return random
+        }
+
+        randoms.forEach { random in
+          if remainingLength == 0 {
+            return
+          }
+
+          if random < charset.count {
+            result.append(charset[Int(random)])
+            remainingLength -= 1
+          }
+        }
+      }
+
+      return result
+    }
+   
+    
+//    @available(iOS 13, *)
+    func startSignInWithAppleFlow() {
+      let nonce = randomNonceString()
+      currentNonce = nonce
+      let appleIDProvider = ASAuthorizationAppleIDProvider()
+      let request = appleIDProvider.createRequest()
+      request.requestedScopes = [.fullName, .email]
+      request.nonce = sha256(nonce)
+
+      let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+      authorizationController.delegate = self
+      authorizationController.presentationContextProvider = self
+      authorizationController.performRequests()
+    }
+
+    @available(iOS 13, *)
+    private func sha256(_ input: String) -> String {
+      let inputData = Data(input.utf8)
+      let hashedData = SHA256.hash(data: inputData)
+      let hashString = hashedData.compactMap {
+        return String(format: "%02x", $0)
+      }.joined()
+
+      return hashString
+    }
+    
+    
+    
+    
+    
+   
+    
+
     @IBAction func logInAction(_ sender: GIDSignInButton) {
         
     }
@@ -120,62 +281,29 @@ class LaunchViewController: UIViewController {
         let firebaseAuth = Auth.auth()
       do {
         try firebaseAuth.signOut()
-        Data.userID = ""
+        AppData.userID = ""
       } catch let signOutError as NSError {
         print ("Error signing out: %@", signOutError)
       }
         
         //if let blah = GID
         if let user = Auth.auth().currentUser{
-            Data.userID = user.uid
+            AppData.userID = user.uid
            
             nameOutlet.text = "Welcome \(user.displayName!)"
             logInOutlet.isHidden = true
             logOutOutlet.isHidden = false
+            authorizationButton.isHidden = true
         }
        else{
             nameOutlet.text = "Not Logged in"
         logInOutlet.isHidden = false
         logOutOutlet.isHidden = true
+        authorizationButton.isHidden = false
        }
     }
     
-    func randomizeAthletes(){
-//            allAthletes.append(Athlete(f: "OWEN", l: "MIZE", s: "CLC", g: 12, sf: "CRYSTAL LAKE CENTRAL"))
-//                allAthletes.append(Athlete(f: "JAKHARI", l: "ANDERSON", s: "CG", g: 12, sf: "CARY-GROVE"))
-//                allAthletes.append(Athlete(f: "DREW", l: "MCGINNESS", s: "CLS", g: 9, sf: "CRYSTAL LAKE SOUTH"))
-//            let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-//            let chars = Array(letters)
-//            let schoolArray = ["CLC","CG","CLS","PR"]
-//            let schoolFullArray = ["CRYSTAL LAKE CENTRAL", "CARY-GROVE", "CRYSTAL LAKE SOUTH", "PRAIRIE RIDGE"]
-//
-//
-//            for _ in 3...1000{
-//                var first = ""
-//                var last = ""
-//                for _ in 0...4{
-//                    first.append(String(chars[Int.random(in: 0 ..< chars.count)]))
-//                    last.append(String(chars[Int.random(in: 0 ..< chars.count)]))
-//                }
-//                var choice = Int.random(in: 0..<schoolArray.count)
-//                let school = schoolArray[choice]
-//                let schoolF = schoolFullArray[choice]
-//                //let school = schoolArray.randomElement()!
-//                let grade = Int.random(in: 9...12)
-//
-//                allAthletes.append(Athlete(f: first, l: last, s: school, g: grade, sf: schoolF))
-//
-//            }
-    //        var teams = ["A","B","C"]
-    //        var levels = ["VAR", "F/S"]
-    //        for school in schoolArray{
-    //            for letter in teams{
-    //                allAthletes.append(Athlete(f: letter, l: school, s: school, g: 12))
-    //        }
-    //     }
 
-
-        }
   
     @IBAction func athleticNetAction(_ sender: UIButton) {
         if let url = URL(string: "https://www.athletic.net/TrackAndField/Illinois/") {
@@ -246,11 +374,11 @@ class LaunchViewController: UIViewController {
 
             let dict = snapshot.value as! [String:Any]
             let s = School(key: snapshot.key, dict: dict)
-            if Data.schoolsNew.contains(where: {$0.uid == s.uid}){
-                print("school already in Data.schoolsNew")
+            if AppData.schoolsNew.contains(where: {$0.uid == s.uid}){
+                print("school already in AppData.schoolsNew")
             }
             else{
-            Data.schoolsNew.append(s)
+            AppData.schoolsNew.append(s)
             }
             print("added a schoolsNew \(s.full)")
         })
@@ -260,10 +388,10 @@ class LaunchViewController: UIViewController {
             let dict = snapshot.value as! [String:Any]
             let school = School(key: snapshot.key, dict: dict)
 
-          for i in 0..<Data.schoolsNew.count{
-                if(Data.schoolsNew[i].uid == uid){
-                   Data.schoolsNew[i] = school
-                    print("SchoolNew \(i)Changed \(Data.schoolsNew[i].full)")
+          for i in 0..<AppData.schoolsNew.count{
+                if(AppData.schoolsNew[i].uid == uid){
+                   AppData.schoolsNew[i] = school
+                    print("SchoolNew \(i)Changed \(AppData.schoolsNew[i].full)")
                 }
                 }
 
@@ -272,7 +400,7 @@ class LaunchViewController: UIViewController {
         ref2.child("schoolsNew").observe(.childRemoved) { (snapshot) in
             print("a school has been removed from firebase")
             let key = snapshot.key
-            Data.schoolsNew.removeAll(where: {$0.uid == key})
+            AppData.schoolsNew.removeAll(where: {$0.uid == key})
             
         }
         
@@ -287,7 +415,7 @@ class LaunchViewController: UIViewController {
         ref.child("meets").observe(.childAdded, with: { (snapshot) in
             
             let dict = snapshot.value as! [String:Any]
-            Data.meets.append(Meet(key: snapshot.key, dict: dict))
+            AppData.meets.append(Meet(key: snapshot.key, dict: dict))
         })
         
         
@@ -314,9 +442,9 @@ class LaunchViewController: UIViewController {
         ref.child("meets").observe(.childChanged, with: { (snapshot) in
             print("A meet has changed on firebase!")
             let dict = snapshot.value as! [String:Any]
-            for i in 0..<Data.meets.count{
-                if Data.meets[i].uid == snapshot.key{
-                    Data.meets[i] = Meet(key: snapshot.key, dict: dict)
+            for i in 0..<AppData.meets.count{
+                if AppData.meets[i].uid == snapshot.key{
+                    AppData.meets[i] = Meet(key: snapshot.key, dict: dict)
                     print("Changed the meet in Data.meets")
                 }
             }
@@ -343,14 +471,14 @@ class LaunchViewController: UIViewController {
             
             var addAth = true
             let a = Athlete(key: uid, dict: dict)
-            for ath in Data.allAthletes{
+            for ath in AppData.allAthletes{
                 if ath.uid == a.uid{
                     addAth = false
                 }
             }
             if addAth{
-            Data.allAthletes.append(a)
-            //print("Added Athlete to allAthletes \(Data.allAthletes[Data.allAthletes.count-1].first) ")
+            AppData.allAthletes.append(a)
+            //print("Added Athlete to allAthletes \(AppData.allAthletes[Data.allAthletes.count-1].first) ")
             }
             for e in a.events{
                 //print(e.name)
@@ -438,10 +566,10 @@ class LaunchViewController: UIViewController {
         
                
         
-        for i in 0..<Data.allAthletes.count{
-            if(Data.allAthletes[i].uid == uid){
-                Data.allAthletes[i] = a
-                print("Athlete \(i)Changed \(Data.allAthletes[i].last)")
+        for i in 0..<AppData.allAthletes.count{
+            if(AppData.allAthletes[i].uid == uid){
+                AppData.allAthletes[i] = a
+                print("Athlete \(i)Changed \(AppData.allAthletes[i].last)")
             }
         
                 
@@ -461,11 +589,11 @@ class LaunchViewController: UIViewController {
         ref = Database.database().reference()
         ref.child("athletes").observe(.childRemoved, with: { (snapshot) in
             print("Removing athleted observed from Array")
-            for i in 0..<Data.allAthletes.count{
+            for i in 0..<AppData.allAthletes.count{
                 
-                if Data.allAthletes[i].uid == snapshot.key{
-                    print("\(Data.allAthletes[i].last) has been removed")
-                    Data.allAthletes.remove(at: i)
+                if AppData.allAthletes[i].uid == snapshot.key{
+                    print("\(AppData.allAthletes[i].last) has been removed")
+                    AppData.allAthletes.remove(at: i)
                     break
                 }
             }
@@ -526,7 +654,7 @@ class LaunchViewController: UIViewController {
                                 if person[0] != "First"{
                                     let athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2])!, sf: fullSchool)
                                 print(athlete)
-                                    Data.allAthletes.append(athlete)
+                                    AppData.allAthletes.append(athlete)
                                 }
                                  
                              }
@@ -554,7 +682,7 @@ func beenScoredChangedInFirebase(){
         print("meet changed")
         print(snapshot.key)
         let uid = snapshot.key
-        for meet in Data.meets{
+        for meet in AppData.meets{
             print("looping through meets")
             if meet.uid == uid{
                 
@@ -569,3 +697,75 @@ func beenScoredChangedInFirebase(){
         }
     }
 }
+
+// create account with email and password firebase
+//func createAccount(email: String, password: String){
+//
+//    Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+//      if let error = error as? NSError {
+//        switch AuthErrorCode(rawValue: error.code) {
+//        case .operationNotAllowed:
+//            self.errorMessage = "The given sign-in provider is disabled for this Firebase project."
+//        case .emailAlreadyInUse:
+//            self.errorMessage = "The email address is already in use by another account."
+//
+//        case .invalidEmail:
+//            self.errorMessage = "The email address is badly formatted."
+//
+//        case .weakPassword:
+//            self.errorMessage = "The password must be 6 characters long or more."
+//        // Error:
+//        default:
+//            self.errorMessage = "Error: \(error.localizedDescription)"
+//        }
+//        let signAlert = UIAlertController(title: "Error", message: self.errorMessage, preferredStyle: .alert)
+//        signAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//        self.present(signAlert, animated: true, completion: nil)
+//      } else {
+//        print("User signs up successfully")
+//        if let user = Auth.auth().currentUser{
+//            Data.userID = user.uid
+//
+//            self.nameOutlet.text = "\(user.email!)"
+//            //self.logInOutlet.isHidden = true
+//            //self.logOutOutlet.isHidden = false
+//
+//
+//      }
+//
+//
+//    }
+//}
+//}
+
+// Sign in with username and password
+//func signIn2(email: String, password: String){
+//    print("signIn2 being called")
+//    Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
+//      if let error = error as? NSError {
+//        switch AuthErrorCode(rawValue: error.code) {
+//        case .operationNotAllowed:
+//            self.errorMessage = "username/password not enabled in firebase"
+//        case .userDisabled:
+//            self.errorMessage = "The user account has been disabled by an administrator."
+//        case .wrongPassword:
+//            self.errorMessage = "The password is invalid or the user does not have a password."
+//        case .invalidEmail:
+//            self.errorMessage = "The email address is malformed."
+//        default:
+//            print("Error: \(error.localizedDescription)")
+//
+//        }
+//      } else {
+//        print("User signs in successfully")
+//
+//        if let user = Auth.auth().currentUser{
+//            Data.userID = user.uid
+//
+//            self.nameOutlet.text = "\(user.email!)"
+//           // self.logInOutlet.isHidden = true
+//           // self.logOutOutlet.isHidden = false
+//      }
+//    }
+//}
+//}

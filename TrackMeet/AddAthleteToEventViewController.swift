@@ -28,7 +28,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
             super.viewDidLoad()
             self.title = screenTitle
             lev = String(screenTitle.suffix(3))
-            for a in Data.allAthletes{
+            for a in AppData.allAthletes{
                 if meet.schools.keys.contains(a.schoolFull){
                     displayedAthletes.append(a)
                 }
@@ -105,7 +105,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
         if Meet.canManage{return true}
         if let user = Auth.auth().currentUser{
         let sf = displayedAthletes[indexPath.row].schoolFull
-        for s in Data.schoolsNew{
+        for s in AppData.schoolsNew{
             if s.full == sf{
                 for coach in s.coaches{
                     
@@ -124,7 +124,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
 //            let alert = UIAlertController(title: "Are you sure?", message: "Deleting this athlete will also delete any results stored for this athlete", preferredStyle:    .alert)
 //            let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
 //                let selected = self.displayedAthletes[indexPath.row]
-//                Data.allAthletes.removeAll { (athlete) -> Bool in
+//                AppData.allAthletes.removeAll { (athlete) -> Bool in
 //                    athlete.equals(other: selected)
 //
 //                }
@@ -173,22 +173,22 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
                     if let grade = Int(alert.textFields![2].text!){
                         self.displayedAthletes[indexPath.row].grade = grade}
                     self.tableView.reloadRows(at: [indexPath], with: .fade)
-                    for i in 0 ..< Data.allAthletes.count{
-                       if self.displayedAthletes[indexPath.row].equals(other: Data.allAthletes[i]){
-                        Data.allAthletes[i].first = alert.textFields![0].text!
-                         Data.allAthletes[i].last = alert.textFields![1].text!
-                         //Data.allAthletes[i].school = alert.textFields![2].text!
+                    for i in 0 ..< AppData.allAthletes.count{
+                       if self.displayedAthletes[indexPath.row].equals(other: AppData.allAthletes[i]){
+                        AppData.allAthletes[i].first = alert.textFields![0].text!
+                         AppData.allAthletes[i].last = alert.textFields![1].text!
+                         //AppData.allAthletes[i].school = alert.textFields![2].text!
                           if let grade = Int(alert.textFields![2].text!){
-                                Data.allAthletes[i].grade = grade}
+                                AppData.allAthletes[i].grade = grade}
                         
                         // updateFirebase
-                        print(Data.allAthletes[i].first)
-                        Data.allAthletes[i].updateFirebase()
+                        print(AppData.allAthletes[i].first)
+                        AppData.allAthletes[i].updateFirebase()
                         // save changes to userDefaults
                         let userDefaults = UserDefaults.standard
                         do {
 
-                            try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+                            try userDefaults.setObjects(AppData.allAthletes, forKey: "allAthletes")
                                } catch {
                                    print(error.localizedDescription)
                                }
@@ -237,7 +237,7 @@ class AddAthleteToEventViewController: UIViewController, UITableViewDelegate, UI
         func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
             selectAthletes()
             displayedAthletes = [Athlete]()
-            for a in Data.allAthletes{
+            for a in AppData.allAthletes{
             
                 if item.title == a.school{
                     if a.schoolFull.suffix(3) == "(\(meet.gender))"{

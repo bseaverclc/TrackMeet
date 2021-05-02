@@ -154,7 +154,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
            }
            
            self.title = screenTitle
-           for a in Data.allAthletes{
+           for a in AppData.allAthletes{
                      for e in a.events{
                        if e.name == screenTitle && e.meetName == meet.name{
                            switch e.heat{
@@ -616,7 +616,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         
               let userDefaults = UserDefaults.standard
               do {
-                      try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+                      try userDefaults.setObjects(AppData.allAthletes, forKey: "allAthletes")
                      } catch {
                          print(error.localizedDescription)
                      }
@@ -915,7 +915,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
                // save to userdefaults
                   let userDefaults = UserDefaults.standard
                   do {
-                          try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+                          try userDefaults.setObjects(AppData.allAthletes, forKey: "allAthletes")
                          } catch {
                              print(error.localizedDescription)
                          }
@@ -972,7 +972,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
        // save to userdefaults
        let userDefaults = UserDefaults.standard
        do {
-               try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+               try userDefaults.setObjects(AppData.allAthletes, forKey: "allAthletes")
               } catch {
                   print(error.localizedDescription)
               }

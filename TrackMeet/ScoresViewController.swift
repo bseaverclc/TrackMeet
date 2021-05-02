@@ -70,7 +70,7 @@ class ScoresViewController: UIViewController {
 
     func computeScores(){
         
-        for a in Data.allAthletes{
+        for a in AppData.allAthletes{
             //var updated = false
             
             for e in a.events{

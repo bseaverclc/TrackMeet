@@ -37,18 +37,18 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
             tableView.dataSource = self
             
             self.title = screenTitle
-//            for sch in Data.schoolsNew{
+//            for sch in AppData.schoolsNew{
 //                schoolNames.append(sch.full)
 //
 //            }
 //            schoolNames.sort()
             
-            Data.schoolsNew.sort(by: {$0.full < $1.full})
+            AppData.schoolsNew.sort(by: {$0.full < $1.full})
             
     
             
             
-            if(Data.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3"){
+            if(AppData.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3"){
                 canEditSchools = true
             }
             
@@ -78,13 +78,13 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
 
          func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             // #warning Incomplete implementation, return the number of rows
-            return Data.schoolsNew.count
+            return AppData.schoolsNew.count
         }
 
         
          func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
-            let school = Data.schoolsNew[indexPath.row]
+            let school = AppData.schoolsNew[indexPath.row]
             cell.textLabel?.text = school.full
             cell.detailTextLabel?.text = school.inits
             //print(athlete.grade)
@@ -100,7 +100,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
             var blankAlert = UIAlertController()
             let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
                 
-                let theSchool = Data.schoolsNew[indexPath.row]
+                let theSchool = AppData.schoolsNew[indexPath.row]
                 for e in theSchool.coaches{
                     if Auth.auth().currentUser?.email == e{
                      self.canEditSchools = true
@@ -108,7 +108,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                 
                     }
                 }
-//                for s in Data.schoolsNew{
+//                for s in AppData.schoolsNew{
 //                    if s.full == self.schoolNames[indexPath.row]{
 //                    for e in s.coaches{
 //                        if Auth.auth().currentUser?.email == e{
@@ -120,7 +120,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
 //                }
                 
                 //right now, only I can delete schools
-                if(Data.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3") // || self.canEditSchools
+                if(AppData.userID == "SRrCKcYVC8U6aZTMv0XCYHHR4BG3") // || self.canEditSchools
                 {
                 
                 let alert = UIAlertController(title: "Are you sure?", message: "Deleting this school will delete all the school's athletes and results", preferredStyle: .alert)
@@ -128,23 +128,23 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                 let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
                    // let selected = self.schoolNames[indexPath.row]
                     // removing all athletes from app with this school name
-                   // Data.allAthletes.removeAll(where: {$0.schoolFull == selected})
+                   // AppData.allAthletes.removeAll(where: {$0.schoolFull == selected})
                     
-                    //attempt to delete from firebase and Data.allAthletes
+                    //attempt to delete from firebase and AppData.allAthletes
                     // crashes sometimes.  I think it is when it tries to remove the last athlete
                     
                     theSchool.deleteFromFirebase()
                     
-//                    for s in Data.schoolsNew{
+//                    for s in AppData.schoolsNew{
 //                        if s.full == self.schoolNames[indexPath.row]{
 //                            s.deleteFromFirebase()
 //                        }
 //                    }
-                    if Data.allAthletes.count > 0{
-                    for i in (0...(Data.allAthletes.count - 1)).reversed() {
-                        if Data.allAthletes[i].schoolFull == theSchool.full{
-                            Data.allAthletes[i].deleteFromFirebase()
-                            Data.allAthletes.remove(at: i)
+                    if AppData.allAthletes.count > 0{
+                    for i in (0...(AppData.allAthletes.count - 1)).reversed() {
+                        if AppData.allAthletes[i].schoolFull == theSchool.full{
+                            AppData.allAthletes[i].deleteFromFirebase()
+                            AppData.allAthletes.remove(at: i)
                             
                             
                         }
@@ -152,11 +152,11 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                     }
                     
                    // Skipped some to delete
-//                    for (index, item) in Data.allAthletes.enumerated().reversed() {
-//                        if index < Data.allAthletes.count{
+//                    for (index, item) in AppData.allAthletes.enumerated().reversed() {
+//                        if index < AppData.allAthletes.count{
 //                        if item.schoolFull == selected{
 //                            print(index)
-//                            Data.allAthletes.remove(at: index)
+//                            AppData.allAthletes.remove(at: index)
 //                            item.deleteFromFirebase()
 //
 //
@@ -167,17 +167,17 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                     
                     
                    // self.schoolNames.remove(at: indexPath.row) // remove from array
-                   // Data.schools.removeValue(forKey: selected) // remove from dictionary
+                   // AppData.schools.removeValue(forKey: selected) // remove from dictionary
                     // Database.database().reference().child("schools").child(selected).removeValue()
                     
                     // Still need to remove all athletes from this school
                    // tableView.deleteRows(at: [indexPath], with: .fade)
-                    Data.schoolsNew.remove(at: indexPath.row)
+                    AppData.schoolsNew.remove(at: indexPath.row)
                     self.tableView.reloadData()
                     
 //                    let userDefaults = UserDefaults.standard
 //                    do {
-//                        try userDefaults.setObjects(Data.schools, forKey: "schools")
+//                        try userDefaults.setObjects(AppData.schools, forKey: "schools")
 //                       print("Saving Schools")
 //                    }
 //                    catch{
@@ -201,7 +201,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
             }
   
             let edit = UITableViewRowAction(style: .normal, title: "Edit") { (action, indexPath) in
-                if(Data.userID != "SRrCKcYVC8U6aZTMv0XCYHHR4BG3")
+                if(AppData.userID != "SRrCKcYVC8U6aZTMv0XCYHHR4BG3")
                 {
                     let denyAlert = UIAlertController(title: "Error", message: "Contact developer at bseaver@d155.org to edit schoool name or delete school", preferredStyle: .alert)
                     denyAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -212,12 +212,12 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                 let alert = UIAlertController(title: "", message: "Edit School", preferredStyle: .alert)
                     alert.addTextField(configurationHandler: { (textField) in
                          textField.autocapitalizationType = .allCharacters
-                        textField.text = Data.schoolsNew[indexPath.row].full
+                        textField.text = AppData.schoolsNew[indexPath.row].full
                         
                     })
                 alert.addTextField(configurationHandler: { (textField) in
                      textField.autocapitalizationType = .allCharacters
-                    textField.text = Data.schoolsNew[indexPath.row].inits
+                    textField.text = AppData.schoolsNew[indexPath.row].inits
                     
                 })
               
@@ -226,10 +226,10 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                         
                             //changing school names to new names
                             
-                            for a in Data.allAthletes{
+                            for a in AppData.allAthletes{
                                         print(a.schoolFull)
                                         
-                                        if a.schoolFull == Data.schoolsNew[indexPath.row].full{
+                                        if a.schoolFull == AppData.schoolsNew[indexPath.row].full{
                                             a.schoolFull = alert.textFields![0].text!
                                             a.school = alert.textFields![1].text!
                                             print("changed athletes school")
@@ -238,16 +238,16 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                                     }
                             
                             // changing all meets to new school names
-                            for m in Data.meets{
-                                m.schools.removeValue(forKey: Data.schoolsNew[indexPath.row].full)
+                            for m in AppData.meets{
+                                m.schools.removeValue(forKey: AppData.schoolsNew[indexPath.row].full)
                                 m.schools[alert.textFields![0].text!] = alert.textFields![1].text!
                                 
                             
                             }
                             
-                            // update schoolsNew on Firebase and in Data.schoolsNew
-                            for s in Data.schoolsNew{
-                                if s.full == Data.schoolsNew[indexPath.row].full{
+                            // update schoolsNew on Firebase and in AppData.schoolsNew
+                            for s in AppData.schoolsNew{
+                                if s.full == AppData.schoolsNew[indexPath.row].full{
                                     s.full = alert.textFields![0].text!
                                     s.inits = alert.textFields![1].text!
                                     s.updateFirebase()
@@ -260,9 +260,9 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                               
                            
                             // remove old from Dict
-//                            Data.schools.removeValue(forKey: Data.schoolsNew[indexPath.row].full)
+//                            AppData.schools.removeValue(forKey: AppData.schoolsNew[indexPath.row].full)
 //                            // add new to dict
-//                            Data.schools[alert.textFields![0].text!] = alert.textFields![1].text!
+//                            AppData.schools[alert.textFields![0].text!] = alert.textFields![1].text!
 //                            // update Array of Schools
 //                        self.schoolNames[indexPath.row] = alert.textFields![0].text!
 //
@@ -272,7 +272,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
 //                            // remove entire dictionary from firebase
 //                             Database.database().reference().child("schools").removeValue()
 //                            // write new values to firebase
-//                            ref.updateChildValues(Data.schools)
+//                            ref.updateChildValues(AppData.schools)
                             
                             
                             
@@ -285,13 +285,13 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
 //
 //
 //                                          do {
-//                                            try userDefaults.setObjects(Data.meets, forKey: "meets")
+//                                            try userDefaults.setObjects(AppData.meets, forKey: "meets")
 //
 //                                                 } catch {
 //                                                     print(error.localizedDescription)
 //                                                 }
 //                                       do {
-//                                        try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+//                                        try userDefaults.setObjects(AppData.allAthletes, forKey: "allAthletes")
 //                                           print("Saving Athletes")
 //                                       }
 //                                       catch{
@@ -299,7 +299,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
 //                                       }
 //
 //                                       do {
-//                                        try userDefaults.setObjects(Data.schools, forKey: "schools")
+//                                        try userDefaults.setObjects(AppData.schools, forKey: "schools")
 //                                                      print("Saving Schools")
 //                                                  }
 //                                                  catch{
@@ -347,7 +347,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
     
     
     @IBAction func addSchoolActionNew2(_ sender: UIBarButtonItem) {
-        if(Data.userID == "")
+        if(AppData.userID == "")
         {
             let denyAlert = UIAlertController(title: "Error", message: "Must login on main page to add a school", preferredStyle: .alert)
             denyAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -400,7 +400,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                        badInput = true
                    }
                    
-                for school in Data.schoolsNew{
+                for school in AppData.schoolsNew{
                     if (school.full == "\(fullSchool) \(gender)"){
                         error = "\(fullSchool) \(gender) is already in database"
                         badInput = true
@@ -434,29 +434,29 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                                
            
                     if !badInput{
-                    //Data.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
+                    //AppData.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
                         let newSchool = School(full: "\(fullSchool) \(gender)", inits: alert.textFields![1].text!)
                         
-                        Data.schoolsNew.append(newSchool)
+                        AppData.schoolsNew.append(newSchool)
                         print("added school to schoolsNew in !badInput")
                         if let user = Auth.auth().currentUser{
                             newSchool.addCoach(email: user.email!)
                         }
                         
                         // Save schoolsNew to firebase
-                        // This also adds the school to Data.schoolsNew
+                        // This also adds the school to AppData.schoolsNew
                         newSchool.saveToFirebase()
                         self.tableView.reloadData()
                     
                        
                        //Save schools to firebase
 //                    let ref = Database.database().reference().child("schools")
-//                    ref.updateChildValues(Data.schools)
+//                    ref.updateChildValues(AppData.schools)
 //
 //                       // Save school to UserDefaults
 //                       let userDefaults = UserDefaults.standard
 //                       do {
-//                           try userDefaults.setObjects(Data.schools, forKey: "schools")
+//                           try userDefaults.setObjects(AppData.schools, forKey: "schools")
 //                           print("Saved Schools in Add Meet VC")
 //                              } catch {
 //                                  print(error.localizedDescription)
@@ -464,7 +464,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
 //                              }
 //
 //                       do {
-//                        try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+//                        try userDefaults.setObjects(AppData.allAthletes, forKey: "allAthletes")
 //                                   print("Saving Athletes")
 //                               }
 //                               catch{
@@ -581,7 +581,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                                 let athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2]) ?? 0, sf: fullSchool)
                             print(athlete)
                                 athlete.saveToFirebase()
-                                Data.allAthletes.append(athlete)
+                                AppData.allAthletes.append(athlete)
                             }
                          }
                          }
@@ -651,7 +651,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
 //                       error = "Must include school initials"
 //                       badInput = true
 //                   }
-//                   else if Data.schoolsNew.contains(where: { $0.full == "\(fullSchool) \(gender)" }) {
+//                   else if AppData.schoolsNew.contains(where: { $0.full == "\(fullSchool) \(gender)" }) {
 //                    error = "\(fullSchool) \(gender) is already in database"
 //                    badInput = true
 //                     }
@@ -661,7 +661,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
 ////                       badInput = true
 ////                   }
 //
-//                   else if Data.schoolsNew.contains(where: { $0.inits == initSchool }) {
+//                   else if AppData.schoolsNew.contains(where: { $0.inits == initSchool }) {
 //                    error = "The initials \(initSchool) are already in use"
 //                    badInput = true
 //                     }
@@ -679,20 +679,20 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
 //
 //
 //
-//                    //Data.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
+//                    //AppData.schools["\(fullSchool) \(gender)"] = alert.textFields![1].text!
 //                    let newSchool = School(full: "\(fullSchool) \(gender)", inits: alert.textFields![1].text!)
-//                    Data.schoolsNew.append(newSchool)
+//                    AppData.schoolsNew.append(newSchool)
 //                    print("add to schoolsNew in addSchool")
 //                    newSchool.saveToFirebase()
 //
 //                       //Save schools to firebase
 ////                    let ref = Database.database().reference().child("schools")
-////                    ref.updateChildValues(Data.schools)
+////                    ref.updateChildValues(AppData.schools)
 //
 //                       // Save school to UserDefaults
 ////                       let userDefaults = UserDefaults.standard
 ////                       do {
-////                        try userDefaults.setObjects(Data.schools, forKey: "schools")
+////                        try userDefaults.setObjects(AppData.schools, forKey: "schools")
 ////                           print("Saved Schools in Add Meet VC")
 ////                              } catch {
 ////                                  print(error.localizedDescription)
@@ -700,7 +700,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
 ////                              }
 ////
 ////                       do {
-////                        try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+////                        try userDefaults.setObjects(AppData.allAthletes, forKey: "allAthletes")
 ////                                   print("Saving Athletes")
 ////                               }
 ////                               catch{
@@ -781,7 +781,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
                                     let athlete = Athlete(f: person[0], l: person[1], s: initSchool, g: Int(person[2])!, sf: fullSchool)
                                 print(athlete)
                                     athlete.saveToFirebase()
-                                    Data.allAthletes.append(athlete)
+                                    AppData.allAthletes.append(athlete)
                                 }
                                  
                              }
@@ -800,7 +800,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
     }
         
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedSchool = Data.schoolsNew[indexPath.row]
+        selectedSchool = AppData.schoolsNew[indexPath.row]
         performSegue(withIdentifier: "toAthletesSegue", sender: self)
     }
     
@@ -812,13 +812,13 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
            // nvc.meets = meets
             nvc.schools.append(selectedSchool)
         }
-        Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
+        AppData.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
     }
     
     @IBAction func unwindtoSchools( _ seg: UIStoryboardSegue) {
       //let pvc = seg.source as! AthletesViewController
       // allAthletes = pvc.allAthletes
-        Data.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
+        AppData.allAthletes.sort(by: {$0.last.localizedCaseInsensitiveCompare($1.last) == .orderedAscending})
        print("unwind to schools")
        
        
@@ -827,13 +827,13 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
 //    func storeToUserDefaults(){
 //        let userDefaults = UserDefaults.standard
 //           do {
-//            try userDefaults.setObjects(Data.meets, forKey: "meets")
+//            try userDefaults.setObjects(AppData.meets, forKey: "meets")
 //            
 //                  } catch {
 //                      print(error.localizedDescription)
 //                  }
 //        do {
-//            try userDefaults.setObjects(Data.allAthletes, forKey: "allAthletes")
+//            try userDefaults.setObjects(AppData.allAthletes, forKey: "allAthletes")
 //            print("Saving Athletes")
 //        }
 //        catch{
@@ -841,7 +841,7 @@ class SchoolsViewController: UIViewController,UITableViewDelegate, UITableViewDa
 //        }
 //        
 //        do {
-//            try userDefaults.setObjects(Data.schools, forKey: "schools")
+//            try userDefaults.setObjects(AppData.schools, forKey: "schools")
 //                       print("Saving Schools")
 //                   }
 //                   catch{
