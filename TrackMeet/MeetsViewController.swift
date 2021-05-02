@@ -144,33 +144,33 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
                 
         
-                let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
-                    let blankAlert = UIAlertController(title: "Are you sure?", message: "Deleting this meet will also delete all results", preferredStyle: .alert)
-                    let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
-                        //var selected = AppData.meets[indexPath.row]
-                        AppData.meets[indexPath.row].deleteFromFirebase()
-                         
-                        AppData.meets.remove(at: indexPath.row)
-                        tableView.deleteRows(at: [indexPath], with: .fade)
-                        
-//                        let userDefaults = UserDefaults.standard
-//                        do {
-//                           try userDefaults.setObjects(AppData.meets, forKey: "meets")
-//                           print("Saving meets")
-//                        }
-//                        catch{
-//                              print("error saving meets")
-//                        }
-                    }
-                    let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-                    blankAlert.addAction(ok)
-                    blankAlert.addAction(cancel)
-                    self.present(blankAlert, animated: true, completion: nil)
-                    
-                    
-                    
-                    
-                }
+//                let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+//                    let blankAlert = UIAlertController(title: "Are you sure?", message: "Deleting this meet will also delete all results", preferredStyle: .alert)
+//                    let ok = UIAlertAction(title: "Delete", style: .destructive) { (a) in
+//                        //var selected = AppData.meets[indexPath.row]
+//                        AppData.meets[indexPath.row].deleteFromFirebase()
+//
+//                        AppData.meets.remove(at: indexPath.row)
+//                        tableView.deleteRows(at: [indexPath], with: .fade)
+//
+////                        let userDefaults = UserDefaults.standard
+////                        do {
+////                           try userDefaults.setObjects(AppData.meets, forKey: "meets")
+////                           print("Saving meets")
+////                        }
+////                        catch{
+////                              print("error saving meets")
+////                        }
+//                    }
+//                    let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+//                    blankAlert.addAction(ok)
+//                    blankAlert.addAction(cancel)
+//                    self.present(blankAlert, animated: true, completion: nil)
+//
+//
+//
+//
+//                }
 
                 let edit = UITableViewRowAction(style: .normal, title: "Edit") { (action, indexPath) in
                   
@@ -182,7 +182,7 @@ class MeetsViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
                 
             }
-        return [edit,delete]
+        return [edit]
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
