@@ -7,11 +7,13 @@
 //
 
 import UIKit
+import Firebase
 
 class AthleteResultsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var athlete : Athlete!
     //var meets : [Meet]!
     var meet : Meet?
+    var canEdit = false
     
     @IBOutlet weak var eventLabel: UILabel!
     
@@ -89,26 +91,60 @@ class AthleteResultsViewController: UIViewController, UITableViewDataSource, UIT
         return cell
     }
     
-  
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return canEdit
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+            if editingStyle == .delete{
+                let cell = tableView.cellForRow(at: indexPath) as! AthleteResultsTableViewCell
+                if cell.markOutlet.text == ""{
+                    if let euid = thisMeetEvents[indexPath.row].uid{
+                        print("calling deleteEventFromFirebase")
+                        athlete.deleteEventFromFirebase(euid: euid)
+                        thisMeetEvents.remove(at: indexPath.row)
+                        tableView.deleteRows(at: [indexPath], with: .fade)
+                        tableView.reloadData()
+                        
+                }
+                }
+            }
+    }
+            
+            
+            
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "\(athlete.first) \(athlete.last)"
+        checkCanEdit()
+        print("Can edit athlete \(canEdit)")
         
 
         // Do any additional setup after loading the view.
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func checkCanEdit(){
+        if let m = meet{
+            if let user = Auth.auth().currentUser{
+            let sf = athlete.schoolFull
+            for s in AppData.schoolsNew{
+                if s.full == sf{
+                    for coach in s.coaches{
+                        
+                        if user.email == coach{
+                            print("can edit")
+                            canEdit = true
+                        }
+                    }
+                }
+            }
+            }
+            
+            
+        }
     }
-    */
 
 }

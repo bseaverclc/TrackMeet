@@ -633,7 +633,7 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
         }
        }
     
-    @IBAction func clearPlacesAction(_ sender: UIButton) {
+    func clearOutPlaces(){
         if Meet.canManage{
         for a in eventAthletes{
             for e in a.events{
@@ -653,6 +653,16 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
             
         }
     }
+    
+    @IBAction func clearPlacesAction(_ sender: UIButton) {
+        let alert = UIAlertController(title: "Caution", message: "Are you sure you want to clear all places?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "No", style: .destructive, handler: nil))
+        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (alert) in
+            self.clearOutPlaces()
+        }))
+        present(alert, animated: true, completion: nil)
+        
+    }
         
     @IBAction func refreshAction(_ sender: UIButton) {
         viewDidLoad()
@@ -660,6 +670,31 @@ class EventEditViewController: UIViewController, UITableViewDelegate,UITableView
     @IBAction func tapAction(_ sender: UITapGestureRecognizer) {
         view.endEditing(true)
     }
+    
+    
+    @IBAction func switchAction2(_ sender: UIButton) {
+        print("switch action happening")
+        let start = screenTitle.index(screenTitle.startIndex, offsetBy: 0)
+        let end = screenTitle.index(screenTitle.endIndex, offsetBy: -3)
+        let range = start..<end
+         
+        let check = screenTitle[range]
+        for e in meet.events{
+            if e != screenTitle && e.contains(check){
+                print(e)
+                screenTitle = e
+                viewDidLoad()
+                break
+            }
+        }
+        
+    }
+    
+    
+    @IBAction func switchAction(_ sender: UIBarButtonItem) {
+        
+    }
+    
    
   // Sorting Functions
     func sortBySchool(){
